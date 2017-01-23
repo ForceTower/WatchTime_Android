@@ -9,6 +9,7 @@ android {
         targetSdkVersion 25
         versionCode 1
         versionName "1.0"
+        multiDexEnabled true
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
     }
     buildTypes {
@@ -26,5 +27,11 @@ dependencies {
     })
     compile 'com.android.support:appcompat-v7:25.1.0'
     testCompile 'junit:junit:4.12'
+
+    compile 'com.android.support:design:25.1.0'
+    compile 'com.jakewharton:butterknife:7.0.1'
+    compile 'de.hdodenhof:circleimageview:2.1.0'
+    compile 'com.github.johnkil.android-robototextview:robototextview:2.5.1'
+
     compile project(':base')
 }
