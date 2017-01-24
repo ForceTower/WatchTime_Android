@@ -43,6 +43,7 @@ public class MainActivity extends WatchTimeBaseActivity implements NavigationDra
     @Bind(R.id.toolbar)
     Toolbar mToolbar;
 
+    //Drawer
     @Bind(R.id.navigation_drawer_container)
     ScrimInsetsFrameLayout mNavigationDrawerContainer;
 

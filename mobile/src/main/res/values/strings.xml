@@ -1,4 +1,11 @@
 <resources>
     <string name="app_name">OQV Beta</string>
     <string name="search">Search</string>
+    <string name="title_movies">Movies</string>
+    <string name="title_shows">TV Shows</string>
+    <string name="preferences">Settings</string>
+    <string name="title_my_watch_list">Your list</string>
+    <string name="title_friends_activities">Friends</string>
+    <string name="drawer_open">Open Drawer</string>
+    <string name="drawer_close">Close Drawer</string>
 </resources>
