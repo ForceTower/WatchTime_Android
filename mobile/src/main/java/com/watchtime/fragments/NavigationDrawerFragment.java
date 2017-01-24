@@ -146,10 +146,10 @@ public class NavigationDrawerFragment extends Fragment implements NavigationAdap
         List<NavDrawerItem> navItems = new ArrayList<>();
 
         navItems.add(new NavDrawerItem(true)); //Header
-        navItems.add(new NavDrawerItem(getString(R.string.title_movies), R.drawable.ic_nav_movies, new MoviesProvider()));
-        navItems.add(new NavDrawerItem(getString(R.string.title_shows), R.drawable.ic_nav_tv, new ShowsProvider()));
-        navItems.add(new NavDrawerItem(getString(R.string.title_my_watch_list), R.drawable.ic_nav_vpn, new MyListsProvider()));
-        navItems.add(new NavDrawerItem(getString(R.string.title_friends_activities), R.drawable.ic_nav_tv, new FriendsWatchsProvider()));
+        navItems.add(new NavDrawerItem(getString(R.string.title_movies), R.drawable.ic_nav_movies/*, new MoviesProvider()*/));
+        navItems.add(new NavDrawerItem(getString(R.string.title_shows), R.drawable.ic_nav_tv/*, new ShowsProvider()*/));
+        navItems.add(new NavDrawerItem(getString(R.string.title_my_watch_list), R.drawable.ic_nav_vpn/*, new MyListsProvider()*/));
+        navItems.add(new NavDrawerItem(getString(R.string.title_friends_activities), R.drawable.ic_nav_tv/*, new FriendsWatchsProvider()*/));
 
         navItems.add(new NavDrawerItem(getString(R.string.preferences), R.drawable.ic_nav_settings, settingsClickListener));
 

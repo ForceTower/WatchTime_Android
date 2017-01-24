@@ -3,6 +3,7 @@ package com.watchtime.fragments.drawer;
 import android.view.View;
 
 import com.watchtime.adapters.NavigationAdapter;
+import com.watchtime.base.providers.media.MediaProvider;
 
 /**
  * Created by João Paulo on 24/01/2017.

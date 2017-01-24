@@ -8,4 +8,5 @@
     <string name="title_friends_activities">Friends</string>
     <string name="drawer_open">Open Drawer</string>
     <string name="drawer_close">Close Drawer</string>
+    <string name="genres">Genres</string>
 </resources>
