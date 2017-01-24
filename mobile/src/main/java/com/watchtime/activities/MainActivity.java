@@ -22,6 +22,7 @@ import com.watchtime.activities.base.WatchTimeBaseActivity;
 import com.watchtime.base.content.preferences.Prefs;
 import com.watchtime.base.utils.PrefUtils;
 import com.watchtime.fragments.NavigationDrawerFragment;
+import com.watchtime.fragments.drawer.NavDrawerItem;
 import com.watchtime.utils.ToolbarUtils;
 import com.watchtime.widgets.ScrimInsetsFrameLayout;
 
@@ -134,14 +135,14 @@ public class MainActivity extends WatchTimeBaseActivity implements NavigationDra
 
     @Override
     public void onNavigationDrawerItemSelected(NavDrawerItem item, String title) {
-        setTitle(null != title ? title : getString(R.string.app_name)); //Changes the App name
+        setTitle(title != null ? title : getString(R.string.app_name)); //Changes the App name
         //Prepare to update content by changing Fragments
         FragmentManager fragmentManager = getSupportFragmentManager();
 
         String tag = title + "_tag";
         mCurrentFragment = fragmentManager.findFragmentByTag(tag);
 
-        if (null == mCurrentFragment && item.hasProvider()) { //If this fragment was not instantiated yet, creates a new instance of it
+        if (mCurrentFragment == null && item.hasProvider()) { //If this fragment was not instantiated yet, creates a new instance of it
             mCurrentFragment = MediaContainerFragment.newInstance(item.getMediaProvider());
         }
 

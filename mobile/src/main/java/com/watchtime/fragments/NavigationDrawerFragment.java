@@ -21,6 +21,7 @@ import com.watchtime.adapters.NavigationAdapter;
 import com.watchtime.adapters.decorators.OneShotDividerDecorator;
 import com.watchtime.base.content.preferences.Prefs;
 import com.watchtime.base.utils.PrefUtils;
+import com.watchtime.fragments.drawer.NavDrawerItem;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -36,6 +37,25 @@ public class NavigationDrawerFragment extends Fragment implements NavigationAdap
          */
         void onNavigationDrawerItemSelected(NavDrawerItem item, String s);
     }
+    //Listeners
+    private NavDrawerItem.OnClickListener settingsClickListener = new NavDrawerItem.OnClickListener() {
+        @Override
+        public void onClick(View v, NavigationAdapter.ItemRowHolder rowHolder, int position) {
+            //SettingsActivity.startActivity(getActivity());
+            mDrawerLayout.closeDrawer(mNavigationDrawerContainer);
+        }
+    };
+
+    private NavigationAdapter.OnItemClickListener itemClickListener = new NavigationAdapter.OnItemClickListener() {
+        @Override
+        public void onItemClick(View v, NavigationAdapter.ItemRowHolder vh, NavDrawerItem item, int position) {
+            if (null != item.getOnClickListener()) {
+                item.onClick(v, vh, position);
+                return;
+            }
+            selectItem(mAdapter.getCorrectPosition(position));
+        }
+    };
 
     //Remembers the position of the selected item
     private static final String STATE_SELECTED_POSITION = "selected_navigation_drawer_position";

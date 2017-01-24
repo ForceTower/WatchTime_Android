@@ -45,6 +45,11 @@ public class NavDrawerItem {
         switchValue = isSwitch;
     }
 
+    public NavDrawerItem(String title, int icon, OnClickListener listener) {
+        this(title, icon);
+        onClickListener = listener;
+    }
+
     public NavDrawerItem(boolean isHeader) {
         this.isHeader = isHeader;
     }
