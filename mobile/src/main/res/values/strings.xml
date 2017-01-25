@@ -15,4 +15,5 @@
     <string name="terms">This is an high alpha version of the app. Bugs are expected</string>
     <string name="leave">Quit</string>
     <string name="accept">Accept</string>
+    <string name="your_profile">Profile</string>
 </resources>

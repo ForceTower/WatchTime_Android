@@ -1,6 +1,7 @@
 package com.watchtime.adapters;
 
 import android.content.Context;
+import android.content.res.Resources;
 import android.graphics.PorterDuff;
 import android.support.annotation.NonNull;
 import android.support.v4.content.ContextCompat;
@@ -14,6 +15,7 @@ import android.widget.Switch;
 import android.widget.TextView;
 
 import com.watchtime.R;
+import com.watchtime.base.WatchTimeApplication;
 import com.watchtime.fragments.drawer.NavDrawerItem;
 
 
@@ -66,7 +68,15 @@ public class NavigationAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
 
         //TODO: When user is connected, change to the user image
         holder.getProfileImageView().setVisibility(View.VISIBLE);
-        holder.getProfileImageView().setImageResource(R.drawable.app_logo);
+        holder.getProfileImageView().setImageResource(R.mipmap.ic_creator_picture_delete);
+
+        holder.getTitleTextView().setVisibility(View.VISIBLE);
+        holder.getTitleTextView().setText("ForceTower");
+        holder.getTitleTextView().setTextColor(normalColor);
+
+        holder.getSubtitleTextView().setVisibility(View.VISIBLE);
+        holder.getSubtitleTextView().setText("455382 Hours Watched");
+        holder.getSubtitleTextView().setTextColor(normalColor);
     }
 
     private void onBindItemViewHolder(ItemRowHolder holder, int position) {
