@@ -90,7 +90,7 @@ public class MainActivity extends WatchTimeBaseActivity implements NavigationDra
         if (null != savedInstanceState) return;
 
         //Gets the user preference for the start view and shows it
-        int providerId = PrefUtils.get(this, Prefs.DEFAULT_VIEW, 0);
+        int providerId = PrefUtils.get(this, Prefs.DEFAULT_VIEW, 1);
         mNavigationDrawerFragment.selectItem(providerId);
     }
 

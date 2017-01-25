@@ -5,5 +5,5 @@ package com.watchtime.base;
  */
 
 public class Constants {
-    public static String PREFS_FILE = "OQV_PrefsFile";
+    public static String PREFS_FILE = "WatchTime_PrefsFile";
 }

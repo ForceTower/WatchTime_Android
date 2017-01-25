@@ -65,17 +65,18 @@ public class NavigationAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
     private void onBindHeaderViewHolder(HeaderHolder holder, int position) {
         //TODO: When user is connected, change the to a user color
         holder.getBackgroundImageView().setBackgroundResource(R.color.primary_dark);
+        holder.getBackgroundImageView().setImageResource(R.drawable.background_test_image3);
 
         //TODO: When user is connected, change to the user image
         holder.getProfileImageView().setVisibility(View.VISIBLE);
-        holder.getProfileImageView().setImageResource(R.mipmap.ic_creator_picture_delete);
+        holder.getProfileImageView().setImageResource(R.drawable.user_image_test);
 
         holder.getTitleTextView().setVisibility(View.VISIBLE);
         holder.getTitleTextView().setText("ForceTower");
         holder.getTitleTextView().setTextColor(normalColor);
 
         holder.getSubtitleTextView().setVisibility(View.VISIBLE);
-        holder.getSubtitleTextView().setText("455382 Hours Watched");
+        holder.getSubtitleTextView().setText("2 years 4 months and 3 days watched");
         holder.getSubtitleTextView().setTextColor(normalColor);
     }
 
@@ -125,7 +126,7 @@ public class NavigationAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
         this.items = items;
         this.callback = callback;
         this.normalColor = ContextCompat.getColor(context, R.color.nav_drawer_deselected);
-        this.checkedColor = ContextCompat.getColor(context, R.color.primary);
+        this.checkedColor = ContextCompat.getColor(context, R.color.primary_green);
         this.checkedBackgroundRes = R.color.nav_drawer_selected_bg;
         this.normalBackgroundRes = R.drawable.selectable_nav_background;
     }

@@ -7,9 +7,16 @@
     <color name="selectable_focused">#22FFFFFF</color>
     <color name="selectable_pressed">#55FFFFFF</color>
 
-    <color name="primary">#FF3F51B5</color>
-    <color name="primary_dark">#FF303F9F</color>
-    <color name="accent">#FF5C6BC0</color>
+    <!--<color name="primary">#FF3F51B5</color>
+    <color name="primary_dark">#FF303F9F</color> -->
+    <color name="primary">#5ABA00</color>
+    <color name="primary_dark">#5ABA00</color>
+    <color name="primary_green">#5ABA00</color>
+    <color name="accent">#5ABA00</color>
+    <!--<color name="accent">#FF5C6BC0</color>-->
+    <color name="iron">#CCCCCC</color>
+    <color name="white">#FFFFFF</color>
+    <color name="red">#D40E00</color>
 
     <color name="trans_white">#99FFFFFF</color>
     <color name="div_white">#22FFFFFF</color>

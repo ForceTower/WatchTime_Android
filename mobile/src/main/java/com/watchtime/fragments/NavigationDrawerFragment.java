@@ -17,6 +17,7 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.watchtime.R;
+import com.watchtime.activities.LoginActivity;
 import com.watchtime.adapters.NavigationAdapter;
 import com.watchtime.adapters.decorators.OneShotDividerDecorator;
 import com.watchtime.base.content.preferences.Prefs;
@@ -46,10 +47,21 @@ public class NavigationDrawerFragment extends Fragment implements NavigationAdap
         }
     };
 
+    private NavDrawerItem.OnClickListener loginClickListener = new NavDrawerItem.OnClickListener() {
+        @Override
+        public void onClick(View v, NavigationAdapter.ItemRowHolder rowHolder, int position) {
+            LoginActivity.startActivity(getActivity());
+            mDrawerLayout.closeDrawer(mNavigationDrawerContainer);
+        }
+    };
+
+    //This aways happens, But we don't have a custom listener for the item, that means we are trying to select the item
+    //In other words, if we defined an action for this item ourselves, perform this action, else, do the default action
+    //In this case, loginClickListener and settingsClickListener
     private NavigationAdapter.OnItemClickListener itemClickListener = new NavigationAdapter.OnItemClickListener() {
         @Override
         public void onItemClick(View v, NavigationAdapter.ItemRowHolder vh, NavDrawerItem item, int position) {
-            if (null != item.getOnClickListener()) {
+            if (item.getOnClickListener() != null) {
                 item.onClick(v, vh, position);
                 return;
             }
@@ -135,8 +147,11 @@ public class NavigationDrawerFragment extends Fragment implements NavigationAdap
         //Sets a click listener to the Navigation Adapter.
         mAdapter.setOnItemClickListener(itemClickListener);
 
+
         //Sets the Decorator on position
-        mRecyclerView.addItemDecoration(new OneShotDividerDecorator(getActivity(), 4));
+        mRecyclerView.addItemDecoration(new OneShotDividerDecorator(getActivity(), 1));
+        mRecyclerView.addItemDecoration(new OneShotDividerDecorator(getActivity(), 3));
+        mRecyclerView.addItemDecoration(new OneShotDividerDecorator(getActivity(), 7));
         mRecyclerView.setHasFixedSize(true);
         mRecyclerView.setAdapter(mAdapter);
         mRecyclerView.requestFocus();
@@ -146,13 +161,16 @@ public class NavigationDrawerFragment extends Fragment implements NavigationAdap
         List<NavDrawerItem> navItems = new ArrayList<>();
 
         navItems.add(new NavDrawerItem(true)); //Header
+        navItems.add(new NavDrawerItem(getString(R.string.your_profile), R.drawable.my_profile_icons/*, new FriendsWatchsProvider()*/));
         navItems.add(new NavDrawerItem(getString(R.string.title_movies), R.drawable.ic_nav_movies/*, new MoviesProvider()*/));
         navItems.add(new NavDrawerItem(getString(R.string.title_shows), R.drawable.ic_nav_tv/*, new ShowsProvider()*/));
-        navItems.add(new NavDrawerItem(getString(R.string.title_my_watch_list), R.drawable.ic_bookmarks/*, new MyListsProvider()*/));
+        navItems.add(new NavDrawerItem(getString(R.string.title_my_watch_list), R.drawable.ic_your_list/*, new MyListsProvider()*/));
         navItems.add(new NavDrawerItem(getString(R.string.title_friends_activities), R.drawable.ic_friends_watch/*, new FriendsWatchsProvider()*/));
+        navItems.add(new NavDrawerItem(getString(R.string.title_discover_movies), R.drawable.ic_discover/*, new FriendsWatchsProvider()*/));
+        navItems.add(new NavDrawerItem(getString(R.string.your_activity), R.drawable.ic_your_activity/*, new FriendsWatchsProvider()*/));
 
-        navItems.add(new NavDrawerItem(getString(R.string.your_profile), R.drawable.my_profile_icons/*, new FriendsWatchsProvider()*/));
         navItems.add(new NavDrawerItem(getString(R.string.preferences), R.drawable.ic_nav_settings, settingsClickListener));
+        navItems.add(new NavDrawerItem(getString(R.string.title_login), R.drawable.ic_login_image, loginClickListener));
 
         return navItems;
     }

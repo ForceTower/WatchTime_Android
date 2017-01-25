@@ -5,6 +5,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
 import android.view.View;
+import android.widget.Button;
 
 import com.watchtime.R;
 import com.watchtime.activities.base.WatchTimeBaseActivity;
@@ -18,12 +19,18 @@ public class TermsActivity extends WatchTimeBaseActivity {
 
     @Bind(R.id.toolbar)
     Toolbar toolbar;
+    @Bind(R.id.accept_terms)
+    Button acceptTerms;
+    @Bind(R.id.reject_terms)
+    Button rejectTerms;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState, R.layout.activity_terms);
         setSupportActionBar(toolbar);
 
+        acceptTerms.setBackgroundResource(R.color.primary_green);
+        rejectTerms.setBackgroundResource(R.color.red);
         ToolbarUtils.updateToolbarHeight(this, toolbar);
     }
 
