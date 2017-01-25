@@ -37,6 +37,12 @@
         <item name="android:paddingRight">16dip</item>
     </style>
 
+    <!-- Toolbar -->
+    <style name="Theme.WatchTime.Toolbar.SearchView" parent="ThemeOverlay.AppCompat.Dark.ActionBar">
+        <item name="colorControlNormal">@android:color/white</item>
+        <item name="colorAccent">@android:color/white</item>
+    </style>
+
     <!-- Progress Bar -->
     <style name="ProgressBar.WatchTime" parent="android:Widget.ProgressBar.Horizontal">
         <item name="android:progressDrawable">@drawable/progress_horizontal_holo_light</item>

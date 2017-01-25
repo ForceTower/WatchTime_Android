@@ -1,6 +1,7 @@
 package com.watchtime.activities;
 
 import android.Manifest;
+import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -25,7 +26,7 @@ import com.watchtime.fragments.MediaContainerFragment;
 import com.watchtime.fragments.NavigationDrawerFragment;
 import com.watchtime.fragments.drawer.NavDrawerItem;
 import com.watchtime.utils.ToolbarUtils;
-import com.watchtime.widgets.ScrimInsetsFrameLayout;
+import com.watchtime.widget.ScrimInsetsFrameLayout;
 
 import butterknife.Bind;
 
@@ -64,6 +65,10 @@ public class MainActivity extends WatchTimeBaseActivity implements NavigationDra
         //Request Permission to Write And Read From External Memory
         if (ContextCompat.checkSelfPermission(this, Manifest.permission.WRITE_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
             ActivityCompat.requestPermissions(this, new String[]{ Manifest.permission.WRITE_EXTERNAL_STORAGE }, PERMISSIONS_REQUEST);
+        }
+
+        if (!PrefUtils.contains(this, TermsActivity.TERMS_ACCEPTED)) {
+            startActivity(new Intent(this, TermsActivity.class));
         }
 
         //Supports Action Bar
@@ -152,6 +157,9 @@ public class MainActivity extends WatchTimeBaseActivity implements NavigationDra
             mTabs.getTabAt(0).select();
 
         //Exchange Fragments
+        System.out.println("mCurrentFragment " + mCurrentFragment);
+        if (mCurrentFragment == null)
+            return;
         fragmentManager.beginTransaction().replace(R.id.container, mCurrentFragment, tag).commit();
 
         //If this new Fragment is a media container, update the tabs
@@ -206,6 +214,7 @@ public class MainActivity extends WatchTimeBaseActivity implements NavigationDra
         switch (requestCode) {
             case PERMISSIONS_REQUEST: {
                 if (grantResults.length < 1 || grantResults[0] == PackageManager.PERMISSION_DENIED) {
+                    System.out.println("No permission!");
                     finish(); //End app it user doesn't give the permissions
                 }
             }

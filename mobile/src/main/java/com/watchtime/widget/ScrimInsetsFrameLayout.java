@@ -1,4 +1,4 @@
-package com.watchtime.widgets;
+package com.watchtime.widget;
 
 import android.content.Context;
 import android.content.res.TypedArray;

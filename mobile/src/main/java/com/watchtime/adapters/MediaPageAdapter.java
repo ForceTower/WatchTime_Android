@@ -10,6 +10,8 @@ import com.watchtime.R;
 import com.watchtime.base.WatchTimeApplication;
 import com.watchtime.base.providers.media.MediaProvider;
 import com.watchtime.base.utils.LocaleUtils;
+import com.watchtime.fragments.MediaGenreSelectionFragment;
+import com.watchtime.fragments.drawer.MediaListFragment;
 
 import java.util.HashMap;
 import java.util.List;
@@ -17,9 +19,10 @@ import java.util.Map;
 
 /**
  * Created by João Paulo on 24/01/2017.
+ * For a Selected type of media (eg Movies or Shows), creates a layout with all the media, separated some categories
  */
 
-public class MediaPagerAdapter extends FragmentPagerAdapter {
+public class MediaPageAdapter extends FragmentPagerAdapter {
     private FragmentManager fragmentManager;
     private Map<Integer, String> fragmentsTags = new HashMap<>();
     private final List<MediaProvider.NavInfo> tabs;
@@ -28,7 +31,7 @@ public class MediaPagerAdapter extends FragmentPagerAdapter {
     private int hasGenreTab = 0;
     private Fragment genreTabFragment;
 
-    public MediaPagerAdapter(MediaProvider provider, FragmentManager manager, List<MediaProvider.NavInfo> tabs) {
+    public MediaPageAdapter(MediaProvider provider, FragmentManager manager, List<MediaProvider.NavInfo> tabs) {
         super(manager);
         fragmentManager = manager;
         this.tabs = tabs;
@@ -94,8 +97,8 @@ public class MediaPagerAdapter extends FragmentPagerAdapter {
     private MediaGenreSelectionFragment.Listener mediaGenreSelectionFragment = new MediaGenreSelectionFragment.Listener() {
         @Override
         public void onGenreSelected(String genre) {
-            mGenre = genre;
-            mProvider.cancel();
+            MediaPageAdapter.this.genre = genre;
+            provider.cancel();
             for (int i = 0; i < getCount(); i++) {
                 MediaListFragment mediaListFragment = getMediaListFragment(i);
                 if (mediaListFragment != null)

@@ -10,7 +10,7 @@ import android.view.ViewGroup;
 
 import com.watchtime.R;
 import com.watchtime.activities.MainActivity;
-import com.watchtime.adapters.MediaPagerAdapter;
+import com.watchtime.adapters.MediaPageAdapter;
 import com.watchtime.base.providers.media.MediaProvider;
 
 import butterknife.Bind;
@@ -23,7 +23,7 @@ import butterknife.ButterKnife;
 public class MediaContainerFragment extends Fragment{
     public static final String EXTRA_PROVIDER = "provider";
 
-    private MediaPagerAdapter pagerAdapter;
+    private MediaPageAdapter pagerAdapter;
     private MediaProvider provider;
     private Integer selection = 0;
 

@@ -30,4 +30,5 @@
 
     <!-- Detail view colors -->
     <color name="detail_header_title_bg">#383D42</color>
+    <color name="transparent">#00000000</color>
 </resources>

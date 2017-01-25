@@ -27,4 +27,8 @@ public class PrefUtils {
     public static ObscuredSharedPreferences getPrefs(Context context) {
         return new ObscuredSharedPreferences(context, context.getSharedPreferences(Constants.PREFS_FILE, Context.MODE_PRIVATE));
     }
+
+    public static Boolean contains(Context context, String key) {
+        return getPrefs(context).contains(key);
+    }
 }
