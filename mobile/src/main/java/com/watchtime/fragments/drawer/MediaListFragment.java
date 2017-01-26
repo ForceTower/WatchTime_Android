@@ -12,7 +12,6 @@ import android.view.ViewGroup;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
-import com.squareup.okhttp.Call;
 import com.watchtime.R;
 import com.watchtime.base.providers.media.MediaProvider;
 import com.watchtime.base.providers.media.models.Media;
@@ -21,6 +20,7 @@ import java.util.ArrayList;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
+import okhttp3.Call;
 
 /**
  * Created by João Paulo on 24/01/2017.

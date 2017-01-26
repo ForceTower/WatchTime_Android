@@ -11,8 +11,8 @@
     <string name="genres">Genres</string>
     <string name="search_hint">Movies, Series, People</string>
     <string name="no_data_found">No data found</string>
-    <string name="loading_data">Loading data...</string>
-    <string name="terms">This is an high alpha version of the app. Bugs are expected\nLogin and Register views does not call the server side of the app yet.\nGood testing</string>
+    <string name="loading_data">Loading data…</string>
+    <string name="terms">This is an high alpha version of the app. Bugs are expected\nRegister view does not call the server side of the app yet.\nGood testing</string>
     <string name="leave">Quit</string>
     <string name="accept">Accept</string>
     <string name="your_profile">Profile</string>
@@ -28,13 +28,21 @@
     <string name="invalid_email">Enter a valid email</string>
     <string name="invalid_password">Password must have 4 to 16 characters</string>
     <string name="logged_in">Connected</string>
-    <string name="connecting">Authenticating...</string>
+    <string name="connecting">Authenticating…</string>
     <string name="login_btn">Login</string>
     <string name="btn_create_account">Create Account</string>
     <string name="login_account_label">Already have an Account? Login</string>
     <string name="repeat_password">Repeat Password</string>
     <string name="invalid_name">Name must be alphanumeric and have at least 3 characters</string>
     <string name="confirm_password_failed">Password confirmation does not match</string>
-    <string name="creating_account">Creating account...</string>
+    <string name="creating_account">Creating account…</string>
     <string name="account_created">Account created</string>
+    <string name="ok">OK</string>
+    <string name="error_on_response">Error on server response</string>
+    <string name="error_getting_response">Error on getting server response</string>
+    <string name="com_facebook_login_canceled">Facebook login canceled</string>
+
+
+
+    <string name="facebook_app_id">1233374160031410</string>
 </resources>

@@ -4,13 +4,14 @@ import android.os.Parcelable;
 import android.support.annotation.DrawableRes;
 import android.support.annotation.Nullable;
 
-import com.squareup.okhttp.Call;
 import com.watchtime.base.providers.BaseProvider;
 import com.watchtime.base.providers.media.models.Genre;
 import com.watchtime.base.providers.media.models.Media;
 
 import java.util.ArrayList;
 import java.util.List;
+
+import okhttp3.Call;
 
 /**
  * Created by João Paulo on 24/01/2017.

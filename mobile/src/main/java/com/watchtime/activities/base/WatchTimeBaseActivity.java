@@ -9,6 +9,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.view.Menu;
 import android.view.MenuItem;
 
+import com.facebook.FacebookSdk;
 import com.watchtime.base.WatchTimeApplication;
 import com.watchtime.base.content.preferences.Prefs;
 import com.watchtime.base.utils.LocaleUtils;
@@ -32,6 +33,8 @@ public abstract class WatchTimeBaseActivity extends AppCompatActivity {
         //Location Related
         String language = PrefUtils.get(this, Prefs.LOCALE, WatchTimeApplication.getSystemLanguage());
         LocaleUtils.setCurrent(this, LocaleUtils.toLocale(language));
+
+        FacebookSdk.sdkInitialize(getApplicationContext());
 
         //View Creation
         super.onCreate(savedInstanceState);

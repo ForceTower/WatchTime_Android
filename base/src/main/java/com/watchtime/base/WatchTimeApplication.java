@@ -5,17 +5,23 @@ import android.content.Context;
 import android.content.res.Configuration;
 import android.support.multidex.MultiDex;
 
+import com.facebook.AccessToken;
+import com.facebook.FacebookSdk;
 import com.sjl.foreground.Foreground;
 import com.squareup.leakcanary.LeakCanary;
-import com.squareup.okhttp.OkHttpClient;
+//import com.squareup.okhttp.OkHttpClient;
 import com.squareup.picasso.OkHttpDownloader;
 import com.squareup.picasso.Picasso;
+import com.watchtime.base.backend.token.TokenAPI;
 import com.watchtime.base.content.preferences.Prefs;
 import com.watchtime.base.content.preferences.StorageUtils;
 import com.watchtime.base.utils.LocaleUtils;
 import com.watchtime.base.utils.PrefUtils;
 
 import java.io.File;
+
+import okhttp3.Cache;
+import okhttp3.OkHttpClient;
 
 /**
  * Created by João Paulo on 23/01/2017.
@@ -25,6 +31,8 @@ public class WatchTimeApplication extends Application {
     private static String systemLanguage;
     private static OkHttpClient httpClient;
     private static Application app; //Find a better option
+    public static TokenAPI token;
+    public static AccessToken facebookToken;
 
     @Override
     protected void attachBaseContext(Context context) {
@@ -42,8 +50,8 @@ public class WatchTimeApplication extends Application {
         Foreground.init(this);
 
         Picasso.Builder builder = new Picasso.Builder(getAppContext());
-        OkHttpDownloader downloader = new OkHttpDownloader(getHttpClient());
-        builder.downloader(downloader);
+        //OkHttpDownloader downloader = new OkHttpDownloader(getHttpClient());
+        //builder.downloader(downloader);
         Picasso.setSingletonInstance(builder.build());
     }
 
@@ -59,15 +67,15 @@ public class WatchTimeApplication extends Application {
             File cacheDir = new File(PrefUtils.get(WatchTimeApplication.getAppContext(), Prefs.STORAGE_LOCATION, StorageUtils.getIdealCacheDirectory(WatchTimeApplication.getAppContext()).toString()));
             cacheDir.mkdirs();
 
-            httpClient = new OkHttpClient();
-
-            com.squareup.okhttp.Cache cache = null;
+            Cache cache = null;
             try {
-                cache = new com.squareup.okhttp.Cache(cacheDir, cacheSize);
+                cache = new Cache(cacheDir, cacheSize);
             } catch (Exception ex) {
                 ex.printStackTrace();
             }
-            httpClient.setCache(cache);
+
+            httpClient = new OkHttpClient.Builder().cache(cache).build();
+            //httpClient.setCache(cache);
         }
 
         return httpClient;

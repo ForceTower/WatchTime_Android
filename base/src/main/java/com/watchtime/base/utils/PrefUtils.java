@@ -3,6 +3,8 @@ package com.watchtime.base.utils;
 import android.content.Context;
 
 import com.watchtime.base.Constants;
+import com.watchtime.base.WatchTimeApplication;
+import com.watchtime.base.backend.token.TokenAPI;
 import com.watchtime.base.content.ObscuredSharedPreferences;
 
 /**
@@ -12,6 +14,14 @@ import com.watchtime.base.content.ObscuredSharedPreferences;
 public class PrefUtils {
     public static void save(Context context, String key, boolean value) {
         getPrefs(context).edit().putBoolean(key, value).apply();
+    }
+
+    public static void save(Context context, String key, String value) {
+        getPrefs(context).edit().putString(key, value).apply();
+    }
+
+    public static void save(Context context, String key, int value) {
+        getPrefs(context).edit().putInt(key, value).apply();
     }
 
     public static String get(Context context, String key, String defaultValue) {

@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <style name="Theme.WatchTime" parent="Theme.Base">
+        <item name="android:seekBarStyle">@style/SeekBar.WatchTime</item>
+        <item name="android:progressBarStyleHorizontal">@style/ProgressBar.WatchTime</item>
+        <item name="android:ratingBarStyle">@style/RatingBar.WatchTime</item>
+    </style>
+
+    <style name="Theme.WatchTime.TransparentStatusBar" parent="Theme.WatchTime">
+        <item name="android:windowTranslucentStatus">true</item>
+        <item name="android:windowTranslucentNavigation">false</item>
+    </style>
+</resources>

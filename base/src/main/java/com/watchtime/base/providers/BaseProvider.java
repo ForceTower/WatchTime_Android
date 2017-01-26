@@ -2,9 +2,7 @@ package com.watchtime.base.providers;
 
 import android.os.AsyncTask;
 
-import com.squareup.okhttp.Call;
-import com.squareup.okhttp.OkHttpClient;
-import com.squareup.okhttp.Request;
+
 import com.watchtime.base.WatchTimeApplication;
 import com.watchtime.base.providers.media.MediaProvider;
 
@@ -13,6 +11,11 @@ import java.net.URLEncoder;
 import java.util.List;
 import java.util.concurrent.ExecutionException;
 
+import okhttp3.Call;
+import okhttp3.Callback;
+import okhttp3.OkHttpClient;
+import okhttp3.Request;
+
 public abstract class BaseProvider {
     protected Call currentCall;
 
@@ -20,7 +23,7 @@ public abstract class BaseProvider {
         return WatchTimeApplication.getHttpClient();
     }
 
-    protected Call enqueue(Request request, com.squareup.okhttp.Callback requestCallback) {
+    protected Call enqueue(Request request, Callback requestCallback) {
         currentCall = getClient().newCall(request);
         if (requestCallback != null) currentCall.enqueue(requestCallback);
         return currentCall;
@@ -32,7 +35,7 @@ public abstract class BaseProvider {
             new AsyncTask<Void, Void, Void>() {
                 @Override
                 protected Void doInBackground(Void... params) {
-                    getClient().cancel(MediaProvider.MEDIA_CALL);
+                    //getClient().cancel(MediaProvider.MEDIA_CALL);
                     return null;
                 }
             }.execute().get();

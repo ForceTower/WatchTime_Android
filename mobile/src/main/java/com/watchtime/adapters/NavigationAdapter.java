@@ -3,9 +3,11 @@ package com.watchtime.adapters;
 import android.content.Context;
 import android.content.res.Resources;
 import android.graphics.PorterDuff;
+import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -14,16 +16,27 @@ import android.widget.ProgressBar;
 import android.widget.Switch;
 import android.widget.TextView;
 
+import com.facebook.AccessToken;
+import com.facebook.GraphRequest;
+import com.facebook.GraphResponse;
+import com.facebook.HttpMethod;
+import com.squareup.picasso.Picasso;
 import com.watchtime.R;
 import com.watchtime.base.WatchTimeApplication;
+import com.watchtime.base.utils.PrefUtils;
 import com.watchtime.fragments.drawer.NavDrawerItem;
 
 
+import org.json.JSONException;
+
+import java.io.IOException;
 import java.util.List;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
 import de.hdodenhof.circleimageview.CircleImageView;
+
+import static com.facebook.FacebookSdk.getApplicationContext;
 
 /**
  * Created by João Paulo on 24/01/2017.
@@ -69,11 +82,41 @@ public class NavigationAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
 
         //TODO: When user is connected, change to the user image
         holder.getProfileImageView().setVisibility(View.VISIBLE);
-        holder.getProfileImageView().setImageResource(R.drawable.user_image_test);
+        holder.getProfileImageView().setImageResource(R.drawable.app_logo);
 
         holder.getTitleTextView().setVisibility(View.VISIBLE);
-        holder.getTitleTextView().setText("ForceTower");
+        holder.getTitleTextView().setText("Guest");
         holder.getTitleTextView().setTextColor(normalColor);
+        final HeaderHolder finalOne = holder;
+
+        if (AccessToken.getCurrentAccessToken() != null) {
+            Log.d("Facebook_LOAD", "Happened");
+            final CircleImageView profileImage = holder.getProfileImageView();
+            final ImageView coverImage = holder.getBackgroundImageView();
+            Bundle params = new Bundle();
+            params.putBoolean("redirect", false);
+            params.putString("type", "large");
+            new GraphRequest(
+                    AccessToken.getCurrentAccessToken(),
+                    "me/?fields=name,picture,cover",
+                    params,
+                    HttpMethod.GET,
+                    new GraphRequest.Callback() {
+                        public void onCompleted(GraphResponse response) {
+                            try {
+                                String name = response.getJSONObject().getString("name");
+                                finalOne.getTitleTextView().setText(name);
+                                String picUrlString = (String) response.getJSONObject().getJSONObject("picture").getJSONObject("data").get("url");
+                                String coverUrlString = (String) response.getJSONObject().getJSONObject("cover").get("source");
+                                Picasso.with(getApplicationContext()).load(picUrlString).into(profileImage);
+                                Picasso.with(getApplicationContext()).load(coverUrlString).into(coverImage);
+                            } catch (JSONException e) {
+                                e.printStackTrace();
+                            }
+                        }
+                    }
+            ).executeAsync();
+        }
 
         holder.getSubtitleTextView().setVisibility(View.VISIBLE);
         holder.getSubtitleTextView().setText("2 years 4 months and 3 days watched");

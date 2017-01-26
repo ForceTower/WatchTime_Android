@@ -31,13 +31,22 @@ import java.util.List;
  * Created by João Paulo on 23/01/2017.
  */
 
-public class NavigationDrawerFragment extends Fragment implements NavigationAdapter.Callback{
+public class NavigationDrawerFragment extends Fragment implements NavigationAdapter.Callback, LoginActivity.OnLoginListener{
     public interface Callbacks {
         /**
          * Called when an item in the navigation drawer is selected.
          */
         void onNavigationDrawerItemSelected(NavDrawerItem item, String s);
     }
+
+    public void onLogin() {
+        mAdapter.notifyDataSetChanged();
+    }
+
+    public void onLogout() {
+        mAdapter.notifyDataSetChanged();
+    }
+
     //Listeners
     private NavDrawerItem.OnClickListener settingsClickListener = new NavDrawerItem.OnClickListener() {
         @Override
@@ -112,6 +121,7 @@ public class NavigationDrawerFragment extends Fragment implements NavigationAdap
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        LoginActivity.loginListener = this;
 
         //Checks if the user knows how to use the drawer
         mUserLearnedDrawer = PrefUtils.get(getActivity(), Prefs.DRAWER_LEARNED, false);
