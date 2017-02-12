@@ -56,6 +56,7 @@ public class NavigationDrawerFragment extends Fragment implements NavigationAdap
 
     public void onLogout() {
         mAdapter.setItems(initItems());
+        mDrawerLayout.closeDrawer(mNavigationDrawerContainer);
     }
 
     //Listeners

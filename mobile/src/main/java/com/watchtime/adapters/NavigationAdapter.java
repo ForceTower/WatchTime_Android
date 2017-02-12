@@ -76,21 +76,21 @@ public class NavigationAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
     }
 
     private void onBindHeaderViewHolder(HeaderHolder holder, int position) {
-        //TODO: When user is connected, change the to a user color
         holder.getBackgroundImageView().setBackgroundResource(R.color.primary_dark);
-
-        //TODO: When user is connected, change to the user image
         holder.getProfileImageView().setVisibility(View.VISIBLE);
 
-
         holder.getTitleTextView().setVisibility(View.VISIBLE);
-        holder.getTitleTextView().setText("Guest");
+        holder.getTitleTextView().setText(R.string.guest_name);
         holder.getTitleTextView().setTextColor(normalColor);
         final HeaderHolder finalOne = holder;
 
         if (AccessToken.getCurrentAccessToken() != null) {
+            holder.getSubtitleTextView().setVisibility(View.VISIBLE);
+            holder.getSubtitleTextView().setText("2 years 4 months and 3 days watched");
+
             final CircleImageView profileImage = holder.getProfileImageView();
             final ImageView coverImage = holder.getBackgroundImageView();
+
             Bundle params = new Bundle();
             params.putBoolean("redirect", false);
             params.putString("type", "large");
@@ -113,14 +113,15 @@ public class NavigationAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
                             }
                         }
                     }
+
             ).executeAsync();
         } else {
             holder.getProfileImageView().setImageResource(R.mipmap.app_logo);
             holder.getBackgroundImageView().setImageResource(R.drawable.background_test_image3);
+            holder.getSubtitleTextView().setVisibility(View.INVISIBLE);
         }
 
-        holder.getSubtitleTextView().setVisibility(View.VISIBLE);
-        holder.getSubtitleTextView().setText("2 years 4 months and 3 days watched");
+
         holder.getSubtitleTextView().setTextColor(normalColor);
     }
 

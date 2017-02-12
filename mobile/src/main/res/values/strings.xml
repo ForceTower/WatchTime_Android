@@ -46,4 +46,5 @@
 
     <string name="facebook_app_id">1233374160031410</string>
     <string name="logout">Logout</string>
+    <string name="guest_name">Guest</string>
 </resources>
