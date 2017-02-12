@@ -5,7 +5,7 @@
     android:layout_height="fill_parent"
     xmlns:tools="http://schemas.android.com/tools"
     android:fitsSystemWindows="true"
-    tools:context="com.watchtime.activities.LoginActivity">
+    tools:context="com.watchtime.activities.LoginActivityNoDesign">
 
     <LinearLayout
         android:orientation="vertical"
@@ -66,7 +66,8 @@
             android:layout_gravity="center_horizontal"
             android:layout_marginBottom="24dp" />
 
-        <TextView android:id="@+id/link_signup"
+        <TextView
+            android:id="@+id/link_signup"
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
             android:layout_marginBottom="24dp"

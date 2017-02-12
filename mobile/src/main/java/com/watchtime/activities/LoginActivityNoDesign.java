@@ -1,13 +1,11 @@
 package com.watchtime.activities;
 
-import android.accounts.AccountManager;
 import android.app.Activity;
 import android.app.ProgressDialog;
 import android.content.Intent;
 import android.os.Handler;
 import android.os.Looper;
 import android.os.Message;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
 import android.util.Patterns;
@@ -45,7 +43,7 @@ import okhttp3.Request;
 import okhttp3.RequestBody;
 import okhttp3.Response;
 
-public class LoginActivity extends WatchTimeBaseActivity {
+public class LoginActivityNoDesign extends WatchTimeBaseActivity {
     private static final int SIGNUP = 0;
 
     public interface OnLoginListener {
@@ -84,14 +82,14 @@ public class LoginActivity extends WatchTimeBaseActivity {
 
 
     public static Intent startActivity(Activity activity) {
-        Intent intent = new Intent(activity, LoginActivity.class);
+        Intent intent = new Intent(activity, LoginActivityNoDesign.class);
         activity.startActivity(intent);
         return intent;
     }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState, R.layout.activity_login);
+        super.onCreate(savedInstanceState, R.layout.activity_login_no_design);
         loginImage.setBackgroundResource(R.drawable.app_logo_writen);
 
         facebookLogin.setReadPermissions("email");
@@ -141,7 +139,7 @@ public class LoginActivity extends WatchTimeBaseActivity {
         final String email = emailText.getText().toString();
         final String password = passwordText.getText().toString();
 
-        progressDialog = new ProgressDialog(LoginActivity.this, R.style.Theme_WatchTime_Dark_Dialog);
+        progressDialog = new ProgressDialog(LoginActivityNoDesign.this, R.style.Theme_WatchTime_Dark_Dialog);
         progressDialog.setIndeterminate(true);
         progressDialog.setMessage(getString(R.string.connecting));
         progressDialog.show();
@@ -189,14 +187,14 @@ public class LoginActivity extends WatchTimeBaseActivity {
                     }
                 } catch (JSONException e) {
                     onLoginFailed(getString(R.string.error_on_response));
-                    Log.e("LoginActivity:Response", e.getMessage());
+                    Log.e("LoginActivityNoDesign:Response", e.getMessage());
                 }
             }
         });
     }
 
     public void signUp() {
-        Intent intent = new Intent(LoginActivity.this, SignUpActivity.class);
+        Intent intent = new Intent(LoginActivityNoDesign.this, SignUpActivity.class);
         startActivityForResult(intent, SIGNUP);
     }
 
