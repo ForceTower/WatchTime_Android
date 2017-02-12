@@ -67,10 +67,6 @@ public class MainActivity extends WatchTimeBaseActivity implements NavigationDra
             ActivityCompat.requestPermissions(this, new String[]{ Manifest.permission.WRITE_EXTERNAL_STORAGE }, PERMISSIONS_REQUEST);
         }
 
-        if (!PrefUtils.contains(this, TermsActivity.TERMS_ACCEPTED)) {
-            startActivity(new Intent(this, TermsActivity.class));
-        }
-
         //Supports Action Bar
         setSupportActionBar(mToolbar);
         //Updates the Toolbar Height
@@ -148,8 +144,22 @@ public class MainActivity extends WatchTimeBaseActivity implements NavigationDra
         String tag = title + "_tag";
         mCurrentFragment = fragmentManager.findFragmentByTag(tag);
 
-        if (mCurrentFragment == null && item.hasProvider()) { //If this fragment was not instantiated yet, creates a new instance of it
-            mCurrentFragment = MediaContainerFragment.newInstance(item.getMediaProvider());
+        if (mCurrentFragment == null) { //If this fragment was not instantiated yet, creates a new instance of it
+            //TODO: Switch case to create a different Fragment for each segment
+            if (item.hasProvider())
+                mCurrentFragment = MediaContainerFragment.newInstance(item.getMediaProvider());
+            /*else {
+
+                if (item.getTag() == ItemTags.PROFILE)
+                    mCurrentFragment = new ProfileFragment();
+                else if (item.getTag() == ItemTags.USER_LIST)
+                    mCurrentFragment = new UserListFragment();
+                else if (item.getTag() == ItemTags.USER_ACTIVITY)
+                    mCurrentFragment = new UserActivityFragment();
+                else
+                    mCurrentFragment = new UnknownSelectionFragment();
+
+            }*/
         }
 
         //Selects the first tab on the fragment

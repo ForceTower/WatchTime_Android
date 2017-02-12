@@ -11,10 +11,6 @@ import android.widget.FrameLayout;
 
 import com.watchtime.R;
 
-/**
- * Created by João Paulo on 23/01/2017.
- */
-
 public class ScrimInsetsFrameLayout extends FrameLayout {
     private Drawable mInsetForeground;
 

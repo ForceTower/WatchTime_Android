@@ -147,12 +147,6 @@ public class LoginActivity extends WatchTimeBaseActivity {
         progressDialog.show();
 
         performLoginCall(email, password);
-        /*new Handler().postDelayed(new Runnable() {
-            @Override
-            public void run() {
-                //performLoginCall(email, password);
-            }
-        }, 500);*/
     }
 
     public void performLoginCall(String email, String password) {

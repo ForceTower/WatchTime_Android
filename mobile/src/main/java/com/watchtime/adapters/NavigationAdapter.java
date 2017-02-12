@@ -78,11 +78,10 @@ public class NavigationAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
     private void onBindHeaderViewHolder(HeaderHolder holder, int position) {
         //TODO: When user is connected, change the to a user color
         holder.getBackgroundImageView().setBackgroundResource(R.color.primary_dark);
-        holder.getBackgroundImageView().setImageResource(R.drawable.background_test_image3);
 
         //TODO: When user is connected, change to the user image
         holder.getProfileImageView().setVisibility(View.VISIBLE);
-        holder.getProfileImageView().setImageResource(R.drawable.app_logo);
+
 
         holder.getTitleTextView().setVisibility(View.VISIBLE);
         holder.getTitleTextView().setText("Guest");
@@ -90,7 +89,6 @@ public class NavigationAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
         final HeaderHolder finalOne = holder;
 
         if (AccessToken.getCurrentAccessToken() != null) {
-            Log.d("Facebook_LOAD", "Happened");
             final CircleImageView profileImage = holder.getProfileImageView();
             final ImageView coverImage = holder.getBackgroundImageView();
             Bundle params = new Bundle();
@@ -116,6 +114,9 @@ public class NavigationAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
                         }
                     }
             ).executeAsync();
+        } else {
+            holder.getProfileImageView().setImageResource(R.mipmap.app_logo);
+            holder.getBackgroundImageView().setImageResource(R.drawable.background_test_image3);
         }
 
         holder.getSubtitleTextView().setVisibility(View.VISIBLE);
