@@ -1,6 +1,7 @@
 package com.watchtime.fragments;
 
 import android.app.Activity;
+import android.content.Intent;
 import android.content.res.Configuration;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -19,11 +20,12 @@ import android.view.ViewGroup;
 import com.facebook.AccessToken;
 import com.facebook.login.LoginManager;
 import com.watchtime.R;
-import com.watchtime.activities.LoginActivityNoDesign;
+import com.watchtime.activities.AccessAccountBaseActivity;
 import com.watchtime.adapters.NavigationAdapter;
 import com.watchtime.adapters.decorators.OneShotDividerDecorator;
 import com.watchtime.base.content.preferences.Prefs;
 import com.watchtime.base.utils.PrefUtils;
+import com.watchtime.fragments.account.LoginFragment;
 import com.watchtime.fragments.drawer.NavDrawerItem;
 
 import java.util.ArrayList;
@@ -34,12 +36,9 @@ import java.util.List;
  * Drawer Fragment... Its the Drawer on the side
  */
 
-public class NavigationDrawerFragment extends Fragment implements NavigationAdapter.Callback, LoginActivityNoDesign.OnLoginListener {
+public class NavigationDrawerFragment extends Fragment implements NavigationAdapter.Callback, LoginFragment.OnLoginListener {
 
     public interface Callbacks {
-        /**
-         * Called when an item in the navigation drawer is selected.
-         */
         void onNavigationDrawerItemSelected(NavDrawerItem item, String s);
     }
 
@@ -65,7 +64,9 @@ public class NavigationDrawerFragment extends Fragment implements NavigationAdap
         @Override
         public void onClick(View v, NavigationAdapter.ItemRowHolder rowHolder, int position) {
             mDrawerLayout.closeDrawer(mNavigationDrawerContainer);
-            LoginActivityNoDesign.startActivity(getActivity());
+            Intent intent = new Intent(getActivity(), AccessAccountBaseActivity.class);
+            startActivity(intent);
+            //LoginActivityNoDesign.startActivity(getActivity());
         }
     };
 
@@ -134,7 +135,7 @@ public class NavigationDrawerFragment extends Fragment implements NavigationAdap
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        LoginActivityNoDesign.loginListener = this;
+        LoginFragment.loginListener = this;
 
         //Checks if the user knows how to use the drawer
         mUserLearnedDrawer = PrefUtils.get(getActivity(), Prefs.DRAWER_LEARNED, false);
