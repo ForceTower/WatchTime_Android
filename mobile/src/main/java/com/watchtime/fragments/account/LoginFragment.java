@@ -1,17 +1,19 @@
-package com.watchtime.activities;
+package com.watchtime.fragments.account;
 
-import android.accounts.AccountManager;
-import android.app.Activity;
 import android.app.ProgressDialog;
 import android.content.Intent;
+import android.os.Build;
+import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
 import android.os.Message;
-import android.support.v7.app.AppCompatActivity;
-import android.os.Bundle;
+import android.support.annotation.Nullable;
+import android.support.v4.app.Fragment;
 import android.util.Log;
 import android.util.Patterns;
+import android.view.LayoutInflater;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
@@ -22,10 +24,10 @@ import com.facebook.AccessToken;
 import com.facebook.CallbackManager;
 import com.facebook.FacebookCallback;
 import com.facebook.FacebookException;
+import com.facebook.login.LoginBehavior;
 import com.facebook.login.LoginResult;
 import com.facebook.login.widget.LoginButton;
 import com.watchtime.R;
-import com.watchtime.activities.base.WatchTimeBaseActivity;
 import com.watchtime.base.ApiEndPoints;
 import com.watchtime.base.WatchTimeApplication;
 import com.watchtime.base.backend.token.TokenAPI;
@@ -36,7 +38,6 @@ import org.json.JSONObject;
 
 import java.io.IOException;
 
-import butterknife.Bind;
 import okhttp3.Call;
 import okhttp3.Callback;
 import okhttp3.FormBody;
@@ -45,64 +46,98 @@ import okhttp3.Request;
 import okhttp3.RequestBody;
 import okhttp3.Response;
 
-public class LoginActivity extends WatchTimeBaseActivity {
-    private static final int SIGNUP = 0;
-
+public class LoginFragment extends Fragment {
     public interface OnLoginListener {
-        void onLogin();
-        void onLogout();
+        public void onLogin();
+        public void onLogout();
     }
-
-    @Bind(R.id.input_email)
-    EditText emailText;
-    @Bind(R.id.input_password)
-    EditText passwordText;
-    @Bind(R.id.btn_login)
-    Button loginBtn;
-    @Bind(R.id.link_signup)
-    TextView signUpText;
-    @Bind(R.id.login_image_view)
-    ImageView loginImage;
-    @Bind(R.id.btn_facebook_login)
-    LoginButton facebookLogin;
-
     public static OnLoginListener loginListener;
+    private static final int SIGN_UP = 0;
+    public static final String TAG = "LoginFragment";
+
+    private EditText emailText;
+    private EditText passwordText;
+    private Button loginBtn;
+    private TextView signUpText;
+    private ImageView loginImage;
+    private LoginButton facebookLogin;
 
     CallbackManager callbackManager;
     ProgressDialog progressDialog;
     Handler mHandler = new Handler(Looper.getMainLooper()) {
         @Override
         public void handleMessage(Message message) {
-            Toast.makeText(getBaseContext(), message.obj.toString(), Toast.LENGTH_LONG).show();
+            Toast.makeText(getContext(), message.obj.toString(), Toast.LENGTH_LONG).show();
             if (progressDialog != null) progressDialog.dismiss();
 
             if (message.what == 1) {
-                finish();
+                getActivity().finish();
             }
         }
     };
 
+    public LoginFragment() {
 
-    public static Intent startActivity(Activity activity) {
-        Intent intent = new Intent(activity, LoginActivity.class);
-        activity.startActivity(intent);
-        return intent;
     }
 
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState, R.layout.activity_login);
-        loginImage.setBackgroundResource(R.drawable.app_logo_writen);
+    public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+    }
 
+    @Override
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+        Bundle bundle = getArguments();
+        String transitionName = "";
+
+        if (bundle != null) {
+            transitionName = bundle.getString("TRANS_NAME");
+        }
+
+        View view = inflater.inflate(R.layout.fragment_login, container, false);
+
+        if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+            loginImage = (ImageView) view.findViewById(R.id.login_image_view);
+            loginImage.setTransitionName(transitionName);
+        }
+
+        emailText = (EditText) view.findViewById(R.id.input_email);
+        passwordText = (EditText) view.findViewById(R.id.input_password);
+        loginBtn = (Button) view.findViewById(R.id.btn_login);
+        signUpText = (TextView) view.findViewById(R.id.link_signup);
+        loginImage = (ImageView) view.findViewById(R.id.login_image_view);
+        facebookLogin = (LoginButton) view.findViewById(R.id.btn_facebook_login);
+
+        loginImage.setImageResource(R.drawable.app_logo_writen);
+
+        return view;
+    }
+
+    @Override
+    public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
+
+        facebookLogin.setLoginBehavior(LoginBehavior.NATIVE_WITH_FALLBACK);
         facebookLogin.setReadPermissions("email");
+
+        facebookLogin.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Log.d("Click!", "Click!");
+            }
+        });
+        facebookLogin.setFragment(this);
+
         callbackManager = CallbackManager.Factory.create();
+
+        Log.d("Callback, please", "Callback is " + callbackManager.toString());
 
         facebookLogin.registerCallback(callbackManager, new FacebookCallback<LoginResult>() {
             @Override
             public void onSuccess(LoginResult loginResult) {
                 AccessToken facebookToken = loginResult.getAccessToken();
                 Log.d("WatchTime:FB_TK", facebookToken.getToken());
-                PrefUtils.save(getApplicationContext(), "fb_session", true);
+                PrefUtils.save(getActivity().getApplicationContext(), "fb_session", true);
                 onLoginSuccess();
             }
 
@@ -141,7 +176,7 @@ public class LoginActivity extends WatchTimeBaseActivity {
         final String email = emailText.getText().toString();
         final String password = passwordText.getText().toString();
 
-        progressDialog = new ProgressDialog(LoginActivity.this, R.style.Theme_WatchTime_Dark_Dialog);
+        progressDialog = new ProgressDialog(getActivity(), R.style.Theme_WatchTime_Dark_Dialog);
         progressDialog.setIndeterminate(true);
         progressDialog.setMessage(getString(R.string.connecting));
         progressDialog.show();
@@ -196,8 +231,8 @@ public class LoginActivity extends WatchTimeBaseActivity {
     }
 
     public void signUp() {
-        Intent intent = new Intent(LoginActivity.this, SignUpActivity.class);
-        startActivityForResult(intent, SIGNUP);
+        //Intent intent = new Intent(LoginActivityNoDesign.this, SignUpActivity.class);
+        //startActivityForResult(intent, SIGN_UP);
     }
 
     public boolean validate() {
@@ -224,12 +259,11 @@ public class LoginActivity extends WatchTimeBaseActivity {
     }
 
     public void onLoginSuccess() {
-        Message completeMessage = mHandler.obtainMessage(1, getString(R.string.logged_in));
-        completeMessage.sendToTarget();
-
         if (loginListener != null) {
             loginListener.onLogin();
         }
+
+        getActivity().finish();
     }
 
     public void onLoginFailed(String reason) {
@@ -238,39 +272,8 @@ public class LoginActivity extends WatchTimeBaseActivity {
     }
 
     @Override
-    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        if (requestCode == SIGNUP) {
-            if (resultCode == RESULT_OK) {
-                Toast.makeText(getBaseContext(), getString(R.string.account_created), Toast.LENGTH_LONG).show();
-                this.finish();
-            }
-        }
         callbackManager.onActivityResult(requestCode, resultCode, data);
-    }
-
-    public void onPause() {
-        exitActivity();
-        super.onPause();
-    }
-
-    public void onDestroy() {
-        if (loginListener != null) {
-            if (AccessToken.getCurrentAccessToken() == null)
-                loginListener.onLogout();
-            else
-                loginListener.onLogin();
-        }
-        super.onDestroy();
-    }
-
-
-    public void exitActivity() {
-        if (loginListener != null) {
-            if (AccessToken.getCurrentAccessToken() == null)
-                loginListener.onLogout();
-            else
-                loginListener.onLogin();
-        }
     }
 }

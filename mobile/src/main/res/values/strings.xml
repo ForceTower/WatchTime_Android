@@ -42,9 +42,18 @@
     <string name="error_getting_response">Error on getting server response</string>
     <string name="com_facebook_login_canceled">Facebook login canceled</string>
 
-
-
     <string name="facebook_app_id">1233374160031410</string>
+    <string name="fb_login_protocol_scheme">fb1233374160031410</string>
+
     <string name="logout">Logout</string>
     <string name="guest_name">Guest</string>
+    <string name="title_sign_up">Sign Up</string>
+
+    <string name="privacy">Privacy</string>
+    <string name="terms_of_use">Terms of use</string>
+
+    <string name="fragment_login_transition">fragment_login_transition</string>
+    <string name="fragment_register_transition">fragment_register_transition</string>
+    <string name="image_logo_transition_login">fragment_image_logo_transition_login</string>
+    <string name="login_or_alternatives">Or...</string>
 </resources>

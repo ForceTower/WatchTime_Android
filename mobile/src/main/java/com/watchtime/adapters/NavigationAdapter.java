@@ -80,7 +80,6 @@ public class NavigationAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
         holder.getProfileImageView().setVisibility(View.VISIBLE);
 
         holder.getTitleTextView().setVisibility(View.VISIBLE);
-        holder.getTitleTextView().setText(R.string.guest_name);
         holder.getTitleTextView().setTextColor(normalColor);
         final HeaderHolder finalOne = holder;
 
@@ -119,6 +118,7 @@ public class NavigationAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
             holder.getProfileImageView().setImageResource(R.mipmap.app_logo);
             holder.getBackgroundImageView().setImageResource(R.drawable.background_test_image3);
             holder.getSubtitleTextView().setVisibility(View.INVISIBLE);
+            holder.getTitleTextView().setText(R.string.guest_name);
         }
 
 

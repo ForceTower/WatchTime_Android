@@ -1,11 +1,9 @@
-<?xml version="1.0" encoding="utf-8"?>
-
 <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="fill_parent"
     android:layout_height="fill_parent"
     xmlns:tools="http://schemas.android.com/tools"
     android:fitsSystemWindows="true"
-    tools:context="com.watchtime.activities.LoginActivity">
+    tools:context="com.watchtime.fragments.account.LoginFragment">
 
     <LinearLayout
         android:orientation="vertical"
@@ -20,7 +18,7 @@
             android:layout_width="wrap_content"
             android:layout_height="72dp"
             android:layout_marginBottom="24dp"
-            android:layout_gravity="center_horizontal" />
+            android:layout_gravity="center_horizontal"/>
 
         <!-- Email Label -->
         <android.support.design.widget.TextInputLayout
@@ -28,12 +26,13 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="8dp"
             android:layout_marginBottom="8dp">
-            <EditText
+
+            <com.devspark.robototextview.widget.RobotoEditText
                 android:id="@+id/input_email"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:inputType="textEmailAddress"
-                android:hint="@string/email" />
+                android:hint="@string/email"/>
         </android.support.design.widget.TextInputLayout>
 
         <!-- Password Label -->
@@ -42,7 +41,7 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="8dp"
             android:layout_marginBottom="8dp">
-            <EditText
+            <com.devspark.robototextview.widget.RobotoEditText
                 android:id="@+id/input_password"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -57,21 +56,39 @@
             android:layout_marginTop="24dp"
             android:layout_marginBottom="24dp"
             android:padding="12dp"
-            android:text="@string/login_btn"/>
+            android:text="@string/login_btn"
+            android:background="@color/primary_dark"/>
 
-        <com.facebook.login.widget.LoginButton
-            android:id="@+id/btn_facebook_login"
-            android:layout_width="fill_parent"
+        <LinearLayout
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_gravity="center_horizontal"
-            android:layout_marginBottom="24dp" />
+            android:orientation="vertical">
 
-        <TextView android:id="@+id/link_signup"
+            <com.devspark.robototextview.widget.RobotoTextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:text="@string/login_or_alternatives"
+                android:layout_marginBottom="8dp"/>
+
+            <com.facebook.login.widget.LoginButton
+                android:id="@+id/btn_facebook_login"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="24dp"
+                android:layout_gravity="center"/>
+
+        </LinearLayout>
+
+        <TextView
+            android:id="@+id/link_signup"
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
             android:layout_marginBottom="24dp"
             android:text="@string/create_account_label"
             android:gravity="center_horizontal"
             android:textSize="16sp"/>
+
     </LinearLayout>
+
 </ScrollView>
