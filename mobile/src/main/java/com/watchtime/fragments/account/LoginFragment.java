@@ -1,7 +1,6 @@
 package com.watchtime.fragments.account;
 
 import android.app.ProgressDialog;
-import android.content.Intent;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
@@ -20,18 +19,10 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.facebook.AccessToken;
-import com.facebook.CallbackManager;
-import com.facebook.FacebookCallback;
-import com.facebook.FacebookException;
-import com.facebook.login.LoginBehavior;
-import com.facebook.login.LoginResult;
-import com.facebook.login.widget.LoginButton;
 import com.watchtime.R;
 import com.watchtime.base.ApiEndPoints;
 import com.watchtime.base.WatchTimeApplication;
 import com.watchtime.base.backend.token.TokenAPI;
-import com.watchtime.base.utils.PrefUtils;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -46,33 +37,22 @@ import okhttp3.Request;
 import okhttp3.RequestBody;
 import okhttp3.Response;
 
+import static com.watchtime.fragments.account.AccessAccountFragment.loginListener;
+
 public class LoginFragment extends Fragment {
-    public interface OnLoginListener {
-        public void onLogin();
-        public void onLogout();
-    }
-    public static OnLoginListener loginListener;
-    private static final int SIGN_UP = 0;
     public static final String TAG = "LoginFragment";
 
     private EditText emailText;
     private EditText passwordText;
     private Button loginBtn;
-    private TextView signUpText;
     private ImageView loginImage;
-    private LoginButton facebookLogin;
 
-    CallbackManager callbackManager;
     ProgressDialog progressDialog;
     Handler mHandler = new Handler(Looper.getMainLooper()) {
         @Override
         public void handleMessage(Message message) {
             Toast.makeText(getContext(), message.obj.toString(), Toast.LENGTH_LONG).show();
             if (progressDialog != null) progressDialog.dismiss();
-
-            if (message.what == 1) {
-                getActivity().finish();
-            }
         }
     };
 
@@ -96,17 +76,16 @@ public class LoginFragment extends Fragment {
 
         View view = inflater.inflate(R.layout.fragment_login, container, false);
 
-        if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-            loginImage = (ImageView) view.findViewById(R.id.login_image_view);
-            loginImage.setTransitionName(transitionName);
-        }
-
+        loginImage = (ImageView) view.findViewById(R.id.login_image_view);
         emailText = (EditText) view.findViewById(R.id.input_email);
         passwordText = (EditText) view.findViewById(R.id.input_password);
         loginBtn = (Button) view.findViewById(R.id.btn_login);
-        signUpText = (TextView) view.findViewById(R.id.link_signup);
         loginImage = (ImageView) view.findViewById(R.id.login_image_view);
-        facebookLogin = (LoginButton) view.findViewById(R.id.btn_facebook_login);
+
+
+        if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+            loginImage.setTransitionName(transitionName);
+        }
 
         loginImage.setImageResource(R.drawable.app_logo_writen);
 
@@ -117,54 +96,11 @@ public class LoginFragment extends Fragment {
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
-        facebookLogin.setLoginBehavior(LoginBehavior.NATIVE_WITH_FALLBACK);
-        facebookLogin.setReadPermissions("email");
-
-        facebookLogin.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Log.d("Click!", "Click!");
-            }
-        });
-        facebookLogin.setFragment(this);
-
-        callbackManager = CallbackManager.Factory.create();
-
-        Log.d("Callback, please", "Callback is " + callbackManager.toString());
-
-        facebookLogin.registerCallback(callbackManager, new FacebookCallback<LoginResult>() {
-            @Override
-            public void onSuccess(LoginResult loginResult) {
-                AccessToken facebookToken = loginResult.getAccessToken();
-                Log.d("WatchTime:FB_TK", facebookToken.getToken());
-                PrefUtils.save(getActivity().getApplicationContext(), "fb_session", true);
-                onLoginSuccess();
-            }
-
-            @Override
-            public void onCancel() {
-                onLoginFailed(getString(R.string.com_facebook_login_canceled));
-            }
-
-            @Override
-            public void onError(FacebookException error) {
-                onLoginFailed(error.getMessage());
-            }
-        });
-
         loginBtn.setBackgroundResource(R.color.primary_dark);
-
         loginBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 login();
-            }
-        });
-
-        signUpText.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                signUp();
             }
         });
     }
@@ -230,11 +166,6 @@ public class LoginFragment extends Fragment {
         });
     }
 
-    public void signUp() {
-        //Intent intent = new Intent(LoginActivityNoDesign.this, SignUpActivity.class);
-        //startActivityForResult(intent, SIGN_UP);
-    }
-
     public boolean validate() {
         boolean valid = true;
 
@@ -259,6 +190,8 @@ public class LoginFragment extends Fragment {
     }
 
     public void onLoginSuccess() {
+        Message completeMessage = mHandler.obtainMessage(0, getString(R.string.logged_in));
+        completeMessage.sendToTarget();
         if (loginListener != null) {
             loginListener.onLogin();
         }
@@ -269,11 +202,5 @@ public class LoginFragment extends Fragment {
     public void onLoginFailed(String reason) {
         Message completeMessage = mHandler.obtainMessage(0, reason);
         completeMessage.sendToTarget();
-    }
-
-    @Override
-    public void onActivityResult(int requestCode, int resultCode, Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
-        callbackManager.onActivityResult(requestCode, resultCode, data);
     }
 }

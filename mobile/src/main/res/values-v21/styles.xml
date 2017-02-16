@@ -12,11 +12,15 @@
 
     <style name="Theme.WatchTime.NavigationDrawer" parent="Theme.WatchTime">
         <item name="android:windowDrawsSystemBarBackgrounds">true</item>
+        <!-- This line below adds it "behind" -->
+        <item name="android:windowTranslucentStatus">true</item>
         <item name="android:statusBarColor">@android:color/transparent</item>
     </style>
 
     <style name="Theme.WatchTime.TransparentStatusBar" parent="Theme.WatchTime">
         <item name="android:windowDrawsSystemBarBackgrounds">true</item>
+        <!-- This line below adds it "behind" -->
+        <item name="android:windowTranslucentStatus">true</item>
         <item name="android:statusBarColor">@android:color/transparent</item>
         <item name="android:windowTranslucentNavigation">false</item>
     </style>

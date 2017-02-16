@@ -25,6 +25,7 @@ import com.watchtime.adapters.NavigationAdapter;
 import com.watchtime.adapters.decorators.OneShotDividerDecorator;
 import com.watchtime.base.content.preferences.Prefs;
 import com.watchtime.base.utils.PrefUtils;
+import com.watchtime.fragments.account.AccessAccountFragment;
 import com.watchtime.fragments.account.LoginFragment;
 import com.watchtime.fragments.drawer.NavDrawerItem;
 
@@ -36,7 +37,7 @@ import java.util.List;
  * Drawer Fragment... Its the Drawer on the side
  */
 
-public class NavigationDrawerFragment extends Fragment implements NavigationAdapter.Callback, LoginFragment.OnLoginListener {
+public class NavigationDrawerFragment extends Fragment implements NavigationAdapter.Callback, AccessAccountFragment.OnLoginListener {
 
     public interface Callbacks {
         void onNavigationDrawerItemSelected(NavDrawerItem item, String s);
@@ -135,7 +136,7 @@ public class NavigationDrawerFragment extends Fragment implements NavigationAdap
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        LoginFragment.loginListener = this;
+        AccessAccountFragment.loginListener = this;
 
         //Checks if the user knows how to use the drawer
         mUserLearnedDrawer = PrefUtils.get(getActivity(), Prefs.DRAWER_LEARNED, false);

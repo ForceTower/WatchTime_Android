@@ -1,14 +1,9 @@
 package com.watchtime.activities;
 
-import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.FragmentManager;
-
 import com.facebook.CallbackManager;
-import com.facebook.FacebookCallback;
-import com.facebook.FacebookException;
-import com.facebook.login.LoginManager;
-import com.facebook.login.LoginResult;
+
 import com.watchtime.R;
 import com.watchtime.activities.base.WatchTimeBaseActivity;
 import com.watchtime.fragments.account.AccessAccountFragment;
@@ -30,5 +25,4 @@ public class AccessAccountBaseActivity extends WatchTimeBaseActivity {
                     .commit();
         }
     }
-
 }

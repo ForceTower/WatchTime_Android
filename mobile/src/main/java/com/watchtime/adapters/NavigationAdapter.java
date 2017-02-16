@@ -4,6 +4,8 @@ import android.content.Context;
 import android.content.res.Resources;
 import android.graphics.PorterDuff;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Looper;
 import android.support.annotation.NonNull;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.RecyclerView;
@@ -20,9 +22,11 @@ import com.facebook.AccessToken;
 import com.facebook.GraphRequest;
 import com.facebook.GraphResponse;
 import com.facebook.HttpMethod;
+import com.squareup.picasso.Callback;
 import com.squareup.picasso.Picasso;
 import com.watchtime.R;
 import com.watchtime.base.WatchTimeApplication;
+import com.watchtime.base.utils.AnimUtils;
 import com.watchtime.base.utils.PrefUtils;
 import com.watchtime.fragments.drawer.NavDrawerItem;
 
@@ -105,8 +109,34 @@ public class NavigationAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
                                 finalOne.getTitleTextView().setText(name);
                                 String picUrlString = (String) response.getJSONObject().getJSONObject("picture").getJSONObject("data").get("url");
                                 String coverUrlString = (String) response.getJSONObject().getJSONObject("cover").get("source");
-                                Picasso.with(getApplicationContext()).load(picUrlString).into(profileImage);
-                                Picasso.with(getApplicationContext()).load(coverUrlString).into(coverImage);
+                                Picasso.with(getApplicationContext()).load(picUrlString).into(profileImage, new com.squareup.picasso.Callback() {
+                                    @Override
+                                    public void onSuccess() {
+                                        Handler mHandler = new Handler(Looper.getMainLooper());
+                                        mHandler.post(new Runnable() {
+                                            @Override
+                                            public void run() {
+                                                AnimUtils.fadeIn(profileImage);
+                                            }
+                                        });
+                                    }
+                                    @Override
+                                    public void onError() {}
+                                });
+                                Picasso.with(getApplicationContext()).load(coverUrlString).into(coverImage, new com.squareup.picasso.Callback() {
+                                    @Override
+                                    public void onSuccess() {
+                                        Handler mHandler = new Handler(Looper.getMainLooper());
+                                        mHandler.post(new Runnable() {
+                                            @Override
+                                            public void run() {
+                                                AnimUtils.fadeIn(coverImage);
+                                            }
+                                        });
+                                    }
+                                    @Override
+                                    public void onError() {}
+                                });
                             } catch (JSONException e) {
                                 e.printStackTrace();
                             }

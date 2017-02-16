@@ -1,14 +1,12 @@
-<?xml version="1.0" encoding="utf-8"?>
-
 <ScrollView
-    xmlns:tools="http://schemas.android.com/tools"
     xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="fill_parent"
-    android:layout_height="fill_parent"
-    android:fitsSystemWindows="true"
-    tools:context="com.watchtime.activities.SignUpActivity">
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context="com.watchtime.fragments.account.SignUpFragment">
 
     <LinearLayout
+        android:id="@+id/container"
         android:orientation="vertical"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -21,7 +19,8 @@
             android:layout_width="wrap_content"
             android:layout_height="72dp"
             android:layout_marginBottom="24dp"
-            android:layout_gravity="center_horizontal" />
+            android:layout_gravity="center_horizontal"
+            android:src="@drawable/app_logo_writen"/>
 
         <!--  Name Label -->
         <android.support.design.widget.TextInputLayout
@@ -77,21 +76,14 @@
 
         <!-- Signup Button -->
         <android.support.v7.widget.AppCompatButton
-            android:id="@+id/btn_signup"
+            android:id="@+id/btn_sign_up"
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="24dp"
             android:layout_marginBottom="24dp"
             android:padding="12dp"
+            android:background="@color/primary_dark"
             android:text="@string/btn_create_account"/>
-
-        <TextView android:id="@+id/link_login"
-            android:layout_width="fill_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginBottom="24dp"
-            android:text="@string/login_account_label"
-            android:gravity="center"
-            android:textSize="16sp"/>
 
     </LinearLayout>
 </ScrollView>
