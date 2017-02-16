@@ -14,6 +14,12 @@
     <color name="primary_green">#5ABA00</color>
     <color name="accent">#5ABA00</color>
     <!--<color name="accent">#FF5C6BC0</color>-->
+
+    <color name="blue_primary">#FF3F51B5</color>
+    <color name="blue_dark">#FF303F9F</color>
+    <color name="blue_accent">#FF5C6BC0</color>
+
+
     <color name="iron">#CCCCCC</color>
     <color name="white">#FFFFFF</color>
     <color name="red">#D40E00</color>
