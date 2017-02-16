@@ -2,7 +2,7 @@ package com.watchtime.base.providers;
 
 import android.os.AsyncTask;
 
-
+import com.google.gson.Gson;
 import com.watchtime.base.WatchTimeApplication;
 import com.watchtime.base.providers.media.MediaProvider;
 
@@ -17,10 +17,15 @@ import okhttp3.OkHttpClient;
 import okhttp3.Request;
 
 public abstract class BaseProvider {
+    protected Gson gson = new Gson();
     protected Call currentCall;
 
     protected OkHttpClient getClient() {
         return WatchTimeApplication.getHttpClient();
+    }
+
+    protected Call enqueue(Request request) {
+        return enqueue(request, null);
     }
 
     protected Call enqueue(Request request, Callback requestCallback) {
@@ -30,18 +35,28 @@ public abstract class BaseProvider {
     }
 
     public void cancel() {
-        // Cancel in async task to prevent networkOnMainThreadException but make it blocking to prevent network calls to be made and then immediately cancelled.
         try {
             new AsyncTask<Void, Void, Void>() {
                 @Override
                 protected Void doInBackground(Void... params) {
-                    //getClient().cancel(MediaProvider.MEDIA_CALL);
+                    cancelRequest(MediaProvider.MEDIA_CALL);
                     return null;
                 }
             }.execute().get();
         } catch (InterruptedException | ExecutionException e) {
             e.printStackTrace();
         }
+    }
+
+    private void cancelRequest(String tag) {
+        for (Call call : getClient().dispatcher().queuedCalls()) {
+            if (call.request().tag().equals(tag))
+                call.cancel();
+        }
+
+        for(Call call : getClient().dispatcher().runningCalls())
+            if(call.request().tag().equals(tag))
+                call.cancel();
     }
 
     protected String buildQuery(List<NameValuePair> valuePairs) {

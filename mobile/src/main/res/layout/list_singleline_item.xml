@@ -16,7 +16,7 @@
         android:layout_marginRight="@dimen/list_text_margin_horizontal"
         android:layout_marginEnd="@dimen/list_text_margin_horizontal"
         android:layout_gravity="center_vertical"
-        android:singleLine="true"
+        android:maxLines="1"
         android:textSize="@dimen/list_text_size"
         android:textColor="@color/text_color"
         tools:text="Title Text" />

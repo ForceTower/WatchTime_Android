@@ -24,6 +24,7 @@ import com.watchtime.activities.AccessAccountBaseActivity;
 import com.watchtime.adapters.NavigationAdapter;
 import com.watchtime.adapters.decorators.OneShotDividerDecorator;
 import com.watchtime.base.content.preferences.Prefs;
+import com.watchtime.base.providers.media.MoviesProvider;
 import com.watchtime.base.utils.PrefUtils;
 import com.watchtime.fragments.account.AccessAccountFragment;
 import com.watchtime.fragments.account.LoginFragment;
@@ -190,19 +191,19 @@ public class NavigationDrawerFragment extends Fragment implements NavigationAdap
         navItems.add(new NavDrawerItem(true)); //Header
 
         if (AccessToken.getCurrentAccessToken() != null) {
-            navItems.add(new NavDrawerItem(getString(R.string.your_profile), R.drawable.my_profile_icons/*, new FriendsWatchsProvider()*/));
+            navItems.add(new NavDrawerItem(getString(R.string.your_profile), R.drawable.my_profile_icons, NavDrawerItem.ItemTags.PROFILE));
         } else {
             navItems.add(new NavDrawerItem(getString(R.string.title_login), R.drawable.ic_login_image, loginClickListener));
         }
 
-        navItems.add(new NavDrawerItem(getString(R.string.title_movies), R.drawable.ic_nav_movies/*, new MoviesProvider()*/));
+        navItems.add(new NavDrawerItem(getString(R.string.title_movies), R.drawable.ic_nav_movies, new MoviesProvider()));
         navItems.add(new NavDrawerItem(getString(R.string.title_shows), R.drawable.ic_nav_tv/*, new ShowsProvider()*/));
 
         if (AccessToken.getCurrentAccessToken() != null) {
-            navItems.add(new NavDrawerItem(getString(R.string.title_my_watch_list), R.drawable.ic_your_list/*, new MyListsProvider()*/));
-            navItems.add(new NavDrawerItem(getString(R.string.title_friends_activities), R.drawable.ic_friends_watch/*, new FriendsWatchsProvider()*/));
+            navItems.add(new NavDrawerItem(getString(R.string.title_my_watch_list), R.drawable.ic_your_list, NavDrawerItem.ItemTags.USER_LIST));
+            navItems.add(new NavDrawerItem(getString(R.string.title_friends_activities), R.drawable.ic_friends_watch, NavDrawerItem.ItemTags.FRIENDS));
             navItems.add(new NavDrawerItem(getString(R.string.title_discover_movies), R.drawable.ic_discover/*, new FriendsWatchsProvider()*/));
-            navItems.add(new NavDrawerItem(getString(R.string.your_activity), R.drawable.ic_your_activity/*, new FriendsWatchsProvider()*/));
+            navItems.add(new NavDrawerItem(getString(R.string.your_activity), R.drawable.ic_your_activity, NavDrawerItem.ItemTags.USER_ACTIVITY));
         }
 
         navItems.add(new NavDrawerItem(getString(R.string.preferences), R.drawable.ic_nav_settings, settingsClickListener));

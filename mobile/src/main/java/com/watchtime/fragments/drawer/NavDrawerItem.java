@@ -10,6 +10,7 @@ import com.watchtime.base.providers.media.MediaProvider;
  * Item to be displayed in the Navigation List
  */
 public class NavDrawerItem {
+
     //Interface to handle click on the items
     public interface OnClickListener{
         void onClick(View v, NavigationAdapter.ItemRowHolder rowHolder, int position);
@@ -23,6 +24,7 @@ public class NavDrawerItem {
     private boolean switchValue = false;
     private boolean showProgress = false;
 
+    private int tag = 0;
     private String title; //title of the item
     private int icon; //icon of the item
 
@@ -32,6 +34,12 @@ public class NavDrawerItem {
     public NavDrawerItem(String title, int icon) {
         this.title = title;
         this.icon = icon;
+    }
+
+    public NavDrawerItem(String title, int icon, int tag) {
+        this.title = title;
+        this.icon = icon;
+        this.tag = tag;
     }
 
     public NavDrawerItem(String title, int icon, MediaProvider provider) {
@@ -83,6 +91,10 @@ public class NavDrawerItem {
         return switchValue;
     }
 
+    public int getTag() {
+        return tag;
+    }
+
     public boolean hasProvider() {
         return mediaProvider != null;
     }
@@ -113,5 +125,12 @@ public class NavDrawerItem {
             if (isSwitch)
                 rowHolder.getSwitch().setVisibility(progress ? View.INVISIBLE : View.VISIBLE);
         }
+    }
+
+    public interface ItemTags {
+        int USER_LIST = 1;
+        int PROFILE = 2;
+        int FRIENDS = 3;
+        int USER_ACTIVITY = 4;
     }
 }

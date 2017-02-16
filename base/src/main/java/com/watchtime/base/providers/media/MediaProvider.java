@@ -1,5 +1,6 @@
 package com.watchtime.base.providers.media;
 
+import android.os.Parcel;
 import android.os.Parcelable;
 import android.support.annotation.DrawableRes;
 import android.support.annotation.Nullable;
@@ -19,28 +20,24 @@ import okhttp3.Call;
  * This class provides all the necessary media to fill a View
  */
 public abstract class MediaProvider extends BaseProvider implements Parcelable {
+    public static final String MEDIA_CALL = "media_http_call";
+
+    public Call getList(Filters filters, Callback callback) {
+        return getList(null, filters, callback);
+    }
+    public abstract Call getList(ArrayList<Media> currentList, Filters filters, Callback callback);
     public List<Genre> getGenres() {
         return new ArrayList<>();
     }
-
-    public List<NavInfo> getNavigation() {
-        List<NavInfo> list = new ArrayList<>();
-        list.add(new NavInfo(1, Filters.Sort.ALPHABET, Filters.Order.ASC, "Alphabetic", null));
-        list.add(new NavInfo(2, Filters.Sort.TRENDING, Filters.Order.ASC, "Trending", null));
-        list.add(new NavInfo(3, Filters.Sort.YEAR, Filters.Order.ASC, "Year", null));
-        list.add(new NavInfo(4, Filters.Sort.RATING, Filters.Order.ASC, "Rating", null));
-        list.add(new NavInfo(5, Filters.Sort.DATE, Filters.Order.ASC, "Date", null));
-        list.add(new NavInfo(5, Filters.Sort.POPULARITY, Filters.Order.ASC, "Popularity", null));
-        return list;
-    }
-
+    public abstract Call getDetail(ArrayList<Media> currentList, Integer index, Callback callback);
+    public abstract int getLoadingMessage();
+    public abstract List<NavInfo> getNavigation();
     public int getDefaultNavigationIndex() {
         return 1;
     }
 
     public interface Callback {
         void onSuccess(Filters filters, ArrayList<Media> items, boolean changed);
-
         void onFailure(Exception e);
     }
 
@@ -104,11 +101,36 @@ public abstract class MediaProvider extends BaseProvider implements Parcelable {
         }
     }
 
-    public static final String MEDIA_CALL = "media_http_call";
-
-    public Call getList(Filters filters, Callback callback) {
-        return getList(null, filters, callback);
+    @Override
+    public int describeContents() {
+        return 0;
     }
 
-    public abstract Call getList(ArrayList<Media> currentList, Filters filters, Callback callback);
+    @Override
+    public void writeToParcel(Parcel dest, int flags) {
+        String className = getClass().getCanonicalName();
+        dest.writeString(className);
+    }
+
+    public static final Parcelable.Creator<MediaProvider> CREATOR = new Parcelable.Creator<MediaProvider>() {
+        @Override
+        public MediaProvider createFromParcel(Parcel source) {
+            String className = source.readString();
+            MediaProvider provider = null;
+
+            try {
+                Class<?> clazz = Class.forName(className);
+                provider = (MediaProvider)clazz.newInstance();
+            } catch (ClassNotFoundException | IllegalAccessException | InstantiationException e) {
+                e.printStackTrace();
+            }
+
+            return provider;
+        }
+
+        @Override
+        public MediaProvider[] newArray(int size) {
+            return null;
+        }
+    };
 }

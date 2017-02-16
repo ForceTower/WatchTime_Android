@@ -4,6 +4,7 @@ import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v4.view.ViewPager;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -22,9 +23,6 @@ import butterknife.ButterKnife;
 
 public class MediaContainerFragment extends Fragment{
     public static final String EXTRA_PROVIDER = "provider";
-
-    private MediaPageAdapter pagerAdapter;
-    private MediaProvider provider;
     private Integer selection = 0;
 
     @Bind(R.id.pager)
@@ -49,8 +47,13 @@ public class MediaContainerFragment extends Fragment{
 
         ButterKnife.bind(this, view);
 
-        provider = getArguments().getParcelable(EXTRA_PROVIDER);
-        pagerAdapter = new MediaPageAdapter(provider, getChildFragmentManager(), provider.getNavigation());
+        MediaProvider provider = getArguments().getParcelable(EXTRA_PROVIDER);
+        if (provider == null) {
+            Log.d("MediaContainer", "Provider is null");
+            return;
+        }
+
+        MediaPageAdapter pagerAdapter = new MediaPageAdapter(provider, getChildFragmentManager(), provider.getNavigation());
         viewPager.setAdapter(pagerAdapter);
         viewPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
             @Override
@@ -73,7 +76,6 @@ public class MediaContainerFragment extends Fragment{
     @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
-
         ((MainActivity)getActivity()).updateTabs(this, selection);
     }
 

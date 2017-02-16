@@ -14,6 +14,7 @@ import android.support.v4.content.ContextCompat;
 import android.support.v4.view.ViewPager;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -137,29 +138,28 @@ public class MainActivity extends WatchTimeBaseActivity implements NavigationDra
 
     @Override
     public void onNavigationDrawerItemSelected(NavDrawerItem item, String title) {
-        setTitle(title != null ? title : getString(R.string.app_name)); //Changes the App name
-        //Prepare to update content by changing Fragments
+        setTitle(title != null ? title : getString(R.string.app_name));
+
         FragmentManager fragmentManager = getSupportFragmentManager();
 
         String tag = title + "_tag";
         mCurrentFragment = fragmentManager.findFragmentByTag(tag);
 
-        if (mCurrentFragment == null) { //If this fragment was not instantiated yet, creates a new instance of it
-            //TODO: Switch case to create a different Fragment for each segment
+        if (mCurrentFragment == null) {
             if (item.hasProvider())
                 mCurrentFragment = MediaContainerFragment.newInstance(item.getMediaProvider());
-            /*else {
-
-                if (item.getTag() == ItemTags.PROFILE)
+            else {
+                /*
+                if (item.getTag() == NavDrawerItem.ItemTags.PROFILE)
                     mCurrentFragment = new ProfileFragment();
-                else if (item.getTag() == ItemTags.USER_LIST)
+                else if (item.getTag() == NavDrawerItem.ItemTags.USER_LIST)
                     mCurrentFragment = new UserListFragment();
-                else if (item.getTag() == ItemTags.USER_ACTIVITY)
+                else if (item.getTag() == NavDrawerItem.ItemTags.USER_ACTIVITY)
                     mCurrentFragment = new UserActivityFragment();
                 else
                     mCurrentFragment = new UnknownSelectionFragment();
-
-            }*/
+                    */
+            }
         }
 
         //Selects the first tab on the fragment
@@ -167,9 +167,10 @@ public class MainActivity extends WatchTimeBaseActivity implements NavigationDra
             mTabs.getTabAt(0).select();
 
         //Exchange Fragments
-        System.out.println("mCurrentFragment " + mCurrentFragment);
+        Log.d("FragmentChange", "mCurrentFragment " + mCurrentFragment);
         if (mCurrentFragment == null)
             return;
+
         fragmentManager.beginTransaction().replace(R.id.container, mCurrentFragment, tag).commit();
 
         //If this new Fragment is a media container, update the tabs

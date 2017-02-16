@@ -3,7 +3,6 @@ package com.watchtime.adapters;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
-import android.util.SparseArray;
 import android.view.ViewGroup;
 
 import com.watchtime.R;
@@ -11,7 +10,7 @@ import com.watchtime.base.WatchTimeApplication;
 import com.watchtime.base.providers.media.MediaProvider;
 import com.watchtime.base.utils.LocaleUtils;
 import com.watchtime.fragments.MediaGenreSelectionFragment;
-import com.watchtime.fragments.drawer.MediaListFragment;
+import com.watchtime.fragments.MediaListFragment;
 
 import java.util.HashMap;
 import java.util.List;

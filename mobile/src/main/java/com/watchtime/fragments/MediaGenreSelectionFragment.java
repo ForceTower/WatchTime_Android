@@ -18,6 +18,7 @@ import com.watchtime.adapters.decorators.DividerItemDecoration;
 import com.watchtime.base.providers.media.MediaProvider;
 import com.watchtime.base.providers.media.models.Genre;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import butterknife.Bind;
@@ -86,7 +87,6 @@ public class MediaGenreSelectionFragment extends Fragment {
     @Override
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-
         List<Genre> genreList = provider.getGenres();
 
         recyclerView.setHasFixedSize(true);
