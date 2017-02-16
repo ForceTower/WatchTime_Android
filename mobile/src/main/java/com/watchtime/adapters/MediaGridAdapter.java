@@ -8,6 +8,8 @@ import android.graphics.Paint;
 import android.graphics.PorterDuff;
 import android.graphics.PorterDuffXfermode;
 import android.graphics.Shader;
+import android.os.Handler;
+import android.os.Looper;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -160,7 +162,13 @@ public class MediaGridAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
 
         if (getItemCount() == 0 || (item != null && !item.isLoadingItem)) {
             items.add(new OverviewItem(true));
-            notifyDataSetChanged();
+            final Runnable runnable = new Runnable() {
+                @Override
+                public void run() {
+                    notifyDataSetChanged();
+                }
+            };
+            new Handler(Looper.getMainLooper()).post(runnable);
         }
     }
 

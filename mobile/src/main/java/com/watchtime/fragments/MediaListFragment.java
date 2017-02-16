@@ -215,6 +215,7 @@ public class MediaListFragment extends Fragment {
 
                         recyclerView.setVisibility(hasItems ? View.VISIBLE : View.INVISIBLE);
                         emptyView.setVisibility(hasItems ? View.GONE : View.VISIBLE);
+                        Log.d("MediaListFragment", "Has items? " + hasItems);
                         break;
                     case LOADING_PAGE:
                         if (!gridAdapter.isLoading())
@@ -249,15 +250,16 @@ public class MediaListFragment extends Fragment {
             }
 
             items.clear();
+            Log.d("MediaListFragment", "Cleared prev list, and fill with new list: " + list);
+            if (list != null) {
+                items.addAll(list);
+            }
             ThreadUtils.runOnUiThread(new Runnable() {
                 @Override
                 public void run() {
                     setState(State.LOADED);
                 }
             });
-
-            if (list != null)
-                items.addAll(list);
 
             //fragment may be detached, so we dont want to update the UI
             if (!isAdded())
