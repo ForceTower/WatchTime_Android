@@ -1,11 +1,12 @@
 package com.watchtime.fragments;
 
 import android.content.res.ColorStateList;
+import android.graphics.Color;
 import android.graphics.PorterDuff;
 import android.graphics.PorterDuffColorFilter;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
-import android.support.design.widget.FloatingActionButton;
+import android.support.v4.graphics.ColorUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -14,8 +15,12 @@ import android.widget.ImageView;
 import android.widget.RatingBar;
 import android.widget.TextView;
 
+import com.github.clans.fab.FloatingActionButton;
+import com.github.clans.fab.FloatingActionMenu;
 import com.watchtime.R;
 import com.watchtime.base.providers.media.models.Movie;
+import com.watchtime.base.utils.PixelUtils;
+import com.watchtime.base.utils.VersionUtils;
 import com.watchtime.fragments.base.DetailMediaBaseFragment;
 
 import butterknife.Bind;
@@ -37,7 +42,13 @@ public class MovieDetailsFragment extends DetailMediaBaseFragment {
     @Bind(R.id.rating)
     RatingBar rating;
     @Bind(R.id.actions_button)
-    FloatingActionButton actionsBtn;
+    FloatingActionMenu actionsBtn;
+    @Bind(R.id.add_to_list)
+    FloatingActionButton addToList;
+    @Bind(R.id.mark_watched)
+    FloatingActionButton markWatched;
+    @Bind(R.id.recommend)
+    FloatingActionButton recommend;
 
     public static MovieDetailsFragment newInstance(Movie m) {
         movie = m;
@@ -60,8 +71,8 @@ public class MovieDetailsFragment extends DetailMediaBaseFragment {
         ButterKnife.bind(this, rootView);
 
         if (movie != null) {
-            actionsBtn.setBackgroundTintList(ColorStateList.valueOf(movie.color));
-            //actionsBtn.getDrawable().setColorFilter(new PorterDuffColorFilter(movie.color, PorterDuff.Mode.MULTIPLY));
+            setupFloatActionButtonsColors();
+
             title.setText(movie.title);
 
             if (!movie.rating.equals("-1")) {
@@ -97,5 +108,27 @@ public class MovieDetailsFragment extends DetailMediaBaseFragment {
         }
 
         return rootView;
+    }
+
+    public void setupFloatActionButtonsColors() {
+        int normal = movie.color;
+        int pressed = PixelUtils.colorLighter(movie.color);
+        int ripple = PixelUtils.colorDarker(movie.color);
+
+        actionsBtn.setMenuButtonColorNormal(normal);
+        actionsBtn.setMenuButtonColorPressed(pressed);
+        actionsBtn.setMenuButtonColorRipple(ripple);
+
+        addToList.setColorNormal(normal);
+        addToList.setColorPressed(pressed);
+        addToList.setColorRipple(ripple);
+
+        markWatched.setColorNormal(normal);
+        markWatched.setColorPressed(pressed);
+        markWatched.setColorRipple(ripple);
+
+        recommend.setColorNormal(normal);
+        recommend.setColorPressed(pressed);
+        recommend.setColorRipple(ripple);
     }
 }

@@ -3,6 +3,7 @@ package com.watchtime.base.utils;
 import android.content.Context;
 import android.content.res.Configuration;
 import android.content.res.Resources;
+import android.graphics.Color;
 import android.graphics.Point;
 import android.util.TypedValue;
 import android.view.Display;
@@ -36,5 +37,23 @@ public class PixelUtils {
 
     public static boolean screenIsPortrait(Context context) {
         return context.getResources().getConfiguration().orientation == Configuration.ORIENTATION_PORTRAIT;
+    }
+
+    public static int colorDarker(int col) {
+        float[] hsv = new float[3];
+        int color = col;
+        Color.colorToHSV(color, hsv);
+        hsv[2] *= 0.8f;
+        color = Color.HSVToColor(hsv);
+        return color;
+    }
+
+    public static int colorLighter(int col) {
+        float[] hsv = new float[3];
+        int color = col;
+        Color.colorToHSV(color, hsv);
+        hsv[2] *= 1.2f;
+        color = Color.HSVToColor(hsv);
+        return color;
     }
 }
