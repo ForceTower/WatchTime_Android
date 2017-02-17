@@ -55,7 +55,7 @@ public class MediaGridAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
 
         int screenWidth = PixelUtils.getScreenWidth(context);
         itemWidth = screenWidth/columns;
-        itemHeight = (int)((double)itemWidth/0.7);
+        itemHeight = (int)((double)itemWidth/0.677);
 
         margin = PixelUtils.getPixelsFromDp(context, 2);
         setItems(items);

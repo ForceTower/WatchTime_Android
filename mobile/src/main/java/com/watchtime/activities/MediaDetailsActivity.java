@@ -102,6 +102,7 @@ public class MediaDetailsActivity extends WatchTimeBaseActivity {
 
         if (prevCover != null) {
             logo.setImageDrawable(prevCover.getDrawable());
+            logo.setScaleType(ImageView.ScaleType.FIT_XY);
         }
 
         getSupportActionBar().setTitle(media.title);
