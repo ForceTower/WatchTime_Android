@@ -5,12 +5,15 @@ import android.content.Intent;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
 import android.transition.TransitionInflater;
 import android.util.Log;
 import android.view.View;
+import android.view.Window;
+import android.view.WindowManager;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -31,6 +34,8 @@ import com.watchtime.utils.ActionBarBackground;
 import com.watchtime.widget.ObservableParallaxScrollView;
 
 import butterknife.Bind;
+
+import static android.view.WindowManager.LayoutParams.FLAG_TRANSLUCENT_NAVIGATION;
 
 public class MediaDetailsActivity extends WatchTimeBaseActivity {
     private static Media media;
@@ -150,6 +155,7 @@ public class MediaDetailsActivity extends WatchTimeBaseActivity {
 
             getWindow().setExitTransition(TransitionInflater.from(this).inflateTransition(android.R.transition.fade));
             getWindow().setEnterTransition(TransitionInflater.from(this).inflateTransition(android.R.transition.fade));
+            getWindow().setNavigationBarColor(media.color);
         }
 
         String imageUrl = media.image;

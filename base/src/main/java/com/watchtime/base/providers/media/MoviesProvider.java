@@ -63,18 +63,24 @@ public class MoviesProvider extends MediaProvider{
         requestBuilder.tag(MEDIA_CALL);
 
 
-        list.add(new Movie("1", "The Only One Movie Possible", "https://image.tmdb.org/t/p/w640/hLudzvGfpi6JlwUnsNhXwKKg4j.jpg", "https://image.tmdb.org/t/p/w640/hLudzvGfpi6JlwUnsNhXwKKg4j.jpg", this, "125", "2017", "10.0", "76", "https://image.tmdb.org/t/p/w533_and_h300_bestv2/x3akjRHhZnIZx0EiQ3eOg66qoS9.jpg"));
-        list.add(new Movie("1", "The Only One Movie Possible", "https://image.tmdb.org/t/p/w640/hLudzvGfpi6JlwUnsNhXwKKg4j.jpg", "https://image.tmdb.org/t/p/w640/hLudzvGfpi6JlwUnsNhXwKKg4j.jpg", this, "125", "2017", "10.0", "76", "https://image.tmdb.org/t/p/w533_and_h300_bestv2/x3akjRHhZnIZx0EiQ3eOg66qoS9.jpg"));
-        list.add(new Movie("1", "The Only One Movie Possible", "https://image.tmdb.org/t/p/w640/hLudzvGfpi6JlwUnsNhXwKKg4j.jpg", "https://image.tmdb.org/t/p/w640/hLudzvGfpi6JlwUnsNhXwKKg4j.jpg", this, "125", "2017", "10.0", "76", "https://image.tmdb.org/t/p/w533_and_h300_bestv2/x3akjRHhZnIZx0EiQ3eOg66qoS9.jpg"));
-        list.add(new Movie("1", "The Only One Movie Possible", "https://image.tmdb.org/t/p/w640/hLudzvGfpi6JlwUnsNhXwKKg4j.jpg", "https://image.tmdb.org/t/p/w640/hLudzvGfpi6JlwUnsNhXwKKg4j.jpg", this, "125", "2017", "10.0", "76", "https://image.tmdb.org/t/p/w533_and_h300_bestv2/x3akjRHhZnIZx0EiQ3eOg66qoS9.jpg"));
-        list.add(new Movie("1", "The Only One Movie Possible", "https://image.tmdb.org/t/p/w640/hLudzvGfpi6JlwUnsNhXwKKg4j.jpg", "https://image.tmdb.org/t/p/w640/hLudzvGfpi6JlwUnsNhXwKKg4j.jpg", this, "125", "2017", "10.0", "76", "https://image.tmdb.org/t/p/w533_and_h300_bestv2/x3akjRHhZnIZx0EiQ3eOg66qoS9.jpg"));
-        list.add(new Movie("1", "The Only One Movie Possible", "https://image.tmdb.org/t/p/w640/hLudzvGfpi6JlwUnsNhXwKKg4j.jpg", "https://image.tmdb.org/t/p/w640/hLudzvGfpi6JlwUnsNhXwKKg4j.jpg", this, "125", "2017", "10.0", "76", "https://image.tmdb.org/t/p/w533_and_h300_bestv2/x3akjRHhZnIZx0EiQ3eOg66qoS9.jpg"));
-        list.add(new Movie("1", "The Only One Movie Possible", "https://image.tmdb.org/t/p/w640/hLudzvGfpi6JlwUnsNhXwKKg4j.jpg", "https://image.tmdb.org/t/p/w640/hLudzvGfpi6JlwUnsNhXwKKg4j.jpg", this, "125", "2017", "10.0", "76", "https://image.tmdb.org/t/p/w533_and_h300_bestv2/x3akjRHhZnIZx0EiQ3eOg66qoS9.jpg"));
-        list.add(new Movie("1", "The Only One Movie Possible", "https://image.tmdb.org/t/p/w640/hLudzvGfpi6JlwUnsNhXwKKg4j.jpg", "https://image.tmdb.org/t/p/w640/hLudzvGfpi6JlwUnsNhXwKKg4j.jpg", this, "125", "2017", "10.0", "76", "https://image.tmdb.org/t/p/w533_and_h300_bestv2/x3akjRHhZnIZx0EiQ3eOg66qoS9.jpg"));
-        list.add(new Movie("1", "The Only One Movie Possible", "https://image.tmdb.org/t/p/w640/hLudzvGfpi6JlwUnsNhXwKKg4j.jpg", "https://image.tmdb.org/t/p/w640/hLudzvGfpi6JlwUnsNhXwKKg4j.jpg", this, "125", "2017", "10.0", "76", "https://image.tmdb.org/t/p/w533_and_h300_bestv2/x3akjRHhZnIZx0EiQ3eOg66qoS9.jpg"));
-        list.add(new Movie("1", "The Only One Movie Possible", "https://image.tmdb.org/t/p/w640/hLudzvGfpi6JlwUnsNhXwKKg4j.jpg", "https://image.tmdb.org/t/p/w640/hLudzvGfpi6JlwUnsNhXwKKg4j.jpg", this, "125", "2017", "10.0", "76", "https://image.tmdb.org/t/p/w533_and_h300_bestv2/x3akjRHhZnIZx0EiQ3eOg66qoS9.jpg"));
-        list.add(new Movie("1", "The Only One Movie Possible", "https://image.tmdb.org/t/p/w640/hLudzvGfpi6JlwUnsNhXwKKg4j.jpg", "https://image.tmdb.org/t/p/w640/hLudzvGfpi6JlwUnsNhXwKKg4j.jpg", this, "125", "2017", "10.0", "76", "https://image.tmdb.org/t/p/w533_and_h300_bestv2/x3akjRHhZnIZx0EiQ3eOg66qoS9.jpg"));
-        list.add(new Movie("1", "The Only One Movie Possible", "https://image.tmdb.org/t/p/w640/hLudzvGfpi6JlwUnsNhXwKKg4j.jpg", "https://image.tmdb.org/t/p/w640/hLudzvGfpi6JlwUnsNhXwKKg4j.jpg", this, "125", "2017", "10.0", "76", "https://image.tmdb.org/t/p/w533_and_h300_bestv2/x3akjRHhZnIZx0EiQ3eOg66qoS9.jpg"));
+        Movie m = new Movie("1", "The Only One Movie Possible", "https://image.tmdb.org/t/p/w640/hLudzvGfpi6JlwUnsNhXwKKg4j.jpg", "https://image.tmdb.org/t/p/w640/hLudzvGfpi6JlwUnsNhXwKKg4j.jpg", this, "125", "2017", "10.0", "76", "https://image.tmdb.org/t/p/w533_and_h300_bestv2/x3akjRHhZnIZx0EiQ3eOg66qoS9.jpg");
+        m.genre = "Drama";
+        m.synopsis = "Taking place after alien crafts land around the world, an expert linguist is recruited by the military to determine whether they come in peace or are a threat.";
+
+        Movie m2 = new Movie("1", "Doctor Strange", "https://image.tmdb.org/t/p/w640/xfWac8MTYDxujaxgPVcRD9yZaul.jpg", "https://image.tmdb.org/t/p/w640/xfWac8MTYDxujaxgPVcRD9yZaul.jpg", this, "105", "2016", "10.0", "189", "https://image.tmdb.org/t/p/w533_and_h300_bestv2/sDNhWjd4X7c0oOlClkkwvqVOo45.jpg");
+        m2.genre = "Adventure";
+        m2.synopsis = "After his career is destroyed, a brilliant but arrogant surgeon gets a new lease on life when a sorcerer takes him under his wing and trains him to defend the world against evil.";
+
+        Movie m3 = new Movie("1", "Captain America: Civil War", "https://image.tmdb.org/t/p/w640/5N20rQURev5CNDcMjHVUZhpoCNC.jpg", "https://image.tmdb.org/t/p/w640/5N20rQURev5CNDcMjHVUZhpoCNC.jpg", this, "120", "2016", "9.5", "102", "https://image.tmdb.org/t/p/w533_and_h300_bestv2/m5O3SZvQ6EgD5XXXLPIP1wLppeW.jpg");
+        m3.genre = "Action";
+        m3.synopsis = "Following the events of Age of Ultron, the collective governments of the world pass an act designed to regulate all superhuman activity. This polarizes opinion amongst the Avengers, causing two factions to side with Iron Man or Captain America, which causes an epic battle between former allies.";
+        for (int i = 0; i < 15; i++) {
+            list.add(m);
+            list.add(m2);
+            list.add(m3);
+        }
+
+
 
 
         return fetchList(list, requestBuilder, filter, callback);

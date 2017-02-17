@@ -26,10 +26,54 @@
             android:id="@+id/title"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            tools:text="Show Title"
+            tools:text="Title"
             android:textColor="@color/text_color"
             android:textSize="@dimen/detail_title_text_size"
             app:typeface="roboto_medium" />
+
+        <LinearLayout
+            android:id="@+id/extras"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/detail_rating_margin_top"
+            android:gravity="center_vertical"
+            android:layout_below="@id/title">
+
+        <RatingBar
+            android:id="@+id/rating"
+            android:layout_width="80dp"
+            android:layout_height="16dp"
+            android:clickable="false"
+            android:focusable="false"
+            android:isIndicator="true"
+            style="@style/RatingBar.WatchTime"
+            android:max="10"
+            android:progress="5"/>
+        </LinearLayout>
+
+        <com.devspark.robototextview.widget.RobotoTextView
+            android:id="@+id/year_time_genre"
+            android:layout_below="@id/extras"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/detail_meta_margin_top"
+            android:gravity="center_vertical"
+            tools:text="2017 - 1h 56min - SciFi"
+            android:textSize="@dimen/detail_meta_text_size"
+            android:textColor="@color/secondary_text_color" />
+
+        <com.devspark.robototextview.widget.RobotoTextView
+            android:id="@+id/plot_short"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/year_time_genre"
+            android:layout_marginTop="@dimen/detail_vertical_offset"
+            tools:text="This will be the a short plot of the media"
+            android:textDirection="locale"
+            android:maxLines="5"
+            android:ellipsize="end"
+            android:textSize="@dimen/detail_desc_text_size"
+            android:textColor="@color/text_color" />
 
     </RelativeLayout>
 

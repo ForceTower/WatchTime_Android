@@ -19,6 +19,8 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.Window;
+import android.view.WindowManager;
 
 import com.watchtime.R;
 import com.watchtime.activities.base.WatchTimeBaseActivity;
@@ -32,6 +34,9 @@ import com.watchtime.utils.ToolbarUtils;
 import com.watchtime.widget.ScrimInsetsFrameLayout;
 
 import butterknife.Bind;
+
+import static android.view.WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS;
+import static android.view.WindowManager.LayoutParams.FLAG_TRANSLUCENT_NAVIGATION;
 
 /**
  * Main Application Activity, all starts from here.
@@ -73,6 +78,7 @@ public class MainActivity extends WatchTimeBaseActivity implements NavigationDra
         if (VersionUtils.isLollipop()) {
             getWindow().setExitTransition(TransitionInflater.from(this).inflateTransition(android.R.transition.fade));
             getWindow().setEnterTransition(TransitionInflater.from(this).inflateTransition(android.R.transition.fade));
+            getWindow().setNavigationBarColor(ContextCompat.getColor(this, R.color.primary));
         }
 
         //Supports Action Bar

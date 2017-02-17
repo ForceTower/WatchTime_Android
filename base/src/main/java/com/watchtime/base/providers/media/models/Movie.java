@@ -11,6 +11,7 @@ import com.watchtime.base.providers.media.MediaProvider;
 
 public class Movie extends Media implements Parcelable{
     public String type = "movie";
+    public String synopsis = "";
     public String runtime = "";
 
     protected Movie(Parcel in) {

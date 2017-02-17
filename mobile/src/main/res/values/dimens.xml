@@ -36,7 +36,14 @@
     <dimen name="griditem_year_textsize">12sp</dimen>
 
     <dimen name="parallax_header_height">428dp</dimen>
+
     <dimen name="detail_horizontal_offset">24dp</dimen>
-    <dimen name="detail_vertical_offset">32dp</dimen>
-    <dimen name="detail_title_text_size">32sp</dimen>
+    <dimen name="detail_vertical_offset">24dp</dimen>
+    <dimen name="detail_title_text_size">21sp</dimen>
+    <dimen name="detail_meta_text_size">14sp</dimen>
+    <dimen name="detail_meta_margin_top">8dp</dimen>
+    <dimen name="detail_rating_margin_top">16dp</dimen>
+    <dimen name="detail_button_margin">14dp</dimen>
+    <dimen name="detail_button_text_size">12sp</dimen>
+    <dimen name="detail_desc_text_size">15sp</dimen>
 </resources>
