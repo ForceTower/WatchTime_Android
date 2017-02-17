@@ -39,7 +39,6 @@
 
                 <ImageView
                     android:id="@+id/bg_image"
-                    android:transitionName="@string/cover_image_transition"
                     android:visibility="invisible"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"

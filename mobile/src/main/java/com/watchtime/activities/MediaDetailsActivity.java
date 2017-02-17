@@ -3,6 +3,8 @@ package com.watchtime.activities;
 import android.content.Context;
 import android.content.Intent;
 import android.support.annotation.Nullable;
+import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
@@ -20,9 +22,11 @@ import com.squareup.picasso.Picasso;
 import com.watchtime.R;
 import com.watchtime.activities.base.WatchTimeBaseActivity;
 import com.watchtime.base.providers.media.models.Media;
+import com.watchtime.base.providers.media.models.Movie;
 import com.watchtime.base.utils.AnimUtils;
 import com.watchtime.base.utils.PixelUtils;
 import com.watchtime.base.utils.VersionUtils;
+import com.watchtime.fragments.MovieDetailsFragment;
 import com.watchtime.utils.ActionBarBackground;
 import com.watchtime.widget.ObservableParallaxScrollView;
 
@@ -95,7 +99,9 @@ public class MediaDetailsActivity extends WatchTimeBaseActivity {
 
         isTablet = parallaxLayout == null;
 
+
         if (media == null) {
+            prevCover = null;
             finish();
             return;
         }
@@ -106,7 +112,7 @@ public class MediaDetailsActivity extends WatchTimeBaseActivity {
         }
 
         getSupportActionBar().setTitle(media.title);
-        //scrollView.setListener(onScrollListener);
+        scrollView.setListener(onScrollListener);
 
         scrollView.setOverScrollEnabled(false);
 
@@ -127,9 +133,23 @@ public class MediaDetailsActivity extends WatchTimeBaseActivity {
         }
 
         //TODO: Change content fragment
+        Fragment fragment = null;
+
+        if (media.isMovie) {
+            fragment = MovieDetailsFragment.newInstance((Movie)media);
+        }
+
+        if (fragment != null) {
+            FragmentManager fragmentManager = getSupportFragmentManager();
+            fragmentManager.beginTransaction().replace(R.id.content, fragment, media.title + "_tag").commit();
+        }
+
         if (VersionUtils.isLollipop()) {
             backgroundImage.setTransitionName(getString(R.string.cover_image_transition));
             logo.setTransitionName(getString(R.string.cover_image_transition));
+
+            getWindow().setExitTransition(TransitionInflater.from(this).inflateTransition(android.R.transition.fade));
+            getWindow().setEnterTransition(TransitionInflater.from(this).inflateTransition(android.R.transition.fade));
         }
 
         String imageUrl = media.image;
@@ -145,13 +165,59 @@ public class MediaDetailsActivity extends WatchTimeBaseActivity {
                     public void run() {
                         AnimUtils.fadeIn(backgroundImage);
                         logo.setVisibility(View.GONE);
+                        Log.d("Media details", "Success");
                     }
                 });
             }
 
             @Override
             public void onError() {
+                Log.d("Media details", "Error!!!!!");
             }
         });
     }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        supportInvalidateOptionsMenu();
+    }
+
+    private ObservableParallaxScrollView.Listener onScrollListener = new ObservableParallaxScrollView.Listener() {
+        @Override
+        public void onScroll(int scrollY, ObservableParallaxScrollView.Direction direction) {
+            if (toolbarHeight == 0) {
+                toolbarHeight = toolbar.getHeight();
+                headerHeight = topHeight - toolbarHeight;
+            }
+
+            if (!isTablet) {
+                if (scrollY > 0) {
+                    if (scrollY < headerHeight) {
+                        float diff = (float) scrollY / (float) headerHeight;
+                        int alpha = (int) Math.ceil(255 * diff);
+                        parallaxColor.getBackground().setAlpha(alpha);
+                        toolbar.getBackground().setAlpha(0);
+                        AnimUtils.fadeOut(toolbarTitle);
+                    } else {
+                        toolbar.getBackground().setAlpha(255);
+                        parallaxColor.getBackground().setAlpha(255);
+                        AnimUtils.fadeIn(toolbarTitle);
+                    }
+                }
+            } else {
+                if (topHeight - scrollY < 0) {
+                    if (transparentBar) {
+                        transparentBar = false;
+                        ActionBarBackground.changeColor(MediaDetailsActivity.this, media.color, true);
+                    }
+                } else {
+                    if (!transparentBar) {
+                        transparentBar = true;
+                        ActionBarBackground.fadeOut(MediaDetailsActivity.this);
+                    }
+                }
+            }
+        }
+    };
 }

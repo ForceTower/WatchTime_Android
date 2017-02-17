@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/content"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:gravity="center_horizontal">
+
+    <RelativeLayout
+        android:id="@+id/base_info_block"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:minHeight="100dp"
+        android:paddingLeft="@dimen/detail_horizontal_offset"
+        android:paddingRight="@dimen/detail_horizontal_offset"
+        android:paddingStart="@dimen/detail_horizontal_offset"
+        android:paddingEnd="@dimen/detail_horizontal_offset"
+        android:paddingBottom="@dimen/detail_vertical_offset"
+        android:paddingTop="@dimen/detail_vertical_offset"
+        android:gravity="center_vertical"
+        android:orientation="vertical">
+
+        <com.devspark.robototextview.widget.RobotoTextView
+            android:id="@+id/title"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            tools:text="Show Title"
+            android:textColor="@color/text_color"
+            android:textSize="@dimen/detail_title_text_size"
+            app:typeface="roboto_medium" />
+
+    </RelativeLayout>
+
+</RelativeLayout>

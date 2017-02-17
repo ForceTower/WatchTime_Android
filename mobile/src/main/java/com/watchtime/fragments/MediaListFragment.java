@@ -13,6 +13,7 @@ import android.support.v4.util.Pair;
 import android.support.v7.graphics.Palette;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.transition.TransitionInflater;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -401,6 +402,8 @@ public class MediaListFragment extends Fragment implements LoadingDetailDialogFr
         if (VersionUtils.isLollipop()) {
             @SuppressWarnings("unchecked")
             ActivityOptionsCompat options = ActivityOptionsCompat.makeSceneTransitionAnimation(getActivity(), cover, cover.getTransitionName());
+            setExitTransition(TransitionInflater.from(context).inflateTransition(android.R.transition.fade));
+            setEnterTransition(TransitionInflater.from(context).inflateTransition(android.R.transition.fade));
             MediaDetailsActivity.startActivity(context, item, options.toBundle(), cover);
         }
         else {

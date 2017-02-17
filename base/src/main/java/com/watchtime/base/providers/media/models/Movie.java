@@ -19,8 +19,8 @@ public class Movie extends Media implements Parcelable{
         isMovie = true;
     }
 
-    public Movie(String videoId, String title, String image, String fullImage, MediaProvider provider, String runtime, String year, String rating, String reviews) {
-        super(videoId, title, image, fullImage, provider, year, rating, reviews);
+    public Movie(String videoId, String title, String image, String fullImage, MediaProvider provider, String runtime, String year, String rating, String reviews, String headerImage) {
+        super(videoId, title, image, fullImage, provider, year, rating, reviews, headerImage);
         isMovie = true;
         this.runtime = runtime;
     }

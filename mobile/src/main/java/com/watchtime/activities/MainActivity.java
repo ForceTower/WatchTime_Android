@@ -14,6 +14,7 @@ import android.support.v4.content.ContextCompat;
 import android.support.v4.view.ViewPager;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.widget.Toolbar;
+import android.transition.TransitionInflater;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -23,6 +24,7 @@ import com.watchtime.R;
 import com.watchtime.activities.base.WatchTimeBaseActivity;
 import com.watchtime.base.content.preferences.Prefs;
 import com.watchtime.base.utils.PrefUtils;
+import com.watchtime.base.utils.VersionUtils;
 import com.watchtime.fragments.MediaContainerFragment;
 import com.watchtime.fragments.NavigationDrawerFragment;
 import com.watchtime.fragments.drawer.NavDrawerItem;
@@ -66,6 +68,11 @@ public class MainActivity extends WatchTimeBaseActivity implements NavigationDra
         //Request Permission to Write And Read From External Memory
         if (ContextCompat.checkSelfPermission(this, Manifest.permission.WRITE_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
             ActivityCompat.requestPermissions(this, new String[]{ Manifest.permission.WRITE_EXTERNAL_STORAGE }, PERMISSIONS_REQUEST);
+        }
+
+        if (VersionUtils.isLollipop()) {
+            getWindow().setExitTransition(TransitionInflater.from(this).inflateTransition(android.R.transition.fade));
+            getWindow().setEnterTransition(TransitionInflater.from(this).inflateTransition(android.R.transition.fade));
         }
 
         //Supports Action Bar

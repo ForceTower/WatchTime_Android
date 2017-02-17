@@ -25,11 +25,12 @@ public class Media implements Parcelable{
     public int color;
     protected MediaProvider provider;
 
-    public Media(String videoId, String title, String image, String fullImage, MediaProvider provider, String year, String rating, String reviews) {
+    public Media(String videoId, String title, String image, String fullImage, MediaProvider provider, String year, String rating, String reviews, String headerImage) {
         this.videoId = videoId;
         this.title = title;
         this.image = image;
         this.fullImage = fullImage;
+        this.headerImage = headerImage;
         this.provider = provider;
         this.year = year;
         this.rating = rating;
