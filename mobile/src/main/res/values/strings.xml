@@ -64,4 +64,8 @@
     <string name="unknown_error">Unknown Error</string>
     <string name="no_search_results">No search results found</string>
     <string name="cover_image_transition">cover_image_transition</string>
+    <string name="add_to_watchlist">Add to watchlist</string>
+    <string name="mark_as_watched">Mark as watched</string>
+    <string name="recommend_title">Recommend to a friend</string>
+    <string name="director">Director</string>
 </resources>

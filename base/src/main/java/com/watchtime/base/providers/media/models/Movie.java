@@ -13,6 +13,8 @@ public class Movie extends Media implements Parcelable{
     public String type = "movie";
     public String synopsis = "";
     public String runtime = "";
+    public String director = "";
+    public String directorImage = "";
 
     protected Movie(Parcel in) {
         super(in);

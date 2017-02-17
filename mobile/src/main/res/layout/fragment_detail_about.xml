@@ -75,6 +75,44 @@
             android:textSize="@dimen/detail_desc_text_size"
             android:textColor="@color/text_color" />
 
+        <LinearLayout
+            android:id="@+id/director_layout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/detail_vertical_offset"
+            android:layout_below="@id/plot_short"
+            android:orientation="vertical">
+
+            <com.devspark.robototextview.widget.RobotoTextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:textColor="@color/text_color"
+                android:text="@string/director"
+                android:paddingBottom="10dp"/>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal">
+                <de.hdodenhof.circleimageview.CircleImageView
+                    android:id="@+id/director_image"
+                    android:layout_width="70dp"
+                    android:layout_height="70dp"
+                    android:src="@mipmap/app_logo"
+                    android:layout_marginEnd="10dp"/>
+
+                <com.devspark.robototextview.widget.RobotoTextView
+                    android:id="@+id/director_name"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    tools:text="Director Name"
+                    android:textSize="17sp"
+                    android:layout_marginStart="10dp"
+                    android:layout_gravity="center_vertical"/>
+            </LinearLayout>
+
+        </LinearLayout>
+
     </RelativeLayout>
 
 </RelativeLayout>

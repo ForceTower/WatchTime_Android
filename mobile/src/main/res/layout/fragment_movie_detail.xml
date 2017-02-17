@@ -42,7 +42,7 @@
             android:id="@+id/recommend"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:src="@drawable/ic_recommend"/>
+            android:src="@drawable/ic_recommend" />
 
         <com.github.clans.fab.FloatingActionButton
             android:id="@+id/mark_watched"

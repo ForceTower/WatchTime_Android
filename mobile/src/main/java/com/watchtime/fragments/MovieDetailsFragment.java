@@ -17,14 +17,18 @@ import android.widget.TextView;
 
 import com.github.clans.fab.FloatingActionButton;
 import com.github.clans.fab.FloatingActionMenu;
+import com.squareup.picasso.Callback;
+import com.squareup.picasso.Picasso;
 import com.watchtime.R;
 import com.watchtime.base.providers.media.models.Movie;
+import com.watchtime.base.utils.AnimUtils;
 import com.watchtime.base.utils.PixelUtils;
 import com.watchtime.base.utils.VersionUtils;
 import com.watchtime.fragments.base.DetailMediaBaseFragment;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
+import de.hdodenhof.circleimageview.CircleImageView;
 
 /**
  * Created by João Paulo on 17/02/2017.
@@ -49,6 +53,10 @@ public class MovieDetailsFragment extends DetailMediaBaseFragment {
     FloatingActionButton markWatched;
     @Bind(R.id.recommend)
     FloatingActionButton recommend;
+    @Bind(R.id.director_name)
+    TextView directorName;
+    @Bind(R.id.director_image)
+    CircleImageView directorImage;
 
     public static MovieDetailsFragment newInstance(Movie m) {
         movie = m;
@@ -71,46 +79,79 @@ public class MovieDetailsFragment extends DetailMediaBaseFragment {
         ButterKnife.bind(this, rootView);
 
         if (movie != null) {
-            setupFloatActionButtonsColors();
-
-            title.setText(movie.title);
-
-            if (!movie.rating.equals("-1")) {
-                Double rating_val = Double.parseDouble(movie.rating);
-                rating.setProgress(rating_val.intValue());
-                rating.setContentDescription("Rating: " + rating_val.intValue() + " out of 10");
-                rating.setVisibility(View.VISIBLE);
-            } else {
-                rating.setVisibility(View.INVISIBLE);
-            }
-
-            String metaDataStr = movie.year;
-
-            if (!movie.runtime.isEmpty()) {
-                int runtime = Integer.parseInt(movie.runtime);
-                int hours = runtime/60;
-                int minutes = runtime%60;
-
-                metaDataStr = metaDataStr + " - " + hours + "h " + minutes + "min";
-            }
-
-            if (movie.genre != null && !movie.genre.isEmpty()) {
-                metaDataStr = metaDataStr + " - " + movie.genre;
-            }
-
-            yearTimeGenre.setText(metaDataStr);
-
-            if (!movie.synopsis.isEmpty()) {
-                plotShort.setText(movie.synopsis);
-                plotShort.setVisibility(View.VISIBLE);
-            }
-
+            setupFloatActionButtons();
+            setupTitleToolbarTitle();
+            setupYearDurationGenres();
+            setupSynopsis();
+            setupDirectorInfo();
         }
 
         return rootView;
     }
 
-    public void setupFloatActionButtonsColors() {
+    public void setupTitleToolbarTitle() {
+        title.setText(movie.title);
+
+        if (!movie.rating.equals("-1")) {
+            Double rating_val = Double.parseDouble(movie.rating);
+            rating.setProgress(rating_val.intValue());
+            rating.setContentDescription("Rating: " + rating_val.intValue() + " out of 10");
+            rating.setVisibility(View.VISIBLE);
+        } else {
+            rating.setVisibility(View.INVISIBLE);
+        }
+    }
+
+    public void setupYearDurationGenres() {
+        String metaDataStr = movie.year;
+
+        if (!movie.runtime.isEmpty()) {
+            int runtime = Integer.parseInt(movie.runtime);
+            int hours = runtime/60;
+            int minutes = runtime%60;
+
+            metaDataStr = metaDataStr + " - " + hours + "h " + minutes + "min";
+        }
+
+        if (movie.genre != null && !movie.genre.isEmpty()) {
+            metaDataStr = metaDataStr + " - " + movie.genre;
+        }
+
+        yearTimeGenre.setText(metaDataStr);
+    }
+
+    public void setupSynopsis() {
+        if (!movie.synopsis.isEmpty()) {
+            plotShort.setText(movie.synopsis);
+            plotShort.setVisibility(View.VISIBLE);
+        }
+    }
+
+    public void setupDirectorInfo() {
+        if (!movie.director.isEmpty()) {
+            directorName.setText(movie.director);
+            directorName.setVisibility(View.VISIBLE);
+        } else directorName.setVisibility(View.GONE);
+
+        if (movie.directorImage != null && !movie.directorImage.isEmpty()) {
+            Picasso.with(getContext()).load(movie.directorImage).into(directorImage, new Callback() {
+                @Override
+                public void onSuccess() {
+                    AnimUtils.fadeIn(directorImage);
+                    //logo.setVisibility(View.GONE);
+                }
+
+                @Override
+                public void onError() {
+
+                }
+            });
+        }
+    }
+
+    public void setupFloatActionButtons() {
+        boolean showNames = true;
+
         int normal = movie.color;
         int pressed = PixelUtils.colorLighter(movie.color);
         int ripple = PixelUtils.colorDarker(movie.color);
@@ -130,5 +171,11 @@ public class MovieDetailsFragment extends DetailMediaBaseFragment {
         recommend.setColorNormal(normal);
         recommend.setColorPressed(pressed);
         recommend.setColorRipple(ripple);
+
+        if (showNames) {
+            addToList.setLabelText(getString(R.string.add_to_watchlist));
+            markWatched.setLabelText(getString(R.string.mark_as_watched));
+            recommend.setLabelText(getString(R.string.recommend_title));
+        }
     }
 }
