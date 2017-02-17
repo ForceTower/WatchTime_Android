@@ -101,4 +101,6 @@
         <item name="android:backgroundDimEnabled">true</item>
     </style>
 
+    <style name="Theme.WatchTime.Detail" parent="Theme.WatchTime.TransparentStatusBar"/>
+
 </resources>

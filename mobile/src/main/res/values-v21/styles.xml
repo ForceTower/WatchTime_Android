@@ -25,5 +25,13 @@
         <item name="android:windowTranslucentNavigation">false</item>
     </style>
 
+    <style name="Theme.WatchTime.Detail" parent="Theme.WatchTime.TransparentStatusBar">
+        <item name="android:windowExitTransition">@transition/movie_detail_exit</item>
+        <item name="android:windowReenterTransition">@transition/movie_detail_exit</item>
+
+        <item name="android:windowSharedElementEnterTransition">@transition/movie_detail_shared_element</item>
+        <item name="android:windowSharedElementExitTransition">@transition/movie_detail_shared_element</item>
+    </style>
+
 
 </resources>

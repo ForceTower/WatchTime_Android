@@ -12,6 +12,7 @@ import android.view.ContextThemeWrapper;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 
 import com.watchtime.R;
 import com.watchtime.base.providers.media.MediaProvider;
@@ -26,7 +27,7 @@ import java.util.ArrayList;
 public class LoadingDetailDialogFragment extends DialogFragment {
     public interface Callback {
         void onDetailLoadFailure();
-        void onDetailLoadSuccess(Media item);
+        void onDetailLoadSuccess(Media item, ImageView cover);
         ArrayList<Media> getCurrentList();
     }
 
@@ -34,14 +35,22 @@ public class LoadingDetailDialogFragment extends DialogFragment {
     public static final String EXTRA_MEDIA = "extra_media";
     private MediaProvider provider;
     private boolean savedInstance = false;
+    private ImageView image;
 
-    public static LoadingDetailDialogFragment newInstance(int position) {
+    public static LoadingDetailDialogFragment newInstance(int position, ImageView image) {
         Bundle args = new Bundle();
         args.putInt(EXTRA_MEDIA, position);
-
-        LoadingDetailDialogFragment fragment = new LoadingDetailDialogFragment();
+        LoadingDetailDialogFragment fragment = new LoadingDetailDialogFragment(image);
         fragment.setArguments(args);
         return fragment;
+    }
+    public LoadingDetailDialogFragment() {
+
+    }
+
+    //This can be really bad
+    public LoadingDetailDialogFragment(ImageView image) {
+        this.image = image;
     }
 
     @Override
@@ -93,12 +102,13 @@ public class LoadingDetailDialogFragment extends DialogFragment {
         Log.d("Load Details", "Got the media: " + media);
 
         Handler handler = new Handler(Looper.getMainLooper());
-        handler.postDelayed(new Runnable() {
+        handler.post(new Runnable() {
             @Override
             public void run() {
-                callback.onDetailLoadSuccess(media);
+                callback.onDetailLoadSuccess(media, image);
+                if (!savedInstance) dismiss();
             }
-        }, 2000);
+        });
 
     }
 }

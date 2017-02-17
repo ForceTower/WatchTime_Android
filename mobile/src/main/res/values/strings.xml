@@ -58,11 +58,10 @@
     <string name="login_or_alternatives">Or...</string>
     <string name="access_account_choose">Select an option</string>
 
-    <!-- TODO: Remove or change this placeholder text -->
-    <string name="hello_blank_fragment">Hello blank fragment</string>
     <string name="loading_details">Loading details...</string>
     <string name="searching">Searching</string>
     <string name="movies_error">No movies found</string>
     <string name="unknown_error">Unknown Error</string>
     <string name="no_search_results">No search results found</string>
+    <string name="cover_image_transition">cover_image_transition</string>
 </resources>

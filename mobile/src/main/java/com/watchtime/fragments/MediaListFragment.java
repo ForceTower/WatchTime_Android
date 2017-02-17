@@ -6,8 +6,10 @@ import android.graphics.drawable.BitmapDrawable;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.design.widget.Snackbar;
+import android.support.v4.app.ActivityOptionsCompat;
 import android.support.v4.app.Fragment;
 import android.support.v4.content.ContextCompat;
+import android.support.v4.util.Pair;
 import android.support.v7.graphics.Palette;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -19,6 +21,7 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.watchtime.R;
+import com.watchtime.activities.MediaDetailsActivity;
 import com.watchtime.adapters.MediaGridAdapter;
 import com.watchtime.base.WatchTimeApplication;
 import com.watchtime.base.content.preferences.Prefs;
@@ -27,6 +30,7 @@ import com.watchtime.base.providers.media.models.Media;
 import com.watchtime.base.utils.LocaleUtils;
 import com.watchtime.base.utils.PrefUtils;
 import com.watchtime.base.utils.ThreadUtils;
+import com.watchtime.base.utils.VersionUtils;
 import com.watchtime.fragments.dialog.LoadingDetailDialogFragment;
 
 import java.util.ArrayList;
@@ -353,10 +357,10 @@ public class MediaListFragment extends Fragment implements LoadingDetailDialogFr
             RecyclerView.ViewHolder holder = recyclerView.getChildViewHolder(v);
 
             if (holder instanceof  MediaGridAdapter.ViewHolder) {
-                ImageView cover = ((MediaGridAdapter.ViewHolder) holder).getCoverImage();
+                final ImageView cover = ((MediaGridAdapter.ViewHolder) holder).getCoverImage();
 
                 if (cover.getDrawable() == null) {
-                    showLoadingDialog(position);
+                    showLoadingDialog(null, position);
                     return;
                 }
 
@@ -372,17 +376,17 @@ public class MediaListFragment extends Fragment implements LoadingDetailDialogFr
                             paletteColor = vibrantColor;
                         }
                         item.color = paletteColor;
-                        showLoadingDialog(position);
+                        showLoadingDialog(cover, position);
                     }
                 });
             } else {
-                showLoadingDialog(position);
+                showLoadingDialog(null, position);
             }
         }
     };
 
-    private void showLoadingDialog(int position) {
-        LoadingDetailDialogFragment loadingFragment = LoadingDetailDialogFragment.newInstance(position);
+    private void showLoadingDialog(ImageView transitionImage, int position) {
+        LoadingDetailDialogFragment loadingFragment = LoadingDetailDialogFragment.newInstance(position, transitionImage);
         loadingFragment.setTargetFragment(MediaListFragment.this, LOADING_DIALOG_FRAGMENT);
         loadingFragment.show(getFragmentManager(), DIALOG_LOADING_DETAIL);
     }
@@ -393,9 +397,15 @@ public class MediaListFragment extends Fragment implements LoadingDetailDialogFr
     }
 
     @Override
-    public void onDetailLoadSuccess(Media item) {
-        Snackbar.make(rootView, "Activity would start now", Snackbar.LENGTH_SHORT).show();
-        //TODO: Start the Detail Activity
+    public void onDetailLoadSuccess(final Media item, ImageView cover) {
+        if (VersionUtils.isLollipop()) {
+            @SuppressWarnings("unchecked")
+            ActivityOptionsCompat options = ActivityOptionsCompat.makeSceneTransitionAnimation(getActivity(), cover, cover.getTransitionName());
+            MediaDetailsActivity.startActivity(context, item, options.toBundle(), cover);
+        }
+        else {
+            MediaDetailsActivity.startActivity(context, item);
+        }
     }
 
     @Override

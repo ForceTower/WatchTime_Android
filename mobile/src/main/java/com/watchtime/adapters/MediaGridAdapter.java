@@ -1,6 +1,7 @@
 package com.watchtime.adapters;
 
 import android.content.Context;
+import android.content.res.Resources;
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
 import android.graphics.LinearGradient;
@@ -10,8 +11,10 @@ import android.graphics.PorterDuffXfermode;
 import android.graphics.Shader;
 import android.os.Handler;
 import android.os.Looper;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -22,10 +25,12 @@ import com.squareup.picasso.Callback;
 import com.squareup.picasso.Picasso;
 import com.squareup.picasso.Transformation;
 import com.watchtime.R;
+import com.watchtime.base.WatchTimeApplication;
 import com.watchtime.base.providers.media.models.Media;
 import com.watchtime.base.utils.AnimUtils;
 import com.watchtime.base.utils.LocaleUtils;
 import com.watchtime.base.utils.PixelUtils;
+import com.watchtime.base.utils.VersionUtils;
 
 import java.util.ArrayList;
 
@@ -103,6 +108,10 @@ public class MediaGridAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
             videoViewHolder.year.setVisibility(View.GONE);
             videoViewHolder.score.setVisibility(View.GONE);
             videoViewHolder.reviews.setVisibility(View.GONE);
+
+            if (VersionUtils.isLollipop()) {
+                videoViewHolder.coverImage.setTransitionName(WatchTimeApplication.getAppContext().getString(R.string.cover_image_transition));
+            }
 
             if (item.image != null && !item.image.equals("")) {
                 Picasso.with(videoViewHolder.coverImage.getContext()).load(item.image)
