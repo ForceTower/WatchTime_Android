@@ -1,5 +1,6 @@
 package com.watchtime.base.providers.media.models;
 
+import android.graphics.Color;
 import android.os.Parcel;
 import android.os.Parcelable;
 
@@ -21,6 +22,7 @@ public class Media implements Parcelable{
     public String image;
     public String fullImage;
     public String headerImage;
+    public int color;
     protected MediaProvider provider;
 
     public Media(String videoId, String title, String image, String fullImage, MediaProvider provider, String year, String rating, String reviews) {

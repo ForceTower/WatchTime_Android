@@ -11,7 +11,6 @@ import android.support.v4.content.ContextCompat;
 import android.support.v7.graphics.Palette;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -28,6 +27,7 @@ import com.watchtime.base.providers.media.models.Media;
 import com.watchtime.base.utils.LocaleUtils;
 import com.watchtime.base.utils.PrefUtils;
 import com.watchtime.base.utils.ThreadUtils;
+import com.watchtime.fragments.dialog.LoadingDetailDialogFragment;
 
 import java.util.ArrayList;
 
@@ -41,7 +41,7 @@ import okhttp3.Call;
  * This is the main screen for all the media the user is going to see in the app.
  */
 
-public class MediaListFragment extends Fragment {
+public class MediaListFragment extends Fragment implements LoadingDetailDialogFragment.Callback{
     public static final String EXTRA_PROVIDER = "extra_provider";
     public static final String EXTRA_SORT = "extra_sort";
     public static final String EXTRA_ORDER = "extra_order";
@@ -371,7 +371,7 @@ public class MediaListFragment extends Fragment {
                         } else {
                             paletteColor = vibrantColor;
                         }
-                        //item.color = paletteColor;
+                        item.color = paletteColor;
                         showLoadingDialog(position);
                     }
                 });
@@ -382,8 +382,24 @@ public class MediaListFragment extends Fragment {
     };
 
     private void showLoadingDialog(int position) {
-        //LoadingDetailDialogFragment loadingFragment = LoadingDetailDialogFragment.newInstance(position);
-        //loadingFragment.setTargetFragment(MediaListFragment.this, LOADING_DIALOG_FRAGMENT);
-        //loadingFragment.show(getFragmentManager(), DIALOG_LOADING_DETAIL);
+        LoadingDetailDialogFragment loadingFragment = LoadingDetailDialogFragment.newInstance(position);
+        loadingFragment.setTargetFragment(MediaListFragment.this, LOADING_DIALOG_FRAGMENT);
+        loadingFragment.show(getFragmentManager(), DIALOG_LOADING_DETAIL);
+    }
+
+    @Override
+    public void onDetailLoadFailure() {
+        Snackbar.make(rootView, R.string.unknown_error, Snackbar.LENGTH_SHORT).show();
+    }
+
+    @Override
+    public void onDetailLoadSuccess(Media item) {
+        Snackbar.make(rootView, "Activity would start now", Snackbar.LENGTH_SHORT).show();
+        //TODO: Start the Detail Activity
+    }
+
+    @Override
+    public ArrayList<Media> getCurrentList() {
+        return items;
     }
 }
