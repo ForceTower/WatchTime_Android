@@ -63,18 +63,18 @@ public class MoviesProvider extends MediaProvider{
         requestBuilder.tag(MEDIA_CALL);
 
 
-        list.add(new Movie("1", "The Only One Movie Possible", "https://image.tmdb.org/t/p/w640/hLudzvGfpi6JlwUnsNhXwKKg4j.jpg", "https://image.tmdb.org/t/p/w640/hLudzvGfpi6JlwUnsNhXwKKg4j.jpg", this, "125", "2017"));
-        list.add(new Movie("1", "The Only One Movie Possible", "https://image.tmdb.org/t/p/w640/hLudzvGfpi6JlwUnsNhXwKKg4j.jpg", "https://image.tmdb.org/t/p/w640/hLudzvGfpi6JlwUnsNhXwKKg4j.jpg", this, "125", "2017"));
-        list.add(new Movie("1", "The Only One Movie Possible", "https://image.tmdb.org/t/p/w640/hLudzvGfpi6JlwUnsNhXwKKg4j.jpg", "https://image.tmdb.org/t/p/w640/hLudzvGfpi6JlwUnsNhXwKKg4j.jpg", this, "125", "2017"));
-        list.add(new Movie("1", "The Only One Movie Possible", "https://image.tmdb.org/t/p/w640/hLudzvGfpi6JlwUnsNhXwKKg4j.jpg", "https://image.tmdb.org/t/p/w640/hLudzvGfpi6JlwUnsNhXwKKg4j.jpg", this, "125", "2017"));
-        list.add(new Movie("1", "The Only One Movie Possible", "https://image.tmdb.org/t/p/w640/hLudzvGfpi6JlwUnsNhXwKKg4j.jpg", "https://image.tmdb.org/t/p/w640/hLudzvGfpi6JlwUnsNhXwKKg4j.jpg", this, "125", "2017"));
-        list.add(new Movie("1", "The Only One Movie Possible", "https://image.tmdb.org/t/p/w640/hLudzvGfpi6JlwUnsNhXwKKg4j.jpg", "https://image.tmdb.org/t/p/w640/hLudzvGfpi6JlwUnsNhXwKKg4j.jpg", this, "125", "2017"));
-        list.add(new Movie("1", "The Only One Movie Possible", "https://image.tmdb.org/t/p/w640/hLudzvGfpi6JlwUnsNhXwKKg4j.jpg", "https://image.tmdb.org/t/p/w640/hLudzvGfpi6JlwUnsNhXwKKg4j.jpg", this, "125", "2017"));
-        list.add(new Movie("1", "The Only One Movie Possible", "https://image.tmdb.org/t/p/w640/hLudzvGfpi6JlwUnsNhXwKKg4j.jpg", "https://image.tmdb.org/t/p/w640/hLudzvGfpi6JlwUnsNhXwKKg4j.jpg", this, "125", "2017"));
-        list.add(new Movie("1", "The Only One Movie Possible", "https://image.tmdb.org/t/p/w640/hLudzvGfpi6JlwUnsNhXwKKg4j.jpg", "https://image.tmdb.org/t/p/w640/hLudzvGfpi6JlwUnsNhXwKKg4j.jpg", this, "125", "2017"));
-        list.add(new Movie("1", "The Only One Movie Possible", "https://image.tmdb.org/t/p/w640/hLudzvGfpi6JlwUnsNhXwKKg4j.jpg", "https://image.tmdb.org/t/p/w640/hLudzvGfpi6JlwUnsNhXwKKg4j.jpg", this, "125", "2017"));
-        list.add(new Movie("1", "The Only One Movie Possible", "https://image.tmdb.org/t/p/w640/hLudzvGfpi6JlwUnsNhXwKKg4j.jpg", "https://image.tmdb.org/t/p/w640/hLudzvGfpi6JlwUnsNhXwKKg4j.jpg", this, "125", "2017"));
-        list.add(new Movie("1", "The Only One Movie Possible", "https://image.tmdb.org/t/p/w640/hLudzvGfpi6JlwUnsNhXwKKg4j.jpg", "https://image.tmdb.org/t/p/w640/hLudzvGfpi6JlwUnsNhXwKKg4j.jpg", this, "125", "2017"));
+        list.add(new Movie("1", "The Only One Movie Possible", "https://image.tmdb.org/t/p/w640/hLudzvGfpi6JlwUnsNhXwKKg4j.jpg", "https://image.tmdb.org/t/p/w640/hLudzvGfpi6JlwUnsNhXwKKg4j.jpg", this, "125", "2017", "10.0", "76"));
+        list.add(new Movie("1", "The Only One Movie Possible", "https://image.tmdb.org/t/p/w640/hLudzvGfpi6JlwUnsNhXwKKg4j.jpg", "https://image.tmdb.org/t/p/w640/hLudzvGfpi6JlwUnsNhXwKKg4j.jpg", this, "125", "2017", "10.0", "76"));
+        list.add(new Movie("1", "The Only One Movie Possible", "https://image.tmdb.org/t/p/w640/hLudzvGfpi6JlwUnsNhXwKKg4j.jpg", "https://image.tmdb.org/t/p/w640/hLudzvGfpi6JlwUnsNhXwKKg4j.jpg", this, "125", "2017", "10.0", "76"));
+        list.add(new Movie("1", "The Only One Movie Possible", "https://image.tmdb.org/t/p/w640/hLudzvGfpi6JlwUnsNhXwKKg4j.jpg", "https://image.tmdb.org/t/p/w640/hLudzvGfpi6JlwUnsNhXwKKg4j.jpg", this, "125", "2017", "10.0", "76"));
+        list.add(new Movie("1", "The Only One Movie Possible", "https://image.tmdb.org/t/p/w640/hLudzvGfpi6JlwUnsNhXwKKg4j.jpg", "https://image.tmdb.org/t/p/w640/hLudzvGfpi6JlwUnsNhXwKKg4j.jpg", this, "125", "2017", "10.0", "76"));
+        list.add(new Movie("1", "The Only One Movie Possible", "https://image.tmdb.org/t/p/w640/hLudzvGfpi6JlwUnsNhXwKKg4j.jpg", "https://image.tmdb.org/t/p/w640/hLudzvGfpi6JlwUnsNhXwKKg4j.jpg", this, "125", "2017", "10.0", "76"));
+        list.add(new Movie("1", "The Only One Movie Possible", "https://image.tmdb.org/t/p/w640/hLudzvGfpi6JlwUnsNhXwKKg4j.jpg", "https://image.tmdb.org/t/p/w640/hLudzvGfpi6JlwUnsNhXwKKg4j.jpg", this, "125", "2017", "10.0", "76"));
+        list.add(new Movie("1", "The Only One Movie Possible", "https://image.tmdb.org/t/p/w640/hLudzvGfpi6JlwUnsNhXwKKg4j.jpg", "https://image.tmdb.org/t/p/w640/hLudzvGfpi6JlwUnsNhXwKKg4j.jpg", this, "125", "2017", "10.0", "76"));
+        list.add(new Movie("1", "The Only One Movie Possible", "https://image.tmdb.org/t/p/w640/hLudzvGfpi6JlwUnsNhXwKKg4j.jpg", "https://image.tmdb.org/t/p/w640/hLudzvGfpi6JlwUnsNhXwKKg4j.jpg", this, "125", "2017", "10.0", "76"));
+        list.add(new Movie("1", "The Only One Movie Possible", "https://image.tmdb.org/t/p/w640/hLudzvGfpi6JlwUnsNhXwKKg4j.jpg", "https://image.tmdb.org/t/p/w640/hLudzvGfpi6JlwUnsNhXwKKg4j.jpg", this, "125", "2017", "10.0", "76"));
+        list.add(new Movie("1", "The Only One Movie Possible", "https://image.tmdb.org/t/p/w640/hLudzvGfpi6JlwUnsNhXwKKg4j.jpg", "https://image.tmdb.org/t/p/w640/hLudzvGfpi6JlwUnsNhXwKKg4j.jpg", this, "125", "2017", "10.0", "76"));
+        list.add(new Movie("1", "The Only One Movie Possible", "https://image.tmdb.org/t/p/w640/hLudzvGfpi6JlwUnsNhXwKKg4j.jpg", "https://image.tmdb.org/t/p/w640/hLudzvGfpi6JlwUnsNhXwKKg4j.jpg", this, "125", "2017", "10.0", "76"));
 
 
         return fetchList(list, requestBuilder, filter, callback);
@@ -136,6 +136,7 @@ public class MoviesProvider extends MediaProvider{
     @Override
     public List<NavInfo> getNavigation() {
         List<NavInfo> tabs = new ArrayList<>();
+        tabs.add(new NavInfo(R.id.movies_trending, Filters.Sort.TRENDING, Filters.Order.DESC, "ALL", R.drawable.filter_trending));
         tabs.add(new NavInfo(R.id.movies_trending, Filters.Sort.TRENDING, Filters.Order.DESC, WatchTimeApplication.getAppContext().getString(R.string.trending), R.drawable.filter_trending));
         return tabs;
     }

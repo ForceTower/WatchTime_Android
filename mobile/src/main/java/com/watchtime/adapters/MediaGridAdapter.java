@@ -95,10 +95,14 @@ public class MediaGridAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
 
             videoViewHolder.title.setText(item.title);
             videoViewHolder.year.setText(item.year);
+            videoViewHolder.score.setText(item.rating);
+            videoViewHolder.reviews.setText(item.reviews);
 
             videoViewHolder.coverImage.setVisibility(View.GONE);
             videoViewHolder.title.setVisibility(View.GONE);
             videoViewHolder.year.setVisibility(View.GONE);
+            videoViewHolder.score.setVisibility(View.GONE);
+            videoViewHolder.reviews.setVisibility(View.GONE);
 
             if (item.image != null && !item.image.equals("")) {
                 Picasso.with(videoViewHolder.coverImage.getContext()).load(item.image)
@@ -111,6 +115,8 @@ public class MediaGridAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
                                 AnimUtils.fadeIn(videoViewHolder.coverImage);
                                 AnimUtils.fadeIn(videoViewHolder.title);
                                 AnimUtils.fadeIn(videoViewHolder.year);
+                                AnimUtils.fadeIn(videoViewHolder.score);
+                                AnimUtils.fadeIn(videoViewHolder.reviews);
                             }
 
                             @Override
@@ -118,6 +124,8 @@ public class MediaGridAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
                                 overviewItem.isImageError = true;
                                 AnimUtils.fadeIn(videoViewHolder.title);
                                 AnimUtils.fadeIn(videoViewHolder.year);
+                                AnimUtils.fadeIn(videoViewHolder.score);
+                                AnimUtils.fadeIn(videoViewHolder.reviews);
                             }
                         });
             }
@@ -228,6 +236,10 @@ public class MediaGridAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
         TextView title;
         @Bind(R.id.year)
         TextView year;
+        @Bind(R.id.score)
+        TextView score;
+        @Bind(R.id.reviews)
+        TextView reviews;
 
         private View.OnFocusChangeListener onFocusChangeListener = new View.OnFocusChangeListener() {
             @Override

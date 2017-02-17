@@ -16,19 +16,22 @@ public class Media implements Parcelable{
     public String year;
     public String genre;
     public String rating;
+    public String reviews;
     public boolean isMovie = false;
     public String image;
     public String fullImage;
     public String headerImage;
     protected MediaProvider provider;
 
-    public Media(String videoId, String title, String image, String fullImage, MediaProvider provider, String year) {
+    public Media(String videoId, String title, String image, String fullImage, MediaProvider provider, String year, String rating, String reviews) {
         this.videoId = videoId;
         this.title = title;
         this.image = image;
         this.fullImage = fullImage;
         this.provider = provider;
         this.year = year;
+        this.rating = rating;
+        this.reviews = reviews;
     }
 
     public Media(Parcel in) {
