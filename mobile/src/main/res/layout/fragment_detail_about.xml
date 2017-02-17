@@ -113,6 +113,28 @@
 
         </LinearLayout>
 
+        <LinearLayout
+            android:id="@+id/cast_layout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/detail_vertical_offset"
+            android:layout_below="@id/director_layout"
+            android:orientation="vertical">
+
+            <com.devspark.robototextview.widget.RobotoTextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:textColor="@color/text_color"
+                android:text="@string/cast"
+                android:paddingBottom="10dp"/>
+
+            <android.support.v7.widget.RecyclerView
+                android:id="@+id/cast_recycler_view"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"/>
+
+        </LinearLayout>
+
     </RelativeLayout>
 
 </RelativeLayout>
