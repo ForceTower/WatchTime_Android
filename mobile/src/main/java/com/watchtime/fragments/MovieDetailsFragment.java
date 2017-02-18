@@ -12,6 +12,7 @@ import android.support.design.widget.Snackbar;
 import android.support.v4.graphics.ColorUtils;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -203,6 +204,8 @@ public class MovieDetailsFragment extends DetailMediaBaseFragment {
         int pressed = PixelUtils.colorLighter(movie.color);
         int ripple = PixelUtils.colorDarker(movie.color);
 
+        actionsBtn.setClosedOnTouchOutside(true);
+
         actionsBtn.setMenuButtonColorNormal(normal);
         actionsBtn.setMenuButtonColorPressed(pressed);
         actionsBtn.setMenuButtonColorRipple(ripple);
@@ -224,6 +227,46 @@ public class MovieDetailsFragment extends DetailMediaBaseFragment {
             markWatched.setLabelText(getString(R.string.mark_as_watched));
             recommend.setLabelText(getString(R.string.recommend_title));
         }
+
+        setupFloatButtonsListeners();
+    }
+
+    public void setupFloatButtonsListeners() {
+        addToList.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(final View v) {
+                new Handler(Looper.getMainLooper()).post(new Runnable() {
+                    @Override
+                    public void run() {
+                        Snackbar.make(v, getString(R.string.add_to_watchlist), Snackbar.LENGTH_SHORT).show();
+                    }
+                });
+            }
+        });
+
+        markWatched.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(final View v) {
+                new Handler(Looper.getMainLooper()).post(new Runnable() {
+                    @Override
+                    public void run() {
+                        Snackbar.make(v, getString(R.string.mark_as_watched), Snackbar.LENGTH_SHORT).show();
+                    }
+                });
+            }
+        });
+
+        recommend.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(final View v) {
+                new Handler(Looper.getMainLooper()).post(new Runnable() {
+                    @Override
+                    public void run() {
+                        Snackbar.make(v, getString(R.string.recommend_title), Snackbar.LENGTH_SHORT).show();
+                    }
+                });
+            }
+        });
     }
 
     private CastAdapter.OnPersonClickListener personClickListener = new CastAdapter.OnPersonClickListener() {

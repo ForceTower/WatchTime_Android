@@ -139,8 +139,7 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:background="@color/overlay"
-        android:visibility="gone"
-        />
+        android:visibility="gone" />
 
     <ImageView
         android:id="@+id/cover_image"
