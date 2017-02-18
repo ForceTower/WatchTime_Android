@@ -33,22 +33,22 @@
 
         <LinearLayout
             android:id="@+id/extras"
-            android:layout_width="match_parent"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="@dimen/detail_rating_margin_top"
             android:gravity="center_vertical"
             android:layout_below="@id/title">
 
-        <RatingBar
-            android:id="@+id/rating"
-            android:layout_width="80dp"
-            android:layout_height="16dp"
-            android:clickable="false"
-            android:focusable="false"
-            android:isIndicator="true"
-            style="@style/RatingBar.WatchTime"
-            android:max="10"
-            android:progress="5"/>
+            <RatingBar
+                android:id="@+id/rating"
+                android:layout_width="80dp"
+                android:layout_height="16dp"
+                android:clickable="true"
+                android:focusable="false"
+                android:isIndicator="true"
+                style="@style/RatingBar.WatchTime"
+                android:max="10"
+                android:progress="5"/>
         </LinearLayout>
 
         <com.devspark.robototextview.widget.RobotoTextView

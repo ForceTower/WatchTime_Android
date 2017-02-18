@@ -71,6 +71,9 @@ public class MovieDetailsFragment extends DetailMediaBaseFragment {
     @Bind(R.id.cast_recycler_view)
     RecyclerView castRecyclerView;
 
+    @Bind(R.id.extras)
+    LinearLayout extras;
+
     LinearLayoutManager layoutManager;
     CastAdapter castAdapter;
     private boolean hasCast = true;
@@ -98,6 +101,7 @@ public class MovieDetailsFragment extends DetailMediaBaseFragment {
         if (movie != null) {
             setupFloatActionButtons();
             setupTitleToolbarTitle();
+            setupRatingBar();
             setupYearDurationGenres();
             setupSynopsis();
             setupDirectorInfo();
@@ -116,12 +120,26 @@ public class MovieDetailsFragment extends DetailMediaBaseFragment {
 
     public void setupTitleToolbarTitle() {
         title.setText(movie.title);
+    }
 
+    public void setupRatingBar() {
         if (!movie.rating.equals("-1")) {
             Double rating_val = Double.parseDouble(movie.rating);
             rating.setProgress(rating_val.intValue());
             rating.setContentDescription("Rating: " + rating_val.intValue() + " out of 10");
             rating.setVisibility(View.VISIBLE);
+            extras.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(final View v) {
+                    Log.d("MovieDetails", "click rating!");
+                    new Handler(Looper.getMainLooper()).post(new Runnable() {
+                        @Override
+                        public void run() {
+                            Snackbar.make(v, "Rate this Movie", Snackbar.LENGTH_SHORT).show();
+                        }
+                    });
+                }
+            });
         } else {
             rating.setVisibility(View.INVISIBLE);
         }
