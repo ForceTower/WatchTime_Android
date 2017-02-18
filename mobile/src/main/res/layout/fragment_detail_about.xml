@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout
+<ScrollView
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     xmlns:app="http://schemas.android.com/apk/res-auto"
@@ -127,10 +127,10 @@
                 android:textColor="@color/text_color"
                 android:text="@string/cast"
                 android:paddingBottom="10dp"/>
+
             <ScrollView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content">
-
                 <android.support.v7.widget.RecyclerView
                     android:id="@+id/cast_recycler_view"
                     android:layout_width="match_parent"
@@ -139,6 +139,7 @@
         </LinearLayout>
 
         <LinearLayout
+            android:id="@+id/all_genres_layout"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_below="@id/cast_layout"
@@ -152,12 +153,13 @@
                 android:textColor="@color/text_color"
                 android:paddingBottom="10dp"/>
 
-                <ListView
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content">
-                </ListView>
+            <android.support.v7.widget.RecyclerView
+                android:id="@+id/all_genre_recycler_view"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"/>
+
         </LinearLayout>
 
     </RelativeLayout>
 
-</RelativeLayout>
+</ScrollView>

@@ -28,6 +28,7 @@ import com.squareup.picasso.Callback;
 import com.squareup.picasso.Picasso;
 import com.watchtime.R;
 import com.watchtime.adapters.CastAdapter;
+import com.watchtime.adapters.GenreAdapter;
 import com.watchtime.base.providers.media.models.Movie;
 import com.watchtime.base.providers.media.models.Person;
 import com.watchtime.base.utils.AnimUtils;
@@ -68,15 +69,24 @@ public class MovieDetailsFragment extends DetailMediaBaseFragment {
     CircleImageView directorImage;
     @Bind(R.id.cast_layout)
     LinearLayout castLayout;
+    @Bind(R.id.all_genres_layout)
+    LinearLayout allGenresLayout;
     @Bind(R.id.cast_recycler_view)
     RecyclerView castRecyclerView;
+    @Bind(R.id.all_genre_recycler_view)
+    RecyclerView allGenresRecyclerView;
 
     @Bind(R.id.extras)
     LinearLayout extras;
 
     LinearLayoutManager layoutManager;
+    LinearLayoutManager genresLayoutManager;
+
     CastAdapter castAdapter;
+    //AllGenresAdapter genreAdapter;
+
     private boolean hasCast = true;
+    private boolean hasOtherGenres = true;
 
     public static MovieDetailsFragment newInstance(Movie m) {
         movie = m;
@@ -106,6 +116,7 @@ public class MovieDetailsFragment extends DetailMediaBaseFragment {
             setupSynopsis();
             setupDirectorInfo();
             setupCastInfo();
+            setupAllGenresInfo();
         }
 
         return rootView;
@@ -116,6 +127,7 @@ public class MovieDetailsFragment extends DetailMediaBaseFragment {
         super.onViewCreated(view, savedInstanceState);
 
         continueCastInfoSetup();
+        continueAllGenresInfoSetup();
     }
 
     public void setupTitleToolbarTitle() {
@@ -205,6 +217,18 @@ public class MovieDetailsFragment extends DetailMediaBaseFragment {
         castRecyclerView.setLayoutManager(layoutManager);
     }
 
+    public void setupAllGenresInfo() {
+        if (movie.genres == null || movie.genres.isEmpty()) {
+            allGenresLayout.setVisibility(View.GONE);
+            hasOtherGenres = false;
+            return;
+        }
+
+        allGenresLayout.setVisibility(View.VISIBLE);
+        genresLayoutManager = new LinearLayoutManager(getContext(), LinearLayoutManager.VERTICAL, false);
+        allGenresRecyclerView.setLayoutManager(genresLayoutManager);
+    }
+
     public void continueCastInfoSetup() {
         if (!hasCast) return;
 
@@ -213,6 +237,14 @@ public class MovieDetailsFragment extends DetailMediaBaseFragment {
         castAdapter = new CastAdapter(getActivity(), movie.actors);
         castAdapter.setOnPersonClickListener(personClickListener);
         castRecyclerView.setAdapter(castAdapter);
+    }
+
+    public void continueAllGenresInfoSetup() {
+        if (!hasOtherGenres) return;
+
+        allGenresRecyclerView.setHasFixedSize(true);
+        //genresAdapter = new AllGenresAdapter(getActivity(), movie.genres);
+        //allGenresRecyclerView.setAdapter(genresAdapter);
     }
 
     public void setupFloatActionButtons() {

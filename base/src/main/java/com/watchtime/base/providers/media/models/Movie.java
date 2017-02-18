@@ -18,6 +18,7 @@ public class Movie extends Media implements Parcelable{
     public String director = "";
     public String directorImage = "";
     public ArrayList<Person> actors;
+    public ArrayList<Genre> genres;
 
     protected Movie(Parcel in) {
         super(in);
