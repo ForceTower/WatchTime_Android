@@ -2,7 +2,9 @@ package com.watchtime.activities;
 
 import android.Manifest;
 import android.content.Intent;
+import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
+import android.content.pm.Signature;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -15,6 +17,7 @@ import android.support.v4.view.ViewPager;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.widget.Toolbar;
 import android.transition.TransitionInflater;
+import android.util.Base64;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -32,6 +35,9 @@ import com.watchtime.fragments.NavigationDrawerFragment;
 import com.watchtime.fragments.drawer.NavDrawerItem;
 import com.watchtime.utils.ToolbarUtils;
 import com.watchtime.widget.ScrimInsetsFrameLayout;
+
+import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
 
 import butterknife.Bind;
 

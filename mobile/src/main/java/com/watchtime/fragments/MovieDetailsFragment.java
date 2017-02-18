@@ -5,13 +5,19 @@ import android.graphics.Color;
 import android.graphics.PorterDuff;
 import android.graphics.PorterDuffColorFilter;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Looper;
 import android.support.annotation.Nullable;
+import android.support.design.widget.Snackbar;
 import android.support.v4.graphics.ColorUtils;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageButton;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.RatingBar;
 import android.widget.TextView;
 
@@ -20,7 +26,9 @@ import com.github.clans.fab.FloatingActionMenu;
 import com.squareup.picasso.Callback;
 import com.squareup.picasso.Picasso;
 import com.watchtime.R;
+import com.watchtime.adapters.CastAdapter;
 import com.watchtime.base.providers.media.models.Movie;
+import com.watchtime.base.providers.media.models.Person;
 import com.watchtime.base.utils.AnimUtils;
 import com.watchtime.base.utils.PixelUtils;
 import com.watchtime.base.utils.VersionUtils;
@@ -57,6 +65,14 @@ public class MovieDetailsFragment extends DetailMediaBaseFragment {
     TextView directorName;
     @Bind(R.id.director_image)
     CircleImageView directorImage;
+    @Bind(R.id.cast_layout)
+    LinearLayout castLayout;
+    @Bind(R.id.cast_recycler_view)
+    RecyclerView castRecyclerView;
+
+    LinearLayoutManager layoutManager;
+    CastAdapter castAdapter;
+    private boolean hasCast = true;
 
     public static MovieDetailsFragment newInstance(Movie m) {
         movie = m;
@@ -84,9 +100,17 @@ public class MovieDetailsFragment extends DetailMediaBaseFragment {
             setupYearDurationGenres();
             setupSynopsis();
             setupDirectorInfo();
+            setupCastInfo();
         }
 
         return rootView;
+    }
+
+    @Override
+    public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
+
+        continueCastInfoSetup();
     }
 
     public void setupTitleToolbarTitle() {
@@ -149,6 +173,29 @@ public class MovieDetailsFragment extends DetailMediaBaseFragment {
         }
     }
 
+    public void setupCastInfo() {
+        if (movie.actors == null || movie.actors.isEmpty()) {
+            castLayout.setVisibility(View.GONE);
+            hasCast = false;
+            return;
+        }
+
+        castLayout.setVisibility(View.VISIBLE);
+
+        layoutManager = new LinearLayoutManager(getContext(), LinearLayoutManager.HORIZONTAL, false);
+        castRecyclerView.setLayoutManager(layoutManager);
+    }
+
+    public void continueCastInfoSetup() {
+        if (!hasCast) return;
+
+        castRecyclerView.setHasFixedSize(true);
+
+        castAdapter = new CastAdapter(getActivity(), movie.actors);
+        castAdapter.setOnPersonClickListener(personClickListener);
+        castRecyclerView.setAdapter(castAdapter);
+    }
+
     public void setupFloatActionButtons() {
         boolean showNames = true;
 
@@ -178,4 +225,25 @@ public class MovieDetailsFragment extends DetailMediaBaseFragment {
             recommend.setLabelText(getString(R.string.recommend_title));
         }
     }
+
+    private CastAdapter.OnPersonClickListener personClickListener = new CastAdapter.OnPersonClickListener() {
+        @Override
+        public void onPersonClick(final View v, final Person person, int position) {
+            new Handler(Looper.getMainLooper()).post(new Runnable() {
+                @Override
+                public void run() {
+                    Snackbar.make(v, "Clicked person: " + person.name, Snackbar.LENGTH_SHORT).show();
+                }
+            });
+        }
+
+        public void onShowMoreClick(final View v) {
+            new Handler(Looper.getMainLooper()).post(new Runnable() {
+                @Override
+                public void run() {
+                    Snackbar.make(v, "Show full cast clicked", Snackbar.LENGTH_SHORT).show();
+                }
+            });
+        }
+    };
 }

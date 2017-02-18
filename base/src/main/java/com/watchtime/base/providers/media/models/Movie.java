@@ -5,6 +5,8 @@ import android.os.Parcelable;
 
 import com.watchtime.base.providers.media.MediaProvider;
 
+import java.util.ArrayList;
+
 /**
  * Created by João Paulo on 16/02/2017.
  */
@@ -15,10 +17,12 @@ public class Movie extends Media implements Parcelable{
     public String runtime = "";
     public String director = "";
     public String directorImage = "";
+    public ArrayList<Person> actors;
 
     protected Movie(Parcel in) {
         super(in);
         runtime = in.readString();
+        //TODO add new parameters
         isMovie = true;
     }
 

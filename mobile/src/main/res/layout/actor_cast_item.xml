@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:orientation="vertical"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:paddingEnd="10dp">
+
+    <de.hdodenhof.circleimageview.CircleImageView
+        android:id="@+id/person_image"
+        android:layout_width="70dp"
+        android:layout_height="70dp"
+        tools:src="@mipmap/app_logo" />
+<!--
+    <com.devspark.robototextview.widget.RobotoTextView
+        android:id="@+id/person_name"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        tools:text="Person Name"
+        android:textColor="@color/text_color"/>
+
+    <com.devspark.robototextview.widget.RobotoTextView
+        android:id="@+id/person_role"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        tools:text="Person Role"
+        android:layout_gravity="center"
+        android:textSize="13sp"/>
+-->
+</LinearLayout>

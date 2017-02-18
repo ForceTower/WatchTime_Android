@@ -69,6 +69,8 @@ public class MediaListFragment extends Fragment implements LoadingDetailDialogFr
     private MediaProvider.Filters.Sort sortDefinition;
     private MediaProvider.Filters.Order orderDefinition;
 
+    private ImageView transImage;
+
     public enum Mode {
         NORMAL, SEARCH
     }
@@ -387,7 +389,8 @@ public class MediaListFragment extends Fragment implements LoadingDetailDialogFr
     };
 
     private void showLoadingDialog(ImageView transitionImage, int position) {
-        LoadingDetailDialogFragment loadingFragment = LoadingDetailDialogFragment.newInstance(position, transitionImage);
+        transImage = transitionImage;
+        LoadingDetailDialogFragment loadingFragment = LoadingDetailDialogFragment.newInstance(position);
         loadingFragment.setTargetFragment(MediaListFragment.this, LOADING_DIALOG_FRAGMENT);
         loadingFragment.show(getFragmentManager(), DIALOG_LOADING_DETAIL);
     }
@@ -398,13 +401,17 @@ public class MediaListFragment extends Fragment implements LoadingDetailDialogFr
     }
 
     @Override
-    public void onDetailLoadSuccess(final Media item, ImageView cover) {
+    public void onDetailLoadSuccess(final Media item) {
         if (VersionUtils.isLollipop()) {
-            @SuppressWarnings("unchecked")
-            ActivityOptionsCompat options = ActivityOptionsCompat.makeSceneTransitionAnimation(getActivity(), cover, cover.getTransitionName());
+            ActivityOptionsCompat options;
+            if (transImage != null) {
+                options = ActivityOptionsCompat.makeSceneTransitionAnimation(getActivity(), transImage, transImage.getTransitionName());
+            } else {
+                options = ActivityOptionsCompat.makeBasic();
+            }
             setExitTransition(TransitionInflater.from(context).inflateTransition(android.R.transition.fade));
             setEnterTransition(TransitionInflater.from(context).inflateTransition(android.R.transition.fade));
-            MediaDetailsActivity.startActivity(context, item, options.toBundle(), cover);
+            MediaDetailsActivity.startActivity(context, item, options.toBundle(), transImage);
         }
         else {
             MediaDetailsActivity.startActivity(context, item);

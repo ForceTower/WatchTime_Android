@@ -54,7 +54,6 @@
         <activity
             android:name=".activities.MediaDetailsActivity"
             android:theme="@style/Theme.WatchTime.Detail">
-
         </activity>
     </application>
 

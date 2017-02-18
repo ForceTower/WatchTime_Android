@@ -27,7 +27,7 @@ import java.util.ArrayList;
 public class LoadingDetailDialogFragment extends DialogFragment {
     public interface Callback {
         void onDetailLoadFailure();
-        void onDetailLoadSuccess(Media item, ImageView cover);
+        void onDetailLoadSuccess(Media item);
         ArrayList<Media> getCurrentList();
     }
 
@@ -35,22 +35,13 @@ public class LoadingDetailDialogFragment extends DialogFragment {
     public static final String EXTRA_MEDIA = "extra_media";
     private MediaProvider provider;
     private boolean savedInstance = false;
-    private ImageView image;
 
-    public static LoadingDetailDialogFragment newInstance(int position, ImageView image) {
+    public static LoadingDetailDialogFragment newInstance(int position) {
         Bundle args = new Bundle();
         args.putInt(EXTRA_MEDIA, position);
-        LoadingDetailDialogFragment fragment = new LoadingDetailDialogFragment(image);
+        LoadingDetailDialogFragment fragment = new LoadingDetailDialogFragment();
         fragment.setArguments(args);
         return fragment;
-    }
-    public LoadingDetailDialogFragment() {
-
-    }
-
-    //This can be really bad
-    public LoadingDetailDialogFragment(ImageView image) {
-        this.image = image;
     }
 
     @Override
@@ -105,7 +96,7 @@ public class LoadingDetailDialogFragment extends DialogFragment {
         handler.post(new Runnable() {
             @Override
             public void run() {
-                callback.onDetailLoadSuccess(media, image);
+                callback.onDetailLoadSuccess(media);
                 if (!savedInstance) dismiss();
             }
         });
