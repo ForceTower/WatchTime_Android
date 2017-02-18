@@ -3,7 +3,7 @@
     <string name="facebook_app_id">1233374160031410</string>
     <string name="loading_movies_title">Loading movies...</string>
     <string name="trending">Trending</string>
-    <string name="all_genres">All</string>
+    <string name="all_genres">All Genres</string>
     <string name="genre_action">Action</string>
     <string name="genre_adventure">Adventure</string>
     <string name="genre_animation">Animation</string>
