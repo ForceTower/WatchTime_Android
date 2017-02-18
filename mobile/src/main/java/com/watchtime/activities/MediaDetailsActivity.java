@@ -63,23 +63,11 @@ public class MediaDetailsActivity extends WatchTimeBaseActivity {
     @Bind(R.id.bg_image)
     ImageView backgroundImage;
 
-    public static ImageView prevCover;
 
-    public static void startActivity(Context context, final Media detail, Bundle options, ImageView view) {
+    public static void startActivity(Context context, final Media detail) {
         Intent intent = new Intent(context, MediaDetailsActivity.class);
-
-        if (options == null) {
-            options = new Bundle();
-            Log.d("DetailsActivity", "Bundle was null");
-        }
-        //options.putParcelable("Media", detail);
         media = detail;
-        prevCover = view;
-        context.startActivity(intent, options);
-    }
-
-    public static void startActivity(Context context, final Media media) {
-        startActivity(context, media, null, null);
+        context.startActivity(intent);
     }
 
     @Override
@@ -106,14 +94,8 @@ public class MediaDetailsActivity extends WatchTimeBaseActivity {
 
 
         if (media == null) {
-            prevCover = null;
             finish();
             return;
-        }
-
-        if (prevCover != null) {
-            logo.setImageDrawable(prevCover.getDrawable());
-            logo.setScaleType(ImageView.ScaleType.FIT_XY);
         }
 
         getSupportActionBar().setTitle(media.title);

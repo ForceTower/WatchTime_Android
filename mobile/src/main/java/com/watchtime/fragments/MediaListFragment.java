@@ -69,7 +69,6 @@ public class MediaListFragment extends Fragment implements LoadingDetailDialogFr
     private MediaProvider.Filters.Sort sortDefinition;
     private MediaProvider.Filters.Order orderDefinition;
 
-    private ImageView transImage;
 
     public enum Mode {
         NORMAL, SEARCH
@@ -363,7 +362,7 @@ public class MediaListFragment extends Fragment implements LoadingDetailDialogFr
                 final ImageView cover = ((MediaGridAdapter.ViewHolder) holder).getCoverImage();
 
                 if (cover.getDrawable() == null) {
-                    showLoadingDialog(null, position);
+                    showLoadingDialog(position);
                     return;
                 }
 
@@ -379,17 +378,16 @@ public class MediaListFragment extends Fragment implements LoadingDetailDialogFr
                             paletteColor = vibrantColor;
                         }
                         item.color = paletteColor;
-                        showLoadingDialog(cover, position);
+                        showLoadingDialog(position);
                     }
                 });
             } else {
-                showLoadingDialog(null, position);
+                showLoadingDialog(position);
             }
         }
     };
 
-    private void showLoadingDialog(ImageView transitionImage, int position) {
-        transImage = transitionImage;
+    private void showLoadingDialog(int position) {
         LoadingDetailDialogFragment loadingFragment = LoadingDetailDialogFragment.newInstance(position);
         loadingFragment.setTargetFragment(MediaListFragment.this, LOADING_DIALOG_FRAGMENT);
         loadingFragment.show(getFragmentManager(), DIALOG_LOADING_DETAIL);
@@ -403,19 +401,10 @@ public class MediaListFragment extends Fragment implements LoadingDetailDialogFr
     @Override
     public void onDetailLoadSuccess(final Media item) {
         if (VersionUtils.isLollipop()) {
-            ActivityOptionsCompat options;
-            if (transImage != null) {
-                options = ActivityOptionsCompat.makeSceneTransitionAnimation(getActivity(), transImage, transImage.getTransitionName());
-            } else {
-                options = ActivityOptionsCompat.makeBasic();
-            }
             setExitTransition(TransitionInflater.from(context).inflateTransition(android.R.transition.fade));
             setEnterTransition(TransitionInflater.from(context).inflateTransition(android.R.transition.fade));
-            MediaDetailsActivity.startActivity(context, item, options.toBundle(), transImage);
         }
-        else {
-            MediaDetailsActivity.startActivity(context, item);
-        }
+        MediaDetailsActivity.startActivity(context, item);
     }
 
     @Override
