@@ -9,7 +9,6 @@
     <string name="drawer_open">Open Drawer</string>
     <string name="drawer_close">Close Drawer</string>
     <string name="genres">Genres</string>
-    <string name="search_hint">Movies, Series, People</string>
     <string name="no_data_found">No data found</string>
     <string name="loading_data">Loading data…</string>
     <string name="terms">This is an high alpha version of the app. Bugs are expected\nRegister view does not call the server side of the app yet.\nGood testing</string>
@@ -17,14 +16,11 @@
     <string name="accept">Accept</string>
     <string name="your_profile">Profile</string>
     <string name="title_discover_movies">Discover</string>
-    <string name="help">Help</string>
     <string name="your_activity">Your Activity</string>
     <string name="title_login">Login</string>
     <string name="email">Email</string>
     <string name="password">Password</string>
-    <string name="create_account_label">Don\'t have an account? Create one</string>
     <string name="username_login">Name</string>
-    <string name="login_failed">Login Failed</string>
     <string name="invalid_email">Enter a valid email</string>
     <string name="invalid_password">Password must have 4 to 16 characters</string>
     <string name="logged_in">Connected</string>
@@ -52,8 +48,6 @@
     <string name="privacy">Privacy</string>
     <string name="terms_of_use">Terms of use</string>
 
-    <string name="fragment_login_transition">fragment_login_transition</string>
-    <string name="fragment_register_transition">fragment_register_transition</string>
     <string name="image_logo_transition_login">fragment_image_logo_transition_login</string>
     <string name="login_or_alternatives">Or...</string>
     <string name="access_account_choose">Select an option</string>
@@ -69,5 +63,4 @@
     <string name="recommend_title">Recommend to a friend</string>
     <string name="director">Director</string>
     <string name="cast">Cast</string>
-    <string name="other_genres">Other Genres</string>
 </resources>

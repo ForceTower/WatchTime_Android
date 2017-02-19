@@ -12,14 +12,10 @@
     <dimen name="iconlist_icon_width">24dp</dimen>
     <dimen name="iconlist_icon_margin_horizontal">16dp</dimen>
     <dimen name="iconlist_text_margin_horizontal">72dp</dimen>
-    <dimen name="iconlist_secondary_text_size">14sp</dimen>
-    <dimen name="iconlist_text_twolines_padding">10dp</dimen>
 
     <dimen name="navlist_item_height">48dp</dimen>
     <dimen name="navlist_item_header">172dp</dimen>
 
-    <dimen name="action_margin">32dp</dimen>
-    <dimen name="context_icon">28dp</dimen>
     <dimen name="first_keyline">16dp</dimen>
     <dimen name="second_keyline">72dp</dimen>
     <dimen name="toolbar_horizontal_padding">4dp</dimen>
@@ -27,7 +23,6 @@
     <!-- Per the design guidelines, navigation drawers should be between 240dp and 320dp:
      https://developer.android.com/design/patterns/navigation-drawer.html -->
     <dimen name="nav_drawer_width">304dp</dimen>
-    <dimen name="text_account_sizes">30sp</dimen>
 
     <dimen name="griditem_title_horizontal">16dp</dimen>
     <dimen name="griditem_title_bottom">16dp</dimen>
@@ -43,7 +38,5 @@
     <dimen name="detail_meta_text_size">14sp</dimen>
     <dimen name="detail_meta_margin_top">8dp</dimen>
     <dimen name="detail_rating_margin_top">16dp</dimen>
-    <dimen name="detail_button_margin">14dp</dimen>
-    <dimen name="detail_button_text_size">12sp</dimen>
     <dimen name="detail_desc_text_size">15sp</dimen>
 </resources>
