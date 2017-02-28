@@ -122,7 +122,6 @@ public class MoviesProvider extends MediaProvider{
                     }
 
                     MovieResponse movies;
-
                     try {
                         movies = gson.fromJson(responseStr, MovieResponse.class);
                     } catch (Exception e) {

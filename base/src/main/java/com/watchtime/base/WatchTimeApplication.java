@@ -75,7 +75,6 @@ public class WatchTimeApplication extends Application {
             }
 
             httpClient = new OkHttpClient.Builder().cache(cache).build();
-            //httpClient.setCache(cache);
         }
 
         return httpClient;

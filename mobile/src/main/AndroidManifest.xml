@@ -27,6 +27,7 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.WatchTime"
         tools:replace="android:theme">
+
         <activity
             android:name=".activities.MainActivity"
             android:theme="@style/Theme.WatchTime.NavigationDrawer"
@@ -37,8 +38,11 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+
         <activity android:name=".activities.TermsActivity" />
+
         <activity android:name=".activities.SignUpActivity" />
+
         <activity
             android:name=".activities.AccessAccountBaseActivity"
             android:theme="@style/Theme.WatchTime.TransparentStatusBar">
@@ -51,10 +55,11 @@
                 <data android:scheme="@string/fb_login_protocol_scheme" />
             </intent-filter>
         </activity>
+
         <activity
             android:name=".activities.MediaDetailsActivity"
             android:theme="@style/Theme.WatchTime.Detail">
         </activity>
-    </application>
 
+    </application>
 </manifest>
