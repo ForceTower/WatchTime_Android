@@ -11,6 +11,10 @@ import com.watchtime.base.providers.media.models.Media;
 import com.watchtime.base.providers.media.models.Movie;
 import com.watchtime.base.providers.media.models.Person;
 
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import java.io.IOException;
 import java.net.SocketException;
 import java.util.ArrayList;
@@ -27,8 +31,7 @@ import okhttp3.Response;
 
 public class MoviesProvider extends MediaProvider{
     private static final MoviesProvider mediaProvider = new MoviesProvider();
-    private static Integer CURRENT_API = 0;
-    private static final String[] API_URLS = ApiEndPoints.BASE_MOVIES_URLS;
+    private static final String API_URL = ApiEndPoints.BASE_MOVIES_URLS;
     private static Filters filters = new Filters();
 
     @Override
@@ -53,14 +56,14 @@ public class MoviesProvider extends MediaProvider{
             list = (ArrayList<Media>) currentList.clone();
         }
 
-        ArrayList<NameValuePair> params = new ArrayList<>();
-        params.add(new NameValuePair("lang", filter.langCode));
-        params.add(new NameValuePair("sort_by", "rating"));
+        //ArrayList<NameValuePair> params = new ArrayList<>();
+        //params.add(new NameValuePair("lang", filter.langCode));
+        //params.add(new NameValuePair("sort_by", "rating"));
         //params.add(new NameValuePair("page", Integer.toString(filter.page)));
 
         Request.Builder requestBuilder = new Request.Builder();
-        String query = buildQuery(params);
-        requestBuilder.url(API_URLS[CURRENT_API] + query);
+        //String query = buildQuery(params);
+        requestBuilder.url(API_URL + filter.page);
         requestBuilder.tag(MEDIA_CALL);
 
         ArrayList<Person> actors = new ArrayList<>();
@@ -91,13 +94,13 @@ public class MoviesProvider extends MediaProvider{
         m3.director = "Joe Russo";
         m3.directorImage = "https://image.tmdb.org/t/p/w640/5bMVczVDqLJFpfLQZhQ4hhwkSQD.jpg";
         //m3.actors = actors;
-
+/*
         for (int i = 0; i < 15; i++) {
             list.add(m);
             list.add(m2);
             list.add(m3);
         }
-
+*/
         return fetchList(list, requestBuilder, filter, callback);
     }
 
@@ -105,8 +108,8 @@ public class MoviesProvider extends MediaProvider{
         return enqueue(requestBuilder.build(), new okhttp3.Callback() {
             @Override
             public void onFailure(Call call, IOException e) {
-                //callback.onFailure(e);
-                callback.onSuccess(filters, currentList, true);
+                callback.onFailure(e);
+                //callback.onSuccess(filters, currentList, true);
             }
 
             @Override
@@ -123,19 +126,19 @@ public class MoviesProvider extends MediaProvider{
 
                     MovieResponse movies;
                     try {
-                        movies = gson.fromJson(responseStr, MovieResponse.class);
+                        movies = new MovieResponse(responseStr);
+                        currentList.addAll(movies.asList());
                     } catch (Exception e) {
                         onFailure(e);
                     }
-
                     callback.onSuccess(filters, currentList, true);
                 }
             }
 
             void onFailure(Exception ex) {
                 Log.d("MoviesProviderError", "Error: " + ex.toString());
-                //callback.onFailure(ex);
-                callback.onSuccess(filters, currentList, true);
+                callback.onFailure(ex);
+                //callback.onSuccess(filters, currentList, true);
             }
         });
     }
@@ -178,10 +181,46 @@ public class MoviesProvider extends MediaProvider{
     }
 
     private class MovieResponse {
-        public String id;
-        public String page;
-        public LinkedTreeMap<String, Object> results;
-        public String total_pages;
-        public String total_results;
+        JSONArray response;
+
+        MovieResponse(String json) throws JSONException {
+            this.response = new JSONArray(json);
+        }
+
+        ArrayList<Movie> asList() throws JSONException {
+            ArrayList<Movie> list = new ArrayList<>();
+
+            for (int i = 0; i < response.length(); i++) {
+                JSONObject item = response.getJSONObject(i);
+
+                Integer tmdb_id = item.getInt("tmdb");
+                String name = item.getString("name");
+                String overview = item.optString("overview", "");
+                String release_date = item.optString("release_date", "0000-00-00");
+                String poster = item.optString("poster_path", "");
+                String backdrop = item.optString("backdrop_path", "");
+                String rating = item.getString("vote_average");
+                String reviews = item.getString("vote_count");
+                String runtime = item.optString("runtime", "0");
+
+                String year = release_date.split("-")[0];
+                if (!poster.trim().equals("")) {
+                    poster = "https://image.tmdb.org/t/p/w780/" + poster;
+                }
+
+                if (!backdrop.trim().equals("")) {
+                    backdrop = "https://image.tmdb.org/t/p/w780/" + backdrop;
+                }
+
+                if (runtime == null || runtime.equals("null"))
+                    runtime = "0";
+
+                Movie movie = new Movie(tmdb_id.toString(), name, poster, poster, mediaProvider, runtime, year, rating, reviews, backdrop);
+                movie.synopsis = overview;
+                list.add(movie);
+            }
+
+            return list;
+        }
     }
 }

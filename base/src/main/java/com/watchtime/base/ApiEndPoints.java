@@ -10,5 +10,5 @@ public class ApiEndPoints {
     public static String API_POINT = BASE_URL + "/api";
 
 
-    public static String[] BASE_MOVIES_URLS = {API_POINT + "/movies"};
+    public static String BASE_MOVIES_URLS = BASE_URL + "/movie/popular/";
 }

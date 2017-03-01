@@ -161,7 +161,10 @@ public class MovieDetailsFragment extends DetailMediaBaseFragment {
         String metaDataStr = movie.year;
 
         if (!movie.runtime.isEmpty()) {
-            int runtime = Integer.parseInt(movie.runtime);
+            int runtime = 0;
+            if (movie.runtime != null) {
+                runtime = Integer.parseInt(movie.runtime);
+            }
             int hours = runtime/60;
             int minutes = runtime%60;
 
