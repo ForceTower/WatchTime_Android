@@ -43,7 +43,7 @@ public abstract class MediaProvider extends BaseProvider implements Parcelable {
 
     public static class Filters {
         public enum Order {ASC, DESC}
-        public enum Sort {POPULARITY, YEAR, DATE, RATING, ALPHABET, TRENDING}
+        public enum Sort {POPULARITY, RELEASE, NOW_PLAYING, RATING, UPCOMING}
 
         public String keywords = null;
         public String genre = null;
@@ -71,7 +71,7 @@ public abstract class MediaProvider extends BaseProvider implements Parcelable {
         private Filters.Order mDefOrder;
         private String mLabel;
 
-        public NavInfo(int id, Filters.Sort sort, Filters.Order defOrder, String label,@Nullable @DrawableRes Integer icon) {
+        NavInfo(int id, Filters.Sort sort, Filters.Order defOrder, String label,@Nullable @DrawableRes Integer icon) {
             mId = id;
             mSort = sort;
             mDefOrder = defOrder;

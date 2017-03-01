@@ -84,7 +84,6 @@ public class MainActivity extends WatchTimeBaseActivity implements NavigationDra
         if (VersionUtils.isLollipop()) {
             getWindow().setExitTransition(TransitionInflater.from(this).inflateTransition(android.R.transition.fade));
             getWindow().setEnterTransition(TransitionInflater.from(this).inflateTransition(android.R.transition.fade));
-            getWindow().setNavigationBarColor(ContextCompat.getColor(this, R.color.primary));
         }
 
         //Supports Action Bar

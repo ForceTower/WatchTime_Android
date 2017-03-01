@@ -21,6 +21,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import okhttp3.Call;
+import okhttp3.Callback;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import okhttp3.Response;
@@ -31,7 +32,7 @@ import okhttp3.Response;
 
 public class MoviesProvider extends MediaProvider{
     private static final MoviesProvider mediaProvider = new MoviesProvider();
-    private static final String API_URL = ApiEndPoints.BASE_MOVIES_URLS;
+    private static final String API_URL = ApiEndPoints.BASE_MOVIES_POPULAR;
     private static Filters filters = new Filters();
 
     @Override
@@ -56,14 +57,19 @@ public class MoviesProvider extends MediaProvider{
             list = (ArrayList<Media>) currentList.clone();
         }
 
-        //ArrayList<NameValuePair> params = new ArrayList<>();
-        //params.add(new NameValuePair("lang", filter.langCode));
-        //params.add(new NameValuePair("sort_by", "rating"));
-        //params.add(new NameValuePair("page", Integer.toString(filter.page)));
+        String requestWebsite = ApiEndPoints.BASE_MOVIES_POPULAR;
+        if (filter.sort == Filters.Sort.RELEASE) {
+            requestWebsite = ApiEndPoints.BASE_MOVIES_RELEASE;
+        } else if (filter.sort == Filters.Sort.RATING) {
+            requestWebsite = ApiEndPoints.BASE_MOVIES_RATING;
+        } else if (filter.sort == Filters.Sort.NOW_PLAYING) {
+            requestWebsite = ApiEndPoints.BASE_MOVIES_NOW_PLAYING;
+        } else if (filter.sort == Filters.Sort.UPCOMING) {
+            requestWebsite = ApiEndPoints.BASE_MOVIES_UPCOMING;
+        }
 
         Request.Builder requestBuilder = new Request.Builder();
-        //String query = buildQuery(params);
-        requestBuilder.url(API_URL + filter.page);
+        requestBuilder.url(requestWebsite + filter.page);
         requestBuilder.tag(MEDIA_CALL);
 
         ArrayList<Person> actors = new ArrayList<>();
@@ -74,13 +80,6 @@ public class MoviesProvider extends MediaProvider{
         actors.add(new Person("5", "Mads Mikkelsen", "https://image.tmdb.org/t/p/w640/o29Wd1DL8ZcSnVlOhLZ53LPPRwi.jpg", "Kaecilius"));
         actors.add(new Person("6", "Chris Hemsworth", "https://image.tmdb.org/t/p/w640/lrhth7yK9p3vy6p7AabDUM1THKl.jpg", "Thor Odinson"));
 
-        Movie m = new Movie("1", "The Only One Movie Possible", "https://image.tmdb.org/t/p/w640/hLudzvGfpi6JlwUnsNhXwKKg4j.jpg", "https://image.tmdb.org/t/p/w640/hLudzvGfpi6JlwUnsNhXwKKg4j.jpg", this, "125", "2017", "10.0", "76", "https://image.tmdb.org/t/p/w533_and_h300_bestv2/x3akjRHhZnIZx0EiQ3eOg66qoS9.jpg");
-        m.genre = "Drama";
-        m.synopsis = "Taking place after alien crafts land around the world, an expert linguist is recruited by the military to determine whether they come in peace or are a threat.";
-        m.director = "Denis Villeneuve";
-        m.directorImage = "https://image.tmdb.org/t/p/w640/uRzwzBRJVqsFjlrvF53zYJhIJRI.jpg";
-        //m.actors = actors;
-
         Movie m2 = new Movie("1", "Doctor Strange", "https://image.tmdb.org/t/p/w640/xfWac8MTYDxujaxgPVcRD9yZaul.jpg", "https://image.tmdb.org/t/p/w640/xfWac8MTYDxujaxgPVcRD9yZaul.jpg", this, "105", "2016", "10.0", "189", "https://image.tmdb.org/t/p/w533_and_h300_bestv2/sDNhWjd4X7c0oOlClkkwvqVOo45.jpg");
         m2.genre = "Adventure";
         m2.synopsis = "After his career is destroyed, a brilliant but arrogant surgeon gets a new lease on life when a sorcerer takes him under his wing and trains him to defend the world against evil.";
@@ -88,19 +87,6 @@ public class MoviesProvider extends MediaProvider{
         m2.directorImage = "https://image.tmdb.org/t/p/w640/7lh5rL4uMgaNmR6O5794s4b1eB7.jpg";
         m2.actors = actors;
 
-        Movie m3 = new Movie("1", "Captain America: Civil War", "https://image.tmdb.org/t/p/w640/5N20rQURev5CNDcMjHVUZhpoCNC.jpg", "https://image.tmdb.org/t/p/w640/5N20rQURev5CNDcMjHVUZhpoCNC.jpg", this, "120", "2016", "9.5", "102", "https://image.tmdb.org/t/p/w533_and_h300_bestv2/m5O3SZvQ6EgD5XXXLPIP1wLppeW.jpg");
-        m3.genre = "Action";
-        m3.synopsis = "Following the events of Age of Ultron, the collective governments of the world pass an act designed to regulate all superhuman activity. This polarizes opinion amongst the Avengers, causing two factions to side with Iron Man or Captain America, which causes an epic battle between former allies.";
-        m3.director = "Joe Russo";
-        m3.directorImage = "https://image.tmdb.org/t/p/w640/5bMVczVDqLJFpfLQZhQ4hhwkSQD.jpg";
-        //m3.actors = actors;
-/*
-        for (int i = 0; i < 15; i++) {
-            list.add(m);
-            list.add(m2);
-            list.add(m3);
-        }
-*/
         return fetchList(list, requestBuilder, filter, callback);
     }
 
@@ -109,7 +95,6 @@ public class MoviesProvider extends MediaProvider{
             @Override
             public void onFailure(Call call, IOException e) {
                 callback.onFailure(e);
-                //callback.onSuccess(filters, currentList, true);
             }
 
             @Override
@@ -120,7 +105,7 @@ public class MoviesProvider extends MediaProvider{
                     try {
                         responseStr = response.body().string();
                     } catch (SocketException e) {
-                        onFailure(new IOException("Socket Exception"));
+                        onFailure(e);
                         return;
                     }
 
@@ -132,23 +117,65 @@ public class MoviesProvider extends MediaProvider{
                         onFailure(e);
                     }
                     callback.onSuccess(filters, currentList, true);
+                } else {
+                    onFailure(new Exception("Response is Unsuccessful"));
                 }
             }
 
             void onFailure(Exception ex) {
                 Log.d("MoviesProviderError", "Error: " + ex.toString());
                 callback.onFailure(ex);
-                //callback.onSuccess(filters, currentList, true);
             }
         });
     }
 
     @Override
     public Call getDetail(ArrayList<Media> currentList, Integer index, Callback callback) {
-        ArrayList<Media> returnList = new ArrayList<>();
-        returnList.add(currentList.get(index));
-        callback.onSuccess(null, returnList, true);
-        return null;
+        Media media = currentList.get(index);
+        Request.Builder requestBuilder = new Request.Builder();
+        requestBuilder.url(ApiEndPoints.BASE_MOVIES_DETAILS + media.videoId);
+        requestBuilder.tag(MEDIA_CALL);
+        return fetchDetails(requestBuilder, callback);
+    }
+
+    private Call fetchDetails(final Request.Builder requestBuilder, final Callback callback) {
+        return enqueue(requestBuilder.build(), new okhttp3.Callback() {
+            @Override
+            public void onFailure(Call call, IOException e) {
+                Log.d("MoviesProviderError", "Failed Fetching Details");
+                callback.onFailure(e);
+            }
+
+            @Override
+            public void onResponse(Call call, Response response) throws IOException {
+                Log.d("MoviesProvider", "Details Response Arrived");
+
+                if (response.isSuccessful()) {
+                    String responseStr;
+                    try {
+                        responseStr = response.body().string();
+                    } catch (SocketException e) {
+                        onFailure(e);
+                        return;
+                    }
+
+                    MovieResponse movieResponse;
+                    try {
+                        movieResponse = new MovieResponse();
+                        JSONObject json = new JSONObject(responseStr);
+                        callback.onSuccess(null, movieResponse.singleMovie(json), true);
+                    } catch (Exception e) {
+                        onFailure(e);
+                    }
+
+                }
+            }
+
+            void onFailure(Exception ex) {
+                Log.d("MoviesProviderError", "Error: " + ex.toString());
+                callback.onFailure(ex);
+            }
+        });
     }
 
     @Override
@@ -159,8 +186,11 @@ public class MoviesProvider extends MediaProvider{
     @Override
     public List<NavInfo> getNavigation() {
         List<NavInfo> tabs = new ArrayList<>();
-        tabs.add(new NavInfo(R.id.movies_trending, Filters.Sort.TRENDING, Filters.Order.DESC, "ALL", R.drawable.filter_trending));
-        tabs.add(new NavInfo(R.id.movies_trending, Filters.Sort.TRENDING, Filters.Order.DESC, WatchTimeApplication.getAppContext().getString(R.string.trending), R.drawable.filter_trending));
+        tabs.add(new NavInfo(R.id.movies_release, Filters.Sort.RELEASE, Filters.Order.DESC, WatchTimeApplication.getAppContext().getString(R.string.release), R.drawable.filter_release));
+        tabs.add(new NavInfo(R.id.movies_popular, Filters.Sort.POPULARITY, Filters.Order.DESC, WatchTimeApplication.getAppContext().getString(R.string.popularity), R.drawable.filter_popularity));
+        tabs.add(new NavInfo(R.id.movies_rating, Filters.Sort.RATING, Filters.Order.DESC, WatchTimeApplication.getAppContext().getString(R.string.rating), R.drawable.filter_rating));
+        tabs.add(new NavInfo(R.id.movies_now_playing, Filters.Sort.NOW_PLAYING, Filters.Order.DESC, WatchTimeApplication.getAppContext().getString(R.string.now_playing), R.drawable.filter_now_playing));
+        tabs.add(new NavInfo(R.id.movies_upcoming, Filters.Sort.UPCOMING, Filters.Order.DESC, WatchTimeApplication.getAppContext().getString(R.string.upcoming), R.drawable.filter_upcoming));
         return tabs;
     }
 
@@ -187,8 +217,12 @@ public class MoviesProvider extends MediaProvider{
             this.response = new JSONArray(json);
         }
 
+        MovieResponse() {}
+
         ArrayList<Movie> asList() throws JSONException {
             ArrayList<Movie> list = new ArrayList<>();
+            if(response == null)
+                return list;
 
             for (int i = 0; i < response.length(); i++) {
                 JSONObject item = response.getJSONObject(i);
@@ -221,6 +255,45 @@ public class MoviesProvider extends MediaProvider{
             }
 
             return list;
+        }
+
+        ArrayList<Media> singleMovie(JSONObject item) throws JSONException {
+            ArrayList<Media> returnList = new ArrayList<>();
+
+            Integer tmdb_id = item.getInt("tmdb");
+            String name = item.getString("name");
+            String tag_line = item.optString("tag_line", "");
+            String overview = item.optString("overview", "");
+            String imdb = item.optString("imdb", "");
+            String status = item.optString("status", "Unknown");
+            String release_date = item.optString("release_date", "0000-00-00");
+            String poster = item.optString("poster_path", "");
+            String backdrop = item.optString("backdrop_path", "");
+            String rating = item.getString("vote_average");
+            String reviews = item.getString("vote_count");
+            String runtime = item.optString("runtime", "0");
+            Integer budget = item.optInt("budget", 0);
+            Integer revenue = item.optInt("revenue", 0);
+            String homepage = item.optString("homepage", "");
+
+            String year = release_date.split("-")[0];
+            if (!poster.trim().equals("")) {
+                poster = "https://image.tmdb.org/t/p/w780/" + poster;
+            }
+
+            if (!backdrop.trim().equals("")) {
+                backdrop = "https://image.tmdb.org/t/p/w780/" + backdrop;
+            }
+
+            if (runtime == null || runtime.equals("null"))
+                runtime = "0";
+
+            Movie movie = new Movie(tmdb_id.toString(), name, poster, poster, mediaProvider, runtime, year, rating, reviews, backdrop);
+            movie.synopsis = overview;
+
+            returnList.add(movie);
+            Log.d("MoviesProvider", "Executed");
+            return returnList;
         }
     }
 }

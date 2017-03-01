@@ -88,18 +88,42 @@ public class LoadingDetailDialogFragment extends DialogFragment {
 
         ArrayList<Media> list = callback.getCurrentList();
         int position = getArguments().getInt(EXTRA_MEDIA);
-        final Media media = list.get(position);
+        Media short_media = list.get(position);
+        provider = short_media.getMediaProvider();
+        final int color = short_media.color;
 
-        Log.d("Load Details", "Got the media: " + media);
-
-        Handler handler = new Handler(Looper.getMainLooper());
-        handler.post(new Runnable() {
+        provider.getDetail(list, position, new MediaProvider.Callback() {
             @Override
-            public void run() {
-                callback.onDetailLoadSuccess(media);
-                if (!savedInstance) dismiss();
+            public void onSuccess(MediaProvider.Filters filters, ArrayList<Media> items, boolean changed) {
+                final Media media = items.get(0);
+                media.color = color;
+
+                Handler handler = new Handler(Looper.getMainLooper());
+                handler.post(new Runnable() {
+                    @Override
+                    public void run() {
+                        callback.onDetailLoadSuccess(media);
+                        if (!savedInstance) dismiss();
+                    }
+                });
+            }
+
+            @Override
+            public void onFailure(Exception e) {
+                Handler handler = new Handler(Looper.getMainLooper());
+                handler.post(new Runnable() {
+                    @Override
+                    public void run() {
+                        callback.onDetailLoadFailure();
+                        if (!savedInstance) dismiss();
+                    }
+                });
             }
         });
+
+
+
+
 
     }
 }
