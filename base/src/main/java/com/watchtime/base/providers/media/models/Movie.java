@@ -6,6 +6,7 @@ import android.os.Parcelable;
 import com.watchtime.base.providers.media.MediaProvider;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 
 /**
  * Created by João Paulo on 16/02/2017.
@@ -19,6 +20,7 @@ public class Movie extends Media implements Parcelable{
     public String directorImage = "";
     public ArrayList<Person> actors;
     public ArrayList<Genre> genres;
+    public HashMap<String, Integer> allGenres;
 
     protected Movie(Parcel in) {
         super(in);

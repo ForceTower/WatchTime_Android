@@ -328,7 +328,7 @@ public class MovieDetailsFragment extends DetailMediaBaseFragment {
             new Handler(Looper.getMainLooper()).post(new Runnable() {
                 @Override
                 public void run() {
-                    Snackbar.make(v, "Clicked person: " + person.name, Snackbar.LENGTH_SHORT).show();
+                    Snackbar.make(v, person.name + " as " + person.role, Snackbar.LENGTH_SHORT).show();
                 }
             });
         }

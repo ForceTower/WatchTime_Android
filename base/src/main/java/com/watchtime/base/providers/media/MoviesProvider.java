@@ -16,8 +16,10 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.IOException;
+import java.lang.reflect.Array;
 import java.net.SocketException;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
 import okhttp3.Call;
@@ -257,7 +259,14 @@ public class MoviesProvider extends MediaProvider{
             return list;
         }
 
-        ArrayList<Media> singleMovie(JSONObject item) throws JSONException {
+        ArrayList<Media> singleMovie(JSONObject item) throws Exception {
+            if (item.has("error")) {
+                throw new Exception("Invalid Request");
+            }
+
+            JSONArray data = item.getJSONArray("data");
+            item = data.getJSONObject(0);
+
             ArrayList<Media> returnList = new ArrayList<>();
 
             Integer tmdb_id = item.getInt("tmdb");
@@ -291,8 +300,85 @@ public class MoviesProvider extends MediaProvider{
             Movie movie = new Movie(tmdb_id.toString(), name, poster, poster, mediaProvider, runtime, year, rating, reviews, backdrop);
             movie.synopsis = overview;
 
+
+            HashMap<String, Integer> genres = new HashMap<>();
+
+            JSONObject genresObj = item.getJSONObject("genres");
+            JSONArray dataGenres = genresObj.getJSONArray("data");
+            String firstGenre = "";
+
+            for (int i = 0; i < dataGenres.length(); i++) {
+                JSONObject current = dataGenres.getJSONObject(i);
+                genres.put(current.getString("genre"), current.getInt("genre_id"));
+                if (i == 0) firstGenre = current.getString("genre");
+            }
+
+            movie.allGenres = genres;
+            if (!genres.isEmpty())
+                movie.genre = firstGenre;
+
+            JSONObject cast = item.optJSONObject("cast");
+            if (cast != null)
+                movie.actors = parseActors(cast);
+
+            JSONObject crew = item.optJSONObject("crew");
+            if (crew != null) {
+                ArrayList<String> director = getDirectorName(crew);
+                movie.director = director.get(0);
+                movie.directorImage = director.get(1);
+            }
+
             returnList.add(movie);
             Log.d("MoviesProvider", "Executed");
+            return returnList;
+        }
+
+        private ArrayList<Person> parseActors(JSONObject cast) throws JSONException {
+            ArrayList<Person> returnList = new ArrayList<>();
+            JSONArray data = cast.getJSONArray("data");
+
+            for (int i = 0; i < data.length(); i++) {
+                JSONObject pers = data.getJSONObject(i);
+
+                String tmdb = pers.getString("tmdb");
+                String name = pers.getString("person");
+                String prof = pers.optString("profile_path", "");
+                String role = pers.getString("character");
+
+                if (!prof.trim().isEmpty()) {
+                    prof = "https://image.tmdb.org/t/p/w185/" + prof;
+                }
+
+                Person person = new Person(tmdb, name, prof, role);
+                returnList.add(person);
+            }
+
+            return returnList;
+        }
+
+        private ArrayList<String> getDirectorName(JSONObject crew) throws JSONException {
+            ArrayList<String> returnList = new ArrayList<>();
+            JSONArray data = crew.getJSONArray("data");
+
+            String directorName = "Unknown";
+            String profilePicture = "";
+
+            for (int i = 0; i < data.length(); i++) {
+                JSONObject pers = data.getJSONObject(i);
+
+                String tmdb = pers.getString("tmdb");
+                String name = pers.getString("person");
+                String prof = pers.optString("profile_path", "");
+                String role = pers.optString("job", "");
+
+                if (role.equals("Director")) {
+                    directorName = name;
+                    profilePicture = "https://image.tmdb.org/t/p/w185/" + prof;
+                }
+            }
+
+            returnList.add(directorName);
+            returnList.add(profilePicture);
             return returnList;
         }
     }

@@ -13,6 +13,7 @@ import com.squareup.picasso.Picasso;
 import com.watchtime.R;
 import com.watchtime.base.providers.media.models.Person;
 import com.watchtime.base.utils.AnimUtils;
+import com.watchtime.base.utils.PixelUtils;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -104,8 +105,14 @@ public class CastAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>{
     }
 
     public void setItems(List<Person> actors) {
-        if (actors.size() >= MAX_ACTORS_IN_VIEW) {
-            actors = actors.subList(0, MAX_ACTORS_IN_VIEW-1);
+        int MAX_ACTORS = MAX_ACTORS_IN_VIEW;
+
+        /*if (!PixelUtils.screenIsPortrait(context)) {
+            MAX_ACTORS *= 2;
+        }*/
+
+        if (actors.size() >= MAX_ACTORS) {
+            actors = actors.subList(0, MAX_ACTORS-1);
         }
 
         this.actors = new ArrayList<>();
