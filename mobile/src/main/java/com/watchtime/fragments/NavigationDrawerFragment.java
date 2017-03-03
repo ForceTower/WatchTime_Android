@@ -1,6 +1,7 @@
 package com.watchtime.fragments;
 
 import android.app.Activity;
+import android.content.Context;
 import android.content.Intent;
 import android.content.res.Configuration;
 import android.os.Bundle;
@@ -119,7 +120,7 @@ public class NavigationDrawerFragment extends Fragment implements NavigationAdap
     }
 
     @Override
-    public void onAttach(Activity activity) {
+    public void onAttach(Context activity) {
         super.onAttach(activity);
         try {
             mCallbacks = (Callbacks) activity;
