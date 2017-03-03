@@ -3,8 +3,11 @@ package com.watchtime.base.providers.media.models;
 import android.graphics.Color;
 import android.os.Parcel;
 import android.os.Parcelable;
+import android.widget.ArrayAdapter;
 
 import com.watchtime.base.providers.media.MediaProvider;
+
+import java.util.ArrayList;
 
 /**
  * Created by João Paulo on 24/01/2017.
@@ -24,6 +27,7 @@ public class Media implements Parcelable{
     public String headerImage;
     public int color;
     protected MediaProvider provider;
+    public ArrayList<String> backdrops;
 
     public Media(String videoId, String title, String image, String fullImage, MediaProvider provider, String year, String rating, String reviews, String headerImage) {
         this.videoId = videoId;

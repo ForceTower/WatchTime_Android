@@ -8,6 +8,7 @@ import android.support.annotation.Nullable;
 import android.support.design.widget.Snackbar;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.transition.TransitionInflater;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
@@ -30,6 +31,7 @@ import com.watchtime.base.providers.media.models.Movie;
 import com.watchtime.base.providers.media.models.Person;
 import com.watchtime.base.utils.AnimUtils;
 import com.watchtime.base.utils.PixelUtils;
+import com.watchtime.base.utils.VersionUtils;
 import com.watchtime.fragments.base.DetailMediaBaseFragment;
 
 import butterknife.Bind;
@@ -188,7 +190,6 @@ public class MovieDetailsFragment extends DetailMediaBaseFragment implements Med
                 @Override
                 public void onSuccess() {
                     AnimUtils.fadeIn(directorImage);
-                    //logo.setVisibility(View.GONE);
                 }
 
                 @Override
@@ -300,18 +301,14 @@ public class MovieDetailsFragment extends DetailMediaBaseFragment implements Med
     @Override
     public boolean onTouchEvent(MotionEvent event) {
         if (event.getAction() == MotionEvent.ACTION_DOWN) {
-            Log.d("MovieDetails", "Signal received");
             if (actionsBtn.isOpened()) {
                 Rect outRect = new Rect();
                 actionsBtn.getGlobalVisibleRect(outRect);
 
                 if(!outRect.contains((int)event.getRawX(), (int)event.getRawY())) {
                     actionsBtn.close(true);
-                    Log.d("MovieDetails", "Should've closed");
                     return true;
                 }
-
-                Log.d("MovieDetails", "Should've not closed");
             }
         }
         return false;

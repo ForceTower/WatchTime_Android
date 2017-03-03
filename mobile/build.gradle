@@ -32,6 +32,7 @@ dependencies {
 
 
     compile project(':base')
+
     compile 'com.android.support:appcompat-v7:25.2.0'
     compile 'com.android.support:design:25.2.0'
     compile 'com.jakewharton:butterknife:7.0.1'
@@ -40,6 +41,6 @@ dependencies {
     compile 'com.android.support:support-v4:25.2.0'
     compile 'com.github.nirhart:parallaxscroll:1.0'
     compile 'com.github.clans:fab:1.6.4'
-
+    compile 'com.android.support.constraint:constraint-layout:+'
     testCompile 'junit:junit:4.12'
 }

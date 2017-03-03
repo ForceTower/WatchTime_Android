@@ -329,6 +329,11 @@ public class MoviesProvider extends MediaProvider{
                 movie.directorImage = director.get(1);
             }
 
+            JSONObject backdrops = item.optJSONObject("images");
+            if (backdrops != null) {
+                movie.backdrops = parseBackdrops(backdrops);
+            }
+
             returnList.add(movie);
             Log.d("MoviesProvider", "Executed");
             return returnList;
@@ -381,6 +386,22 @@ public class MoviesProvider extends MediaProvider{
             returnList.add(directorName);
             returnList.add(profilePicture);
             return returnList;
+        }
+
+        public ArrayList<String> parseBackdrops(JSONObject object) throws JSONException {
+            ArrayList<String> backdrops = new ArrayList<>();
+
+            JSONArray array = object.optJSONArray("data");
+            if (array != null) {
+                for (int i = 0; i < array.length(); i++) {
+                    JSONObject backdrop = array.getJSONObject(i);
+                    String url = backdrop.optString("image_path");
+                    if (url != null)
+                        backdrops.add("https://image.tmdb.org/t/p/w780" + url);
+                }
+            }
+
+            return backdrops;
         }
     }
 }
