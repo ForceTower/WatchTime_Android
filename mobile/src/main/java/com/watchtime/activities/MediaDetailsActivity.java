@@ -144,7 +144,6 @@ public class MediaDetailsActivity extends WatchTimeBaseActivity {
         backgroundImage.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                //Snackbar.make(v, "Show More Pictures Activity will be created soon", Snackbar.LENGTH_SHORT).show();
                 if (media.backdrops != null && !media.backdrops.isEmpty()) {
                     if (VersionUtils.isLollipop())
                         getWindow().setExitTransition(TransitionInflater.from(MediaDetailsActivity.this).inflateTransition(android.R.transition.explode));

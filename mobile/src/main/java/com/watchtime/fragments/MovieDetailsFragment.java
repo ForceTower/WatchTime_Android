@@ -8,7 +8,6 @@ import android.support.annotation.Nullable;
 import android.support.design.widget.Snackbar;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.transition.TransitionInflater;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
@@ -31,7 +30,6 @@ import com.watchtime.base.providers.media.models.Movie;
 import com.watchtime.base.providers.media.models.Person;
 import com.watchtime.base.utils.AnimUtils;
 import com.watchtime.base.utils.PixelUtils;
-import com.watchtime.base.utils.VersionUtils;
 import com.watchtime.fragments.base.DetailMediaBaseFragment;
 
 import butterknife.Bind;
@@ -43,8 +41,10 @@ public class MovieDetailsFragment extends DetailMediaBaseFragment implements Med
 
     @Bind(R.id.title)
     TextView title;
-    @Bind(R.id.year_time_genre)
-    TextView yearTimeGenre;
+    @Bind(R.id.year_time)
+    TextView yearTime;
+    @Bind(R.id.genres)
+    TextView genres;
     @Bind(R.id.plot_short)
     TextView plotShort;
     @Bind(R.id.rating)
@@ -165,11 +165,11 @@ public class MovieDetailsFragment extends DetailMediaBaseFragment implements Med
             metaDataStr = metaDataStr + " - " + hours + "h " + minutes + "min";
         }
 
-        if (movie.genre != null && !movie.genre.isEmpty()) {
+        /*if (movie.genre != null && !movie.genre.isEmpty()) {
             metaDataStr = metaDataStr + " - " + movie.genre;
-        }
+        }*/
 
-        yearTimeGenre.setText(metaDataStr);
+        yearTime.setText(metaDataStr);
     }
 
     public void setupSynopsis() {
@@ -220,9 +220,22 @@ public class MovieDetailsFragment extends DetailMediaBaseFragment implements Med
             return;
         }
 
-        allGenresLayout.setVisibility(View.VISIBLE);
-        genresLayoutManager = new LinearLayoutManager(getContext(), LinearLayoutManager.VERTICAL, false);
-        allGenresRecyclerView.setLayoutManager(genresLayoutManager);
+        String genresText = "";
+        boolean first = true;
+        for (String string : movie.allGenres.keySet()) {
+            if (first) {
+                genresText = string;
+                first = false;
+            } else {
+                genresText = genresText + " - " + string;
+            }
+        }
+        genres.setText(genresText);
+        hasOtherGenres = false;
+        allGenresLayout.setVisibility(View.GONE);
+        //allGenresLayout.setVisibility(View.VISIBLE);
+        //genresLayoutManager = new LinearLayoutManager(getContext(), LinearLayoutManager.VERTICAL, false);
+        //allGenresRecyclerView.setLayoutManager(genresLayoutManager);
     }
 
     public void continueCastInfoSetup() {

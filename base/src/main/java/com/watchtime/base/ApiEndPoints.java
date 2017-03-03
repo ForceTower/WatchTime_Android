@@ -10,9 +10,9 @@ public class ApiEndPoints {
 
     public static String BASE_MOVIES_POPULAR = BASE_URL + "/movies/popular/";
     public static String BASE_MOVIES_RELEASE = BASE_URL + "/movies/release?page=";
-    public static String BASE_MOVIES_RATING = BASE_URL + "/movies/popular/";
-    public static String BASE_MOVIES_NOW_PLAYING = BASE_URL + "/movies/popular/";
-    public static String BASE_MOVIES_UPCOMING = BASE_URL + "/movies/popular/";
+    public static String BASE_MOVIES_RATING = BASE_URL + "/movies/rating/";
+    public static String BASE_MOVIES_NOW_PLAYING = BASE_URL + "/movies/on_theaters/";
+    public static String BASE_MOVIES_UPCOMING = BASE_URL + "/movies/upcoming/";
 
     public static String BASE_MOVIES_DETAILS = BASE_URL + "/movie/";
 }
