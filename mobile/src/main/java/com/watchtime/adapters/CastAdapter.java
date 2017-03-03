@@ -27,7 +27,7 @@ import de.hdodenhof.circleimageview.CircleImageView;
  * Created by João Paulo on 17/02/2017.
  */
 
-public class CastAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>{
+public class CastAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
     public interface OnPersonClickListener {
         void onPersonClick(View v, Person person, int position);
         void onShowMoreClick(View v);

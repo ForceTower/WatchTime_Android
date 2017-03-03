@@ -173,6 +173,11 @@ public class MediaListFragment extends Fragment implements LoadingDetailDialogFr
         mode = (Mode) getArguments().getSerializable(EXTRA_MODE);
         if (mode == Mode.SEARCH) emptyView.setText(getString(R.string.no_search_results));
 
+        sortDefinition = (MediaProvider.Filters.Sort) getArguments().getSerializable(EXTRA_SORT);
+        orderDefinition = (MediaProvider.Filters.Order) getArguments().getSerializable(EXTRA_ORDER);
+        filters.sort = sortDefinition;
+        filters.order = orderDefinition;
+
         if (mode != Mode.SEARCH && gridAdapter.getItemCount() == 0) {
             currentCall = provider.getList(new MediaProvider.Filters(filters), callback);
             setState(State.LOADING);

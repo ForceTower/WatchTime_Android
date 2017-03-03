@@ -1,48 +1,38 @@
 package com.watchtime.fragments;
 
-import android.content.res.ColorStateList;
-import android.graphics.Color;
-import android.graphics.PorterDuff;
-import android.graphics.PorterDuffColorFilter;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
 import android.support.annotation.Nullable;
 import android.support.design.widget.Snackbar;
-import android.support.v4.graphics.ColorUtils;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ImageButton;
-import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RatingBar;
 import android.widget.TextView;
 
+import com.facebook.AccessToken;
 import com.github.clans.fab.FloatingActionButton;
 import com.github.clans.fab.FloatingActionMenu;
 import com.squareup.picasso.Callback;
 import com.squareup.picasso.Picasso;
 import com.watchtime.R;
+import com.watchtime.adapters.AllGenresAdapter;
 import com.watchtime.adapters.CastAdapter;
-import com.watchtime.adapters.GenreAdapter;
 import com.watchtime.base.providers.media.models.Movie;
 import com.watchtime.base.providers.media.models.Person;
 import com.watchtime.base.utils.AnimUtils;
 import com.watchtime.base.utils.PixelUtils;
-import com.watchtime.base.utils.VersionUtils;
 import com.watchtime.fragments.base.DetailMediaBaseFragment;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
 import de.hdodenhof.circleimageview.CircleImageView;
 
-/**
- * Created by João Paulo on 17/02/2017.
- */
 
 public class MovieDetailsFragment extends DetailMediaBaseFragment {
     private static Movie movie;
@@ -83,7 +73,7 @@ public class MovieDetailsFragment extends DetailMediaBaseFragment {
     LinearLayoutManager genresLayoutManager;
 
     CastAdapter castAdapter;
-    //AllGenresAdapter genreAdapter;
+    AllGenresAdapter genresAdapter;
 
     private boolean hasCast = true;
     private boolean hasOtherGenres = true;
@@ -221,7 +211,7 @@ public class MovieDetailsFragment extends DetailMediaBaseFragment {
     }
 
     public void setupAllGenresInfo() {
-        if (movie.genres == null || movie.genres.isEmpty()) {
+        if (movie.allGenres == null || movie.allGenres.isEmpty()) {
             allGenresLayout.setVisibility(View.GONE);
             hasOtherGenres = false;
             return;
@@ -246,12 +236,18 @@ public class MovieDetailsFragment extends DetailMediaBaseFragment {
         if (!hasOtherGenres) return;
 
         allGenresRecyclerView.setHasFixedSize(true);
-        //genresAdapter = new AllGenresAdapter(getActivity(), movie.genres);
-        //allGenresRecyclerView.setAdapter(genresAdapter);
+        genresAdapter = new AllGenresAdapter(getActivity(), movie.allGenres);
+        genresAdapter.setGenreClickListener(genreClickListener);
+        allGenresRecyclerView.setAdapter(genresAdapter);
     }
 
     public void setupFloatActionButtons() {
-        boolean showNames = true;
+        boolean showNames = false;
+
+        if (AccessToken.getCurrentAccessToken() == null) {
+            actionsBtn.setVisibility(View.GONE);
+            return;
+        }
 
         int normal = movie.color;
         int pressed = PixelUtils.colorLighter(movie.color);
@@ -277,8 +273,15 @@ public class MovieDetailsFragment extends DetailMediaBaseFragment {
 
         if (showNames) {
             addToList.setLabelText(getString(R.string.add_to_watchlist));
+            addToList.setLabelVisibility(View.VISIBLE);
             markWatched.setLabelText(getString(R.string.mark_as_watched));
+            markWatched.setLabelVisibility(View.VISIBLE);
             recommend.setLabelText(getString(R.string.recommend_title));
+            recommend.setLabelVisibility(View.VISIBLE);
+        } else {
+            addToList.setLabelVisibility(View.INVISIBLE);
+            markWatched.setLabelVisibility(View.INVISIBLE);
+            recommend.setLabelVisibility(View.INVISIBLE);
         }
 
         setupFloatButtonsListeners();
@@ -338,6 +341,18 @@ public class MovieDetailsFragment extends DetailMediaBaseFragment {
                 @Override
                 public void run() {
                     Snackbar.make(v, "Show full cast clicked", Snackbar.LENGTH_SHORT).show();
+                }
+            });
+        }
+    };
+
+    private AllGenresAdapter.OnGenreClickListener genreClickListener = new AllGenresAdapter.OnGenreClickListener() {
+        @Override
+        public void onGenreClicked(final View v, final String genre, int position) {
+            new Handler(Looper.getMainLooper()).post(new Runnable() {
+                @Override
+                public void run() {
+                    Snackbar.make(v, "Clicked Genre: " + genre, Snackbar.LENGTH_SHORT).show();
                 }
             });
         }

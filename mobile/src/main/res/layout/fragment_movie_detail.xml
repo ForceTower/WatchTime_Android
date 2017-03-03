@@ -42,19 +42,22 @@
             android:id="@+id/recommend"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            fab:fab_label="N"
             android:src="@drawable/ic_recommend" />
-
-        <com.github.clans.fab.FloatingActionButton
-            android:id="@+id/mark_watched"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:src="@drawable/ic_mark_watched"/>
 
         <com.github.clans.fab.FloatingActionButton
             android:id="@+id/add_to_list"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            fab:fab_label="N"
             android:src="@drawable/ic_your_list"/>
+
+        <com.github.clans.fab.FloatingActionButton
+            android:id="@+id/mark_watched"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            fab:fab_label="N"
+            android:src="@drawable/ic_mark_watched"/>
 
     </com.github.clans.fab.FloatingActionMenu>
 

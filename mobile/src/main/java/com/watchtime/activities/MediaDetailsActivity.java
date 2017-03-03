@@ -63,6 +63,7 @@ public class MediaDetailsActivity extends WatchTimeBaseActivity {
     @Bind(R.id.bg_image)
     ImageView backgroundImage;
 
+    private Fragment fragment = null;
 
     public static void startActivity(Context context, final Media detail) {
         Intent intent = new Intent(context, MediaDetailsActivity.class);
@@ -119,8 +120,7 @@ public class MediaDetailsActivity extends WatchTimeBaseActivity {
             content.setMinimumHeight(topHeight);
         }
 
-        //TODO: Change content fragment
-        Fragment fragment = null;
+        fragment = null;
 
         if (media.isMovie) {
             fragment = MovieDetailsFragment.newInstance((Movie)media);
@@ -163,6 +163,12 @@ public class MediaDetailsActivity extends WatchTimeBaseActivity {
                 Log.d("Media details", "Error!!!!!");
             }
         });
+    }
+
+    @Override
+    public void onBackPressed() {
+
+        super.onBackPressed();
     }
 
     @Override
