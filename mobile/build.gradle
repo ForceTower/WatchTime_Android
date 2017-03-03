@@ -32,12 +32,12 @@ dependencies {
 
 
     compile project(':base')
-    compile 'com.android.support:appcompat-v7:25.1.1'
-    compile 'com.android.support:design:25.1.1'
+    compile 'com.android.support:appcompat-v7:25.2.0'
+    compile 'com.android.support:design:25.2.0'
     compile 'com.jakewharton:butterknife:7.0.1'
     compile 'de.hdodenhof:circleimageview:2.1.0'
     compile 'com.github.johnkil.android-robototextview:robototextview:2.5.1'
-    compile 'com.android.support:support-v4:25.1.1'
+    compile 'com.android.support:support-v4:25.2.0'
     compile 'com.github.nirhart:parallaxscroll:1.0'
     compile 'com.github.clans:fab:1.6.4'
 
