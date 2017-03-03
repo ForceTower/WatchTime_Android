@@ -38,6 +38,10 @@ import butterknife.Bind;
 import static android.view.WindowManager.LayoutParams.FLAG_TRANSLUCENT_NAVIGATION;
 
 public class MediaDetailsActivity extends WatchTimeBaseActivity {
+    public interface OnBackPressed {
+        boolean onBackPressed();
+    }
+
     private static Media media;
     private int headerHeight = 0, toolbarHeight = 0, topHeight;
     private boolean transparentBar = true, isTablet = false;
@@ -167,7 +171,10 @@ public class MediaDetailsActivity extends WatchTimeBaseActivity {
 
     @Override
     public void onBackPressed() {
-
+        if (fragment instanceof OnBackPressed) {
+            if (((OnBackPressed) fragment).onBackPressed())
+                return;
+        }
         super.onBackPressed();
     }
 

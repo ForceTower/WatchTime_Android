@@ -21,6 +21,7 @@ import com.github.clans.fab.FloatingActionMenu;
 import com.squareup.picasso.Callback;
 import com.squareup.picasso.Picasso;
 import com.watchtime.R;
+import com.watchtime.activities.MediaDetailsActivity;
 import com.watchtime.adapters.AllGenresAdapter;
 import com.watchtime.adapters.CastAdapter;
 import com.watchtime.base.providers.media.models.Movie;
@@ -33,8 +34,7 @@ import butterknife.Bind;
 import butterknife.ButterKnife;
 import de.hdodenhof.circleimageview.CircleImageView;
 
-
-public class MovieDetailsFragment extends DetailMediaBaseFragment {
+public class MovieDetailsFragment extends DetailMediaBaseFragment implements MediaDetailsActivity.OnBackPressed {
     private static Movie movie;
 
     @Bind(R.id.title)
@@ -285,6 +285,14 @@ public class MovieDetailsFragment extends DetailMediaBaseFragment {
         }
 
         setupFloatButtonsListeners();
+    }
+
+    public boolean onBackPressed() {
+        if (actionsBtn.isOpened()) {
+            actionsBtn.close(true);
+            return true;
+        }
+        return false;
     }
 
     public void setupFloatButtonsListeners() {
