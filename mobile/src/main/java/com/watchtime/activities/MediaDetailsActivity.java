@@ -3,17 +3,15 @@ package com.watchtime.activities;
 import android.content.Context;
 import android.content.Intent;
 import android.support.annotation.Nullable;
+import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
-import android.support.v4.content.ContextCompat;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
 import android.transition.TransitionInflater;
 import android.util.Log;
+import android.view.MotionEvent;
 import android.view.View;
-import android.view.Window;
-import android.view.WindowManager;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -35,11 +33,10 @@ import com.watchtime.widget.ObservableParallaxScrollView;
 
 import butterknife.Bind;
 
-import static android.view.WindowManager.LayoutParams.FLAG_TRANSLUCENT_NAVIGATION;
-
 public class MediaDetailsActivity extends WatchTimeBaseActivity {
-    public interface OnBackPressed {
+    public interface ActivityToFragmentEvents {
         boolean onBackPressed();
+        boolean onTouchEvent(MotionEvent event);
     }
 
     private static Media media;
@@ -144,6 +141,13 @@ public class MediaDetailsActivity extends WatchTimeBaseActivity {
             getWindow().setNavigationBarColor(media.color);
         }
 
+        backgroundImage.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Snackbar.make(v, "Show More Pictures Activity will be created soon", Snackbar.LENGTH_SHORT).show();
+            }
+        });
+
         String imageUrl = media.image;
         if (isTablet || !PixelUtils.screenIsPortrait(this)) {
             imageUrl = media.headerImage;
@@ -170,9 +174,17 @@ public class MediaDetailsActivity extends WatchTimeBaseActivity {
     }
 
     @Override
+    public boolean dispatchTouchEvent(MotionEvent event) {
+        if (fragment != null && fragment instanceof ActivityToFragmentEvents)
+            ((ActivityToFragmentEvents) fragment).onTouchEvent(event);
+
+        return super.dispatchTouchEvent(event);
+    }
+
+    @Override
     public void onBackPressed() {
-        if (fragment instanceof OnBackPressed) {
-            if (((OnBackPressed) fragment).onBackPressed())
+        if (fragment != null && fragment instanceof ActivityToFragmentEvents) {
+            if (((ActivityToFragmentEvents) fragment).onBackPressed())
                 return;
         }
         super.onBackPressed();

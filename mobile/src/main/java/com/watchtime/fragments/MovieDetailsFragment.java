@@ -1,5 +1,6 @@
 package com.watchtime.fragments;
 
+import android.graphics.Rect;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
@@ -9,6 +10,7 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.LinearLayout;
@@ -34,7 +36,7 @@ import butterknife.Bind;
 import butterknife.ButterKnife;
 import de.hdodenhof.circleimageview.CircleImageView;
 
-public class MovieDetailsFragment extends DetailMediaBaseFragment implements MediaDetailsActivity.OnBackPressed {
+public class MovieDetailsFragment extends DetailMediaBaseFragment implements MediaDetailsActivity.ActivityToFragmentEvents {
     private static Movie movie;
 
     @Bind(R.id.title)
@@ -291,6 +293,26 @@ public class MovieDetailsFragment extends DetailMediaBaseFragment implements Med
         if (actionsBtn.isOpened()) {
             actionsBtn.close(true);
             return true;
+        }
+        return false;
+    }
+
+    @Override
+    public boolean onTouchEvent(MotionEvent event) {
+        if (event.getAction() == MotionEvent.ACTION_DOWN) {
+            Log.d("MovieDetails", "Signal received");
+            if (actionsBtn.isOpened()) {
+                Rect outRect = new Rect();
+                actionsBtn.getGlobalVisibleRect(outRect);
+
+                if(!outRect.contains((int)event.getRawX(), (int)event.getRawY())) {
+                    actionsBtn.close(true);
+                    Log.d("MovieDetails", "Should've closed");
+                    return true;
+                }
+
+                Log.d("MovieDetails", "Should've not closed");
+            }
         }
         return false;
     }
