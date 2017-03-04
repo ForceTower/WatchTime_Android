@@ -18,6 +18,7 @@ import com.watchtime.base.WatchTimeApplication;
 import com.watchtime.base.content.preferences.Prefs;
 import com.watchtime.base.utils.LocaleUtils;
 import com.watchtime.base.utils.PrefUtils;
+import com.watchtime.sdk.WatchTimeSdk;
 
 import butterknife.ButterKnife;
 
@@ -39,6 +40,7 @@ public abstract class WatchTimeBaseActivity extends AppCompatActivity {
         LocaleUtils.setCurrent(this, LocaleUtils.toLocale(language));
 
         FacebookSdk.sdkInitialize(getApplicationContext());
+        WatchTimeSdk.initializeSdk(getApplicationContext(), null);
 
         //View Creation
         super.onCreate(savedInstanceState);

@@ -31,6 +31,8 @@ import com.watchtime.base.backend.User;
 import com.watchtime.base.utils.AnimUtils;
 import com.watchtime.base.utils.PrefUtils;
 import com.watchtime.fragments.drawer.NavDrawerItem;
+import com.watchtime.sdk.AccessTokenWT;
+import com.watchtime.sdk.Profile;
 
 
 import org.json.JSONException;
@@ -51,6 +53,17 @@ import static com.facebook.FacebookSdk.getApplicationContext;
 public class NavigationAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>{
     public interface Callback {
         int getSelectedPosition();
+    }
+
+    public void updateInterface() {
+        final Handler handler = new Handler(Looper.getMainLooper());
+        handler.postAtTime(new Runnable() {
+            @Override
+            public void run() {
+                notifyDataSetChanged();
+                handler.postDelayed(this, 3000 );
+            }
+        }, 3000);
     }
 
     public interface OnItemClickListener {
@@ -89,8 +102,9 @@ public class NavigationAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
         holder.getTitleTextView().setTextColor(normalColor);
         final HeaderHolder finalOne = holder;
 
-        if (false) {
-            final User user = null;
+        if (AccessTokenWT.getCurrentAccessToken() != null) {
+            Profile.fetchProfileForCurrentAccessToken();
+            final Profile user = Profile.getCurrentProfile();
             holder.getSubtitleTextView().setVisibility(View.VISIBLE);
 
             int minutes = user.getTimeWatched()%60;
@@ -124,7 +138,6 @@ public class NavigationAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
             if (user.getCover() == null)
                 coverImage.setImageResource(R.drawable.background_test_image3);
             else {
-                System.out.println("Cover is: " + user.getCover());
                 Picasso.with(getApplicationContext()).load("https://image.tmdb.org/t/p/w780" + user.getCover()).into(coverImage, new com.squareup.picasso.Callback() {
                     @Override
                     public void onSuccess() {
@@ -141,7 +154,7 @@ public class NavigationAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
                 });
             }
 
-            Picasso.with(getApplicationContext()).load(ApiEndPoints.PROFILE + user.getId() + "/profile_image").into(profileImage, new com.squareup.picasso.Callback() {
+            Picasso.with(getApplicationContext()).load(ApiEndPoints.PROFILE_BASIC + user.getId() + "/profile_image").into(profileImage, new com.squareup.picasso.Callback() {
                 @Override
                 public void onSuccess() {
                     Handler mHandler = new Handler(Looper.getMainLooper());
@@ -216,6 +229,7 @@ public class NavigationAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
         this.checkedColor = ContextCompat.getColor(context, R.color.primary_green);
         this.checkedBackgroundRes = R.color.nav_drawer_selected_bg;
         this.normalBackgroundRes = R.drawable.selectable_nav_background;
+        updateInterface();
     }
 
     public void setItems(List<NavDrawerItem> items) {

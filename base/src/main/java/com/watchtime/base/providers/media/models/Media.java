@@ -8,6 +8,7 @@ import android.widget.ArrayAdapter;
 import com.watchtime.base.providers.media.MediaProvider;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 
 /**
  * Created by João Paulo on 24/01/2017.
@@ -27,7 +28,7 @@ public class Media implements Parcelable{
     public String headerImage;
     public int color;
     protected MediaProvider provider;
-    public ArrayList<String> backdrops;
+    public HashMap<String, Integer> backdrops;
 
     public Media(String videoId, String title, String image, String fullImage, MediaProvider provider, String year, String rating, String reviews, String headerImage) {
         this.videoId = videoId;

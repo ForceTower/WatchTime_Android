@@ -388,16 +388,17 @@ public class MoviesProvider extends MediaProvider{
             return returnList;
         }
 
-        public ArrayList<String> parseBackdrops(JSONObject object) throws JSONException {
-            ArrayList<String> backdrops = new ArrayList<>();
+        public HashMap<String, Integer> parseBackdrops(JSONObject object) throws JSONException {
+            HashMap<String, Integer> backdrops = new HashMap<>();
 
             JSONArray array = object.optJSONArray("data");
             if (array != null) {
                 for (int i = 0; i < array.length(); i++) {
                     JSONObject backdrop = array.getJSONObject(i);
                     String url = backdrop.optString("image_path");
+                    int id = backdrop.getInt("id");
                     if (url != null)
-                        backdrops.add("https://image.tmdb.org/t/p/w780" + url);
+                        backdrops.put("https://image.tmdb.org/t/p/w780" + url, id);
                 }
             }
 

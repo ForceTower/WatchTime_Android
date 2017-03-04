@@ -10,18 +10,13 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.util.Log;
-import android.widget.Toast;
 
 import com.watchtime.activities.AccessAccountBaseActivity;
 import com.watchtime.base.Constants;
 import com.watchtime.R;
 
-/**
- * Created by João Paulo on 04/03/2017.
- */
-
 public class AccountAuthenticator extends AbstractAccountAuthenticator{
-    public Context mContext;
+    private Context mContext;
 
     public AccountAuthenticator(Context context) {
         super(context);

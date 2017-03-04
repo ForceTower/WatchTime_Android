@@ -1,5 +1,7 @@
 package com.watchtime.base.backend;
 
+import com.watchtime.base.utils.PrefUtils;
+
 public class User {
     private String name;
     private int timeWatched;

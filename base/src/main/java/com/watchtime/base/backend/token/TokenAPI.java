@@ -13,7 +13,6 @@ public class TokenAPI {
         this.refreshToken = refresh_token;
         this.tokenType = token_type;
         this.expiration = expiration;
-        Log.d("TokenAPI", "WatchTimeAccessToken: " + access_token);
     }
 
     public int getExpiration() {

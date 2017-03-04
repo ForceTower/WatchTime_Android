@@ -73,4 +73,5 @@
     <string name="nothing_watched">Nothing watched yet</string>
     <string name="time_watched_minutes">%d minutes watched</string>
     <string name="only_one_account">Only one account can be created</string>
+    <string name="cover_update_success">Cover Updated</string>
 </resources>

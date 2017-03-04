@@ -16,8 +16,10 @@ import com.watchtime.activities.base.WatchTimeBaseAuthenticatorActivity;
 import com.watchtime.base.Constants;
 import com.watchtime.base.WatchTimeApplication;
 import com.watchtime.base.backend.User;
+import com.watchtime.base.utils.PrefUtils;
 import com.watchtime.base.utils.VersionUtils;
 import com.watchtime.fragments.account.AccessAccountFragment;
+import com.watchtime.sdk.AccessTokenWTCache;
 
 import org.json.JSONObject;
 
@@ -129,7 +131,6 @@ public class AccessAccountBaseActivity extends WatchTimeBaseAuthenticatorActivit
         Account account = new Account(accountName, accountType);
         accountManager.addAccountExplicitly(account, null, null);
         accountManager.setAuthToken(account, user.getAuthTokenType(), token);
-
         setAccountAuthenticatorResult(intent.getExtras());
         finish();
     }

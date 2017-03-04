@@ -389,7 +389,6 @@ public class MainActivity extends WatchTimeBaseActivity implements NavigationDra
         for (int i = 0; i < accounts.length; i++) {
             if (accounts[i].name.equals(user.getAccountName())) {
                 accountManager.removeAccount(accounts[i], null, null);
-                //TODO logout handle
                 return true;
             }
         }

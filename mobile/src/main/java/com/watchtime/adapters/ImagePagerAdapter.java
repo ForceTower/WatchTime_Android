@@ -8,15 +8,16 @@ import android.support.v4.app.FragmentStatePagerAdapter;
 import com.watchtime.fragments.ImageSlidePageFragment;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
 public class ImagePagerAdapter extends FragmentStatePagerAdapter {
     private List<String> urls;
 
-    public ImagePagerAdapter(FragmentManager fm, List<String> urls) {
+    public ImagePagerAdapter(FragmentManager fm, HashMap<String, Integer> hash) {
         super(fm);
         if (urls == null) urls = new ArrayList<>();
-        this.urls = urls;
+        urls = new ArrayList<>(hash.keySet());
     }
 
     @Override
