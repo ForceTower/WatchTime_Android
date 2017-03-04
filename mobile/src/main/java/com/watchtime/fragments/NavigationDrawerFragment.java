@@ -49,6 +49,8 @@ public class NavigationDrawerFragment extends Fragment implements NavigationAdap
 
     public interface Callbacks {
         void onNavigationDrawerItemSelected(NavDrawerItem item, String s);
+        void onLoginClicked();
+        void onLogoutClicked();
     }
 
     public void onLogin() {
@@ -85,17 +87,19 @@ public class NavigationDrawerFragment extends Fragment implements NavigationAdap
                 setExitTransition(TransitionInflater.from(getContext()).inflateTransition(android.R.transition.fade));
                 setEnterTransition(TransitionInflater.from(getContext()).inflateTransition(android.R.transition.fade));
                 ActivityOptionsCompat optionsCompat = ActivityOptionsCompat.makeSceneTransitionAnimation(getActivity());
-                startActivity(intent, optionsCompat.toBundle());
+                //startActivity(intent, optionsCompat.toBundle());
             } else {
-                startActivity(intent);
+                //startActivity(intent);
             }
+
+            mCallbacks.onLoginClicked();
         }
     };
 
     private NavDrawerItem.OnClickListener logoutClickListener = new NavDrawerItem.OnClickListener() {
         @Override
         public void onClick(View v, NavigationAdapter.ItemRowHolder rowHolder, int position) {
-            LoginManager.getInstance().logOut();
+            mCallbacks.onLogoutClicked();
             Handler handler = new Handler(Looper.getMainLooper());
             handler.post(new Runnable() {
                 @Override

@@ -18,4 +18,7 @@
     <string name="rating">RATING</string>
     <string name="upcoming">UPCOMING</string>
     <string name="release">RELEASE</string>
+
+    <string name="account_type">com.watchtime</string>
+    <string name="default_token_type">Default Token Type</string>
 </resources>

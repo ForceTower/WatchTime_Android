@@ -2,17 +2,14 @@ package com.watchtime.fragments.account;
 
 import android.app.ProgressDialog;
 import android.content.Intent;
-import android.graphics.drawable.BitmapDrawable;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
 import android.os.Message;
 import android.support.annotation.Nullable;
-import android.support.design.widget.Snackbar;
-import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentManager;
-import android.support.v4.app.FragmentTransaction;
+import android.app.Fragment;
+import android.app.FragmentManager;
 import android.transition.TransitionInflater;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -20,7 +17,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ImageView;
-import android.widget.TextView;
 import android.widget.Toast;
 
 import com.facebook.AccessToken;
@@ -31,21 +27,19 @@ import com.facebook.login.LoginBehavior;
 import com.facebook.login.LoginManager;
 import com.facebook.login.LoginResult;
 import com.facebook.login.widget.LoginButton;
-import com.squareup.picasso.Picasso;
 import com.watchtime.R;
-import com.watchtime.activities.SignUpActivity;
+import com.watchtime.activities.AccessAccountBaseActivity;
 import com.watchtime.base.ApiEndPoints;
 import com.watchtime.base.WatchTimeApplication;
-import com.watchtime.base.utils.AnimUtils;
+import com.watchtime.base.backend.token.TokenAPI;
 import com.watchtime.base.utils.PrefUtils;
-import com.watchtime.fragments.dialog.MessageDialogFragment;
+import com.watchtime.base.utils.VersionUtils;
 
 import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.IOException;
 
-import butterknife.Bind;
 import okhttp3.Call;
 import okhttp3.Callback;
 import okhttp3.FormBody;
@@ -76,8 +70,9 @@ public class AccessAccountFragment extends Fragment {
             if (message.what != 2)
                 if (progressDialog != null) progressDialog.dismiss();
 
-            if (getContext() != null)
-                Toast.makeText(getContext(), message.obj.toString(), Toast.LENGTH_SHORT).show();
+
+            if (getActivity() != null)
+                Toast.makeText(getActivity(), message.obj.toString(), Toast.LENGTH_SHORT).show();
             else
                 Log.d(TAG, "Delayed message: " + message.obj.toString());
         }
@@ -181,11 +176,11 @@ public class AccessAccountFragment extends Fragment {
                         completeMessage.sendToTarget();
 
                         loginObject = loginObject.getJSONObject("data");
-                        WatchTimeApplication.userFromJSON(loginObject);
+                        ((WatchTimeApplication)getActivity().getApplication()).userFromJSON(loginObject);
                         obtainToken(loginObject.optString("email", ""), id, token);
                     } else {
                         loginObject = loginObject.getJSONObject("data");
-                        WatchTimeApplication.userFromJSON(loginObject);
+                        ((WatchTimeApplication)getActivity().getApplication()).userFromJSON(loginObject);
                         obtainToken(loginObject.optString("email", ""), id, token);
                     }
                 } catch (JSONException e) {
@@ -195,7 +190,7 @@ public class AccessAccountFragment extends Fragment {
         });
     }
 
-    public void obtainToken(String email, String id, String token) {
+    public void obtainToken(final String email, String id, String token) {
         RequestBody requestBody = new FormBody.Builder()
                 .add("email", email)
                 .add("facebook_id", id)
@@ -226,8 +221,8 @@ public class AccessAccountFragment extends Fragment {
                 JSONObject token;
                 try {
                     token = new JSONObject(response.body().string());
-                    WatchTimeApplication.tokenFromJSON(token);
-                    onLoginSuccess();
+                    TokenAPI api = WatchTimeApplication.tokenFromJSON(token);
+                    onLoginSuccess(email, api.getAccessToken());
                 } catch (JSONException e) {
                     onLoginFailed(e.getMessage());
                 }
@@ -277,11 +272,10 @@ public class AccessAccountFragment extends Fragment {
         loginFragment.setArguments(bundle);
 
         FragmentManager fragmentManager = getFragmentManager();
-        fragmentManager.beginTransaction()
-                .replace(R.id.container, loginFragment, LoginFragment.TAG)
-                .addSharedElement(imageLogo, imageTransitionName)
-                .addToBackStack(TAG)
-                .commit();
+        if (VersionUtils.isLollipop())
+            fragmentManager.beginTransaction().replace(R.id.container, loginFragment, LoginFragment.TAG).addSharedElement(imageLogo, imageTransitionName).addToBackStack(TAG).commit();
+        else
+            fragmentManager.beginTransaction().replace(R.id.container, loginFragment, LoginFragment.TAG).addToBackStack(TAG).commit();
     }
 
     public void signUpFragmentStart(View v) {
@@ -303,32 +297,26 @@ public class AccessAccountFragment extends Fragment {
         signUp.setArguments(bundle);
 
         FragmentManager fragmentManager = getFragmentManager();
-        fragmentManager.beginTransaction()
-                .replace(R.id.container, signUp, SignUpFragment.TAG)
-                .addSharedElement(imageLogo, imageTransitionName)
-                .addToBackStack(TAG)
-                .commit();
+        if (VersionUtils.isLollipop())
+            fragmentManager.beginTransaction().replace(R.id.container, signUp, SignUpFragment.TAG).addToBackStack(TAG).addSharedElement(imageLogo, imageTransitionName).commit();
+        else
+            fragmentManager.beginTransaction().replace(R.id.container, signUp, SignUpFragment.TAG).addToBackStack(TAG).commit();
     }
 
-    public void onLoginSuccess() {
+    public void onLoginSuccess(String email, String token) {
         Message completeMessage = mHandler.obtainMessage(0, getString(R.string.logged_in));
         completeMessage.sendToTarget();
         if (loginListener != null) {
            loginListener.onLogin();
         }
-        /*mHandler.postDelayed(new Runnable() {
-            @Override
-            public void run() {*/
-                getActivity().finish();
-         /*   }
-        }, 1000);*/
 
+        ((AccessAccountBaseActivity)getActivity()).facebookLoginToken(email, token);
     }
 
     public void onLoginFailed(String reason) {
         Message completeMessage = mHandler.obtainMessage(1, reason);
         completeMessage.sendToTarget();
-        WatchTimeApplication.connectedUser = null;
+        ((WatchTimeApplication)getActivity().getApplication()).setUser(null);
 
         LoginManager.getInstance().logOut();
     }

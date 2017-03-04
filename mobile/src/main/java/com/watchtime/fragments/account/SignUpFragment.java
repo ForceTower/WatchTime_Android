@@ -7,7 +7,7 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
 import android.os.Message;
-import android.support.v4.app.Fragment;
+import android.app.Fragment;
 import android.util.Patterns;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -18,11 +18,6 @@ import android.widget.ImageView;
 import android.widget.Toast;
 
 import com.watchtime.R;
-import com.watchtime.activities.SignUpActivity;
-
-import butterknife.Bind;
-
-import static android.app.Activity.RESULT_OK;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -41,7 +36,7 @@ public class SignUpFragment extends Fragment {
     private Handler mHandler = new Handler(Looper.getMainLooper()) {
         @Override
         public void handleMessage(Message message) {
-            Toast.makeText(getContext(), message.obj.toString(), Toast.LENGTH_LONG).show();
+            Toast.makeText(getActivity(), message.obj.toString(), Toast.LENGTH_LONG).show();
             if (progressDialog != null)
                 progressDialog.dismiss();
         }

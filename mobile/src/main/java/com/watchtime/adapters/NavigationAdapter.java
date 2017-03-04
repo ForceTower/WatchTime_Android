@@ -89,8 +89,8 @@ public class NavigationAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
         holder.getTitleTextView().setTextColor(normalColor);
         final HeaderHolder finalOne = holder;
 
-        if (WatchTimeApplication.token != null) {
-            final User user = WatchTimeApplication.connectedUser;
+        if (false) {
+            final User user = null;
             holder.getSubtitleTextView().setVisibility(View.VISIBLE);
 
             int minutes = user.getTimeWatched()%60;
@@ -156,57 +156,6 @@ public class NavigationAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
                 @Override
                 public void onError() { System.out.println("Error profile: " + ApiEndPoints.PROFILE + user.getId() + "/profile_image");}
             });
-/*
-            Bundle params = new Bundle();
-            params.putBoolean("redirect", false);
-            params.putString("type", "large");
-            new GraphRequest(
-                    AccessToken.getCurrentAccessToken(),
-                    "me/?fields=name,picture.type(large),cover",
-                    params,
-                    HttpMethod.GET,
-                    new GraphRequest.Callback() {
-                        public void onCompleted(GraphResponse response) {
-                            try {
-                                String name = response.getJSONObject().getString("name");
-                                finalOne.getTitleTextView().setText(name);
-                                String picUrlString = (String) response.getJSONObject().getJSONObject("picture").getJSONObject("data").get("url");
-                                String coverUrlString = (String) response.getJSONObject().getJSONObject("cover").get("source");
-                                Picasso.with(getApplicationContext()).load(picUrlString).into(profileImage, new com.squareup.picasso.Callback() {
-                                    @Override
-                                    public void onSuccess() {
-                                        Handler mHandler = new Handler(Looper.getMainLooper());
-                                        mHandler.post(new Runnable() {
-                                            @Override
-                                            public void run() {
-                                                AnimUtils.fadeIn(profileImage);
-                                            }
-                                        });
-                                    }
-                                    @Override
-                                    public void onError() {}
-                                });
-                                Picasso.with(getApplicationContext()).load(coverUrlString).into(coverImage, new com.squareup.picasso.Callback() {
-                                    @Override
-                                    public void onSuccess() {
-                                        Handler mHandler = new Handler(Looper.getMainLooper());
-                                        mHandler.post(new Runnable() {
-                                            @Override
-                                            public void run() {
-                                                AnimUtils.fadeIn(coverImage);
-                                            }
-                                        });
-                                    }
-                                    @Override
-                                    public void onError() {}
-                                });
-                            } catch (JSONException e) {
-                                e.printStackTrace();
-                            }
-                        }
-                    }
-
-            ).executeAsync();*/
         } else {
             holder.getProfileImageView().setImageResource(R.mipmap.app_logo);
             holder.getBackgroundImageView().setImageResource(R.drawable.background_test_image3);
