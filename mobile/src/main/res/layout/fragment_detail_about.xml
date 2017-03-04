@@ -60,7 +60,7 @@
             tools:text="2017 - 1h 56min"
             android:textSize="@dimen/detail_meta_text_size"
             android:textColor="@color/secondary_text_color" />
-
+<!--
         <com.devspark.robototextview.widget.RobotoTextView
             android:id="@+id/genres"
             android:layout_below="@id/year_time"
@@ -71,12 +71,13 @@
             android:textSize="@dimen/detail_meta_text_size"
             android:textColor="@color/secondary_text_color"
             tools:text="Sci-Fi - Action - Drama" />
+-->
 
         <com.devspark.robototextview.widget.RobotoTextView
             android:id="@+id/plot_short"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_below="@id/genres"
+            android:layout_below="@id/year_time"
             android:layout_marginTop="@dimen/detail_vertical_offset"
             tools:text="This will be the a short plot of the media"
             android:textDirection="locale"
@@ -86,18 +87,40 @@
             android:textColor="@color/text_color" />
 
         <LinearLayout
+            android:id="@+id/genres"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/plot_short"
+            android:layout_marginTop="@dimen/detail_vertical_offset"
+            android:orientation="vertical">
+
+            <com.devspark.robototextview.widget.RobotoTextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:paddingBottom="10dp"
+                android:text="@string/all_genres"
+                android:textColor="@color/text_color" />
+
+            <android.support.v7.widget.RecyclerView
+                android:id="@+id/all_genre_recycler_view"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content" />
+
+        </LinearLayout>
+
+        <LinearLayout
             android:id="@+id/director_layout"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="@dimen/detail_vertical_offset"
-            android:layout_below="@id/plot_short"
+            android:layout_below="@id/genres"
             android:orientation="vertical">
 
             <com.devspark.robototextview.widget.RobotoTextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:textColor="@color/text_color"
-                android:layout_gravity="center_horizontal"
+
                 android:text="@string/director"
                 android:paddingBottom="10dp"/>
 
@@ -136,7 +159,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:textColor="@color/text_color"
-                android:layout_gravity="center_horizontal"
+
                 android:text="@string/cast"
                 android:paddingBottom="10dp"/>
 
@@ -148,29 +171,6 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"/>
             </ScrollView>
-        </LinearLayout>
-
-        <LinearLayout
-            android:id="@+id/all_genres_layout"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_below="@id/cast_layout"
-            android:orientation="vertical"
-            android:layout_marginTop="@dimen/detail_vertical_offset">
-
-            <com.devspark.robototextview.widget.RobotoTextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="@string/all_genres"
-                android:textColor="@color/text_color"
-                android:layout_gravity="center_horizontal"
-                android:paddingBottom="10dp"/>
-
-            <android.support.v7.widget.RecyclerView
-                android:id="@+id/all_genre_recycler_view"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"/>
-
         </LinearLayout>
 
     </RelativeLayout>

@@ -27,6 +27,12 @@
         <item name="android:background">@color/primary</item>
     </style>
 
+    <style name="Theme.WatchTime.Dark.ProgressBar" parent="Theme.AppCompat.Dialog">
+        <item name="colorAccent">@color/white</item>
+        <item name="android:textColorPrimary">@color/iron</item>
+        <item name="android:background">@color/bg</item>
+    </style>
+
     <!-- Rating Bar -->
     <style name="RatingBar.WatchTime" parent="android:Widget.RatingBar">
         <item name="android:progressDrawable">@drawable/ratingbar</item>

@@ -1,5 +1,6 @@
 package com.watchtime.fragments.account;
 
+import android.app.ProgressDialog;
 import android.content.Intent;
 import android.graphics.drawable.BitmapDrawable;
 import android.os.Build;
@@ -8,8 +9,10 @@ import android.os.Handler;
 import android.os.Looper;
 import android.os.Message;
 import android.support.annotation.Nullable;
+import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
+import android.support.v4.app.FragmentTransaction;
 import android.transition.TransitionInflater;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -25,13 +28,31 @@ import com.facebook.CallbackManager;
 import com.facebook.FacebookCallback;
 import com.facebook.FacebookException;
 import com.facebook.login.LoginBehavior;
+import com.facebook.login.LoginManager;
 import com.facebook.login.LoginResult;
 import com.facebook.login.widget.LoginButton;
+import com.squareup.picasso.Picasso;
 import com.watchtime.R;
 import com.watchtime.activities.SignUpActivity;
+import com.watchtime.base.ApiEndPoints;
+import com.watchtime.base.WatchTimeApplication;
+import com.watchtime.base.utils.AnimUtils;
 import com.watchtime.base.utils.PrefUtils;
+import com.watchtime.fragments.dialog.MessageDialogFragment;
+
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.io.IOException;
 
 import butterknife.Bind;
+import okhttp3.Call;
+import okhttp3.Callback;
+import okhttp3.FormBody;
+import okhttp3.OkHttpClient;
+import okhttp3.Request;
+import okhttp3.RequestBody;
+import okhttp3.Response;
 
 public class AccessAccountFragment extends Fragment {
     public interface OnLoginListener {
@@ -47,11 +68,18 @@ public class AccessAccountFragment extends Fragment {
     private Button loginBtn;
     private Button signUpBtn;
     private CallbackManager callbackManager;
+    ProgressDialog progressDialog;
 
     private Handler mHandler = new Handler(Looper.getMainLooper()) {
         @Override
         public void handleMessage(Message message) {
-            Toast.makeText(getContext(), message.obj.toString(), Toast.LENGTH_LONG).show();
+            if (message.what != 2)
+                if (progressDialog != null) progressDialog.dismiss();
+
+            if (getContext() != null)
+                Toast.makeText(getContext(), message.obj.toString(), Toast.LENGTH_SHORT).show();
+            else
+                Log.d(TAG, "Delayed message: " + message.obj.toString());
         }
     };
 
@@ -94,7 +122,16 @@ public class AccessAccountFragment extends Fragment {
                 AccessToken facebookToken = loginResult.getAccessToken();
                 PrefUtils.save(getActivity().getApplicationContext(), "fb_session", true);
                 PrefUtils.save(getActivity().getApplicationContext(), "fb_tk", facebookToken.getToken());
-                onLoginSuccess();
+
+                String id = facebookToken.getUserId();
+                String token = facebookToken.getToken();
+
+                progressDialog = new ProgressDialog(getActivity(), R.style.Theme_WatchTime_Dark_ProgressBar);
+                progressDialog.setIndeterminate(true);
+                progressDialog.setMessage(getString(R.string.validating_credentials));
+                progressDialog.show();
+
+                createServerLoginRequest(id, token);
             }
 
             @Override
@@ -105,6 +142,96 @@ public class AccessAccountFragment extends Fragment {
             @Override
             public void onError(FacebookException error) {
                 onLoginFailed(error.getMessage());
+            }
+        });
+    }
+
+    public void createServerLoginRequest(final String id, final String token) {
+        RequestBody requestBody = new FormBody.Builder()
+                .add("facebook_id", id)
+                .add("facebook_token", token)
+                .build();
+
+        Request request = new Request.Builder()
+                .url(ApiEndPoints.FACEBOOK_LOGIN_REGISTER)
+                .post(requestBody)
+                .build();
+
+        Call facebookCall = new OkHttpClient().newCall(request);
+        facebookCall.enqueue(new Callback() {
+            @Override
+            public void onFailure(Call call, IOException e) {
+                Log.d("AccessAccountFacebook", "Failed: " + e.getMessage());
+            }
+
+            @Override
+            public void onResponse(Call call, Response response) throws IOException {
+                if (!response.isSuccessful()) {
+                    onLoginFailed("Unsuccessful response");
+                    return;
+                }
+
+                try {
+                    JSONObject loginObject = new JSONObject(response.body().string());
+                    Log.d(TAG, loginObject.toString());
+                    if (loginObject.has("error")) {
+                        onLoginFailed(loginObject.getString("error_description"));
+                    } else if (loginObject.has("not_registered")){
+                        Message completeMessage = mHandler.obtainMessage(0, getString(R.string.account_created));
+                        completeMessage.sendToTarget();
+
+                        loginObject = loginObject.getJSONObject("data");
+                        WatchTimeApplication.userFromJSON(loginObject);
+                        obtainToken(loginObject.optString("email", ""), id, token);
+                    } else {
+                        loginObject = loginObject.getJSONObject("data");
+                        WatchTimeApplication.userFromJSON(loginObject);
+                        obtainToken(loginObject.optString("email", ""), id, token);
+                    }
+                } catch (JSONException e) {
+                    onLoginFailed(e.getMessage());
+                }
+            }
+        });
+    }
+
+    public void obtainToken(String email, String id, String token) {
+        RequestBody requestBody = new FormBody.Builder()
+                .add("email", email)
+                .add("facebook_id", id)
+                .add("facebook_token", token)
+                .add("grant_type", "no_password")
+                .add("client_id", ApiEndPoints.CLIENT_ID)
+                .add("client_secret", ApiEndPoints.CLIENT_SECRET)
+                .build();
+
+        Request request = new Request.Builder()
+                .url(ApiEndPoints.OAUTH2_BASE)
+                .post(requestBody)
+                .build();
+
+        Call tokenCall = new OkHttpClient().newCall(request);
+        tokenCall.enqueue(new Callback() {
+            @Override
+            public void onFailure(Call call, IOException e) {
+                onLoginFailed(e.getMessage());
+            }
+
+            @Override
+            public void onResponse(Call call, Response response) throws IOException {
+                if (!response.isSuccessful()) {
+                    onLoginFailed("Unsuccessful response");
+                    return;
+                }
+                JSONObject token;
+                try {
+                    token = new JSONObject(response.body().string());
+                    WatchTimeApplication.tokenFromJSON(token);
+                    onLoginSuccess();
+                } catch (JSONException e) {
+                    onLoginFailed(e.getMessage());
+                }
+
             }
         });
     }
@@ -189,13 +316,21 @@ public class AccessAccountFragment extends Fragment {
         if (loginListener != null) {
            loginListener.onLogin();
         }
+        /*mHandler.postDelayed(new Runnable() {
+            @Override
+            public void run() {*/
+                getActivity().finish();
+         /*   }
+        }, 1000);*/
 
-        getActivity().finish();
     }
 
     public void onLoginFailed(String reason) {
-        Message completeMessage = mHandler.obtainMessage(0, reason);
+        Message completeMessage = mHandler.obtainMessage(1, reason);
         completeMessage.sendToTarget();
+        WatchTimeApplication.connectedUser = null;
+
+        LoginManager.getInstance().logOut();
     }
 
     @Override

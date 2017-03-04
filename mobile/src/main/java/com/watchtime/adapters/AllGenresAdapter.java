@@ -3,10 +3,12 @@ package com.watchtime.adapters;
 import android.content.Context;
 import android.os.Handler;
 import android.os.Looper;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.RatingBar;
 import android.widget.TextView;
 
@@ -49,9 +51,9 @@ public class AllGenresAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
 
         view.getGenreFitness().setVisibility(View.VISIBLE);
         String text = "Kappa";
-        float number = view.getGenreRating().getRating();
+        float number = 5;
         if (number == 5)
-            text = "Describes the movie perfectly";
+            text = "5 - THIS IS AMAZING!";
         else if (number <= 4.5)
             text = "It describes the movie almost perfectly";
         else if (number <= 3.5)
@@ -64,7 +66,8 @@ public class AllGenresAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
             text = "Has nothing to do with this movie";
         view.getGenreFitness().setText(text);
 
-        view.getGenreRating().setVisibility(View.VISIBLE);
+        view.getGenreImage().setVisibility(View.VISIBLE);
+        view.getGenreImage().setImageDrawable(ContextCompat.getDrawable(context, R.drawable.ic_smilly));
     }
 
     @Override
@@ -122,8 +125,8 @@ public class AllGenresAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
         TextView genreName;
         @Bind(R.id.genre_fitness)
         TextView genreFitness;
-        @Bind(R.id.genre_rating)
-        RatingBar genreRating;
+        @Bind(R.id.genre_image)
+        ImageView genreImage;
 
         public ViewHolder(View itemView) {
             super(itemView);
@@ -154,8 +157,8 @@ public class AllGenresAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
             return genreFitness;
         }
 
-        public RatingBar getGenreRating() {
-            return genreRating;
+        public ImageView getGenreImage() {
+            return genreImage;
         }
     }
 }

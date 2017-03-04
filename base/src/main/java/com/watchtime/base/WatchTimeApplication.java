@@ -4,6 +4,7 @@ import android.app.Application;
 import android.content.Context;
 import android.content.res.Configuration;
 import android.support.multidex.MultiDex;
+import android.util.Log;
 
 import com.facebook.AccessToken;
 import com.facebook.FacebookSdk;
@@ -12,11 +13,15 @@ import com.squareup.leakcanary.LeakCanary;
 //import com.squareup.okhttp.OkHttpClient;
 import com.squareup.picasso.OkHttpDownloader;
 import com.squareup.picasso.Picasso;
+import com.watchtime.base.backend.User;
 import com.watchtime.base.backend.token.TokenAPI;
 import com.watchtime.base.content.preferences.Prefs;
 import com.watchtime.base.content.preferences.StorageUtils;
 import com.watchtime.base.utils.LocaleUtils;
 import com.watchtime.base.utils.PrefUtils;
+
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import java.io.File;
 
@@ -32,6 +37,7 @@ public class WatchTimeApplication extends Application {
     private static OkHttpClient httpClient;
     private static Application app; //Find a better option
     public static TokenAPI token;
+    public static User connectedUser;
     public static AccessToken facebookToken;
 
     @Override
@@ -86,5 +92,29 @@ public class WatchTimeApplication extends Application {
 
     public static Context getAppContext() {
         return app;
+    }
+
+    public static void tokenFromJSON(JSONObject json) throws JSONException {
+        String accessToken = json.getString("access_token");
+        String refreshToken = json.optString("refresh_token");
+        String tokenType = json.getString("token_type");
+        int expires = json.getInt("expires_in");
+
+        token = new TokenAPI(accessToken, refreshToken, tokenType, expires);
+    }
+
+    public static void userFromJSON(JSONObject json) throws JSONException {
+        Log.d("Here", "Arrived");
+        String name = json.getString("name");
+        int id = json.getInt("id");
+        String email = json.getString("email");
+        String cover = json.optString("cover", "");
+        int timeWatched = json.getInt("time_watched");
+
+        if (cover.trim().isEmpty() || cover.trim().equals("null"))
+            cover = null;
+
+        connectedUser = new User(id, name, email, timeWatched, cover);
+        Log.d("Created User", "User created");
     }
 }

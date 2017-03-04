@@ -43,8 +43,6 @@ public class MovieDetailsFragment extends DetailMediaBaseFragment implements Med
     TextView title;
     @Bind(R.id.year_time)
     TextView yearTime;
-    @Bind(R.id.genres)
-    TextView genres;
     @Bind(R.id.plot_short)
     TextView plotShort;
     @Bind(R.id.rating)
@@ -63,7 +61,7 @@ public class MovieDetailsFragment extends DetailMediaBaseFragment implements Med
     CircleImageView directorImage;
     @Bind(R.id.cast_layout)
     LinearLayout castLayout;
-    @Bind(R.id.all_genres_layout)
+    @Bind(R.id.genres)
     LinearLayout allGenresLayout;
     @Bind(R.id.cast_recycler_view)
     RecyclerView castRecyclerView;
@@ -220,7 +218,7 @@ public class MovieDetailsFragment extends DetailMediaBaseFragment implements Med
             return;
         }
 
-        String genresText = "";
+        /*String genresText = "";
         boolean first = true;
         for (String string : movie.allGenres.keySet()) {
             if (first) {
@@ -230,12 +228,10 @@ public class MovieDetailsFragment extends DetailMediaBaseFragment implements Med
                 genresText = genresText + " - " + string;
             }
         }
-        genres.setText(genresText);
-        hasOtherGenres = false;
-        allGenresLayout.setVisibility(View.GONE);
-        //allGenresLayout.setVisibility(View.VISIBLE);
-        //genresLayoutManager = new LinearLayoutManager(getContext(), LinearLayoutManager.VERTICAL, false);
-        //allGenresRecyclerView.setLayoutManager(genresLayoutManager);
+        genres.setText(genresText);*/
+        allGenresLayout.setVisibility(View.VISIBLE);
+        genresLayoutManager = new LinearLayoutManager(getContext(), LinearLayoutManager.VERTICAL, false);
+        allGenresRecyclerView.setLayoutManager(genresLayoutManager);
     }
 
     public void continueCastInfoSetup() {

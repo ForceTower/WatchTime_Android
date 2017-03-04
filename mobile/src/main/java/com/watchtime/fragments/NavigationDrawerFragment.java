@@ -5,6 +5,8 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.res.Configuration;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Looper;
 import android.support.annotation.Nullable;
 import android.support.v4.app.ActivityOptionsCompat;
 import android.support.v4.app.Fragment;
@@ -50,7 +52,13 @@ public class NavigationDrawerFragment extends Fragment implements NavigationAdap
     }
 
     public void onLogin() {
-        mAdapter.setItems(initItems());
+        Handler handler = new Handler(Looper.getMainLooper());
+        handler.post(new Runnable() {
+            @Override
+            public void run() {
+                mAdapter.setItems(initItems());
+            }
+        });
     }
 
     public void onLogout() {
@@ -88,7 +96,13 @@ public class NavigationDrawerFragment extends Fragment implements NavigationAdap
         @Override
         public void onClick(View v, NavigationAdapter.ItemRowHolder rowHolder, int position) {
             LoginManager.getInstance().logOut();
-            onLogout();
+            Handler handler = new Handler(Looper.getMainLooper());
+            handler.post(new Runnable() {
+                @Override
+                public void run() {
+                    onLogout();
+                }
+            });
         }
     };
 

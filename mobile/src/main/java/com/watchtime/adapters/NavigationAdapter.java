@@ -25,7 +25,9 @@ import com.facebook.HttpMethod;
 import com.squareup.picasso.Callback;
 import com.squareup.picasso.Picasso;
 import com.watchtime.R;
+import com.watchtime.base.ApiEndPoints;
 import com.watchtime.base.WatchTimeApplication;
+import com.watchtime.base.backend.User;
 import com.watchtime.base.utils.AnimUtils;
 import com.watchtime.base.utils.PrefUtils;
 import com.watchtime.fragments.drawer.NavDrawerItem;
@@ -87,19 +89,80 @@ public class NavigationAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
         holder.getTitleTextView().setTextColor(normalColor);
         final HeaderHolder finalOne = holder;
 
-        if (AccessToken.getCurrentAccessToken() != null) {
+        if (WatchTimeApplication.token != null) {
+            final User user = WatchTimeApplication.connectedUser;
             holder.getSubtitleTextView().setVisibility(View.VISIBLE);
-            holder.getSubtitleTextView().setText("2 years 4 months and 3 days watched");
+
+            int minutes = user.getTimeWatched()%60;
+            int hours = user.getTimeWatched()/60;
+
+            int days = hours/24;
+            hours = hours%24;
+
+            int months = days/30;
+            days = days%24;
+
+            String str = WatchTimeApplication.getAppContext().getString(R.string.nothing_watched);
+
+            if (months > 0)
+                str = months + " months, " + days + " days, " + hours + " hours and " + minutes + " minutes watched";
+            else if (days > 0)
+                str = days + " days, " + hours + " hours and " + minutes + " minutes watched";
+            else if (hours > 0)
+                str = hours + " hours and " + minutes + " minutes watched";
+            else if (minutes > 0)
+                str = minutes + " minutes watched";
+
+            holder.getSubtitleTextView().setText(str);
+            finalOne.getTitleTextView().setText(user.getName());
 
             final CircleImageView profileImage = holder.getProfileImageView();
             final ImageView coverImage = holder.getBackgroundImageView();
 
+            coverImage.setVisibility(View.VISIBLE);
+
+            if (user.getCover() == null)
+                coverImage.setImageResource(R.drawable.background_test_image3);
+            else {
+                System.out.println("Cover is: " + user.getCover());
+                Picasso.with(getApplicationContext()).load("https://image.tmdb.org/t/p/w780" + user.getCover()).into(coverImage, new com.squareup.picasso.Callback() {
+                    @Override
+                    public void onSuccess() {
+                        Handler mHandler = new Handler(Looper.getMainLooper());
+                        mHandler.post(new Runnable() {
+                            @Override
+                            public void run() {
+                                AnimUtils.fadeIn(coverImage);
+                            }
+                        });
+                    }
+                    @Override
+                    public void onError() {}
+                });
+            }
+
+            Picasso.with(getApplicationContext()).load(ApiEndPoints.PROFILE + user.getId() + "/profile_image").into(profileImage, new com.squareup.picasso.Callback() {
+                @Override
+                public void onSuccess() {
+                    Handler mHandler = new Handler(Looper.getMainLooper());
+                    mHandler.post(new Runnable() {
+                        @Override
+                        public void run() {
+                            System.out.println("Success profile");
+                            AnimUtils.fadeIn(profileImage);
+                        }
+                    });
+                }
+                @Override
+                public void onError() { System.out.println("Error profile: " + ApiEndPoints.PROFILE + user.getId() + "/profile_image");}
+            });
+/*
             Bundle params = new Bundle();
             params.putBoolean("redirect", false);
             params.putString("type", "large");
             new GraphRequest(
                     AccessToken.getCurrentAccessToken(),
-                    "me/?fields=name,picture,cover",
+                    "me/?fields=name,picture.type(large),cover",
                     params,
                     HttpMethod.GET,
                     new GraphRequest.Callback() {
@@ -143,7 +206,7 @@ public class NavigationAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
                         }
                     }
 
-            ).executeAsync();
+            ).executeAsync();*/
         } else {
             holder.getProfileImageView().setImageResource(R.mipmap.app_logo);
             holder.getBackgroundImageView().setImageResource(R.drawable.background_test_image3);

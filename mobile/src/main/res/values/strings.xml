@@ -64,4 +64,12 @@
     <string name="director">Director</string>
     <string name="cast">Cast</string>
     <string name="no_images_to_show">There\'s no media to show</string>
+    <string name="validating_credentials">Validating credentials</string>
+    <string name="no_account_associated">No account associated with this facebook profile</string>
+    <string name="create_account_associating_facebook">You can create an account now and associate with this facebook</string>
+    <string name="ask_create_account_with_facebook_info">Create account using Facebook</string>
+    <string name="info_create_account_with_facebook">Create an account using facebook info?</string>
+    <string name="obtaining_access">Obtaining Access...</string>
+    <string name="nothing_watched">Nothing watched yet</string>
+    <string name="time_watched_minutes">%d minutes watched</string>
 </resources>
