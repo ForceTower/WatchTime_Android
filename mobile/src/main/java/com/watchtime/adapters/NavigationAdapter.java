@@ -222,7 +222,7 @@ public class NavigationAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
         this.checkedBackgroundRes = R.color.nav_drawer_selected_bg;
         this.normalBackgroundRes = R.drawable.selectable_nav_background;
 
-        ((WatchTimeApplication)getApplicationContext()).getDataChangeHandler().registerListener("NavDrawer", this, new int[] {OnDataChangeHandler.LOGIN, OnDataChangeHandler.LOGOUT});
+        ((WatchTimeApplication)getApplicationContext()).getDataChangeHandler().registerListener("NavDrawer", this, new int[] {OnDataChangeHandler.LOGIN, OnDataChangeHandler.LOGOUT, OnDataChangeHandler.ALL});
     }
 
     public void setItems(List<NavDrawerItem> items) {
