@@ -350,6 +350,7 @@ public class MovieDetailsFragment extends DetailMediaBaseFragment implements Med
                         Snackbar.make(v, getString(R.string.add_to_watchlist), Snackbar.LENGTH_SHORT).show();
                     }
                 });
+                actionsBtn.close(true);
             }
         });
 
@@ -376,6 +377,7 @@ public class MovieDetailsFragment extends DetailMediaBaseFragment implements Med
                         Snackbar.make(v, getString(R.string.recommend_title), Snackbar.LENGTH_SHORT).show();
                     }
                 });
+                actionsBtn.close(true);
             }
         });
     }
