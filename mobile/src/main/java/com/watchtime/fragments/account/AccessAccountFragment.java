@@ -34,7 +34,7 @@ import com.watchtime.base.WatchTimeApplication;
 import com.watchtime.base.backend.token.TokenAPI;
 import com.watchtime.base.utils.PrefUtils;
 import com.watchtime.base.utils.VersionUtils;
-import com.watchtime.sdk.AccessTokenWTCache;
+import com.watchtime.sdk.AccessTokenWT;
 import com.watchtime.sdk.WatchTimeSdk;
 
 import org.json.JSONException;
@@ -223,9 +223,8 @@ public class AccessAccountFragment extends Fragment {
                 JSONObject token;
                 try {
                     token = new JSONObject(response.body().string());
-                    TokenAPI api = WatchTimeApplication.tokenFromJSON(token);
-                    PrefUtils.getPrefs(WatchTimeSdk.getApplicationContext()).edit().putString(AccessTokenWTCache.CACHED_ACCESS_TOKEN_KEY, token.toString()).apply();
-                    onLoginSuccess(email, api.getAccessToken());
+                    AccessTokenWT accessToken = AccessTokenWT.createFromJSON(token);
+                    onLoginSuccess(email, accessToken);
                 } catch (JSONException e) {
                     onLoginFailed(e.getMessage());
                 }
@@ -306,7 +305,7 @@ public class AccessAccountFragment extends Fragment {
             fragmentManager.beginTransaction().replace(R.id.container, signUp, SignUpFragment.TAG).addToBackStack(TAG).commit();
     }
 
-    public void onLoginSuccess(String email, String token) {
+    public void onLoginSuccess(String email, AccessTokenWT token) {
         Message completeMessage = mHandler.obtainMessage(0, getString(R.string.logged_in));
         completeMessage.sendToTarget();
         if (loginListener != null) {

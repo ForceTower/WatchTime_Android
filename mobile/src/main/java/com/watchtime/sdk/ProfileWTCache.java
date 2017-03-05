@@ -1,5 +1,7 @@
 package com.watchtime.sdk;
 
+import android.util.Log;
+
 import com.watchtime.base.content.ObscuredSharedPreferences;
 import com.watchtime.base.utils.PrefUtils;
 import com.watchtime.sdk.validators.Validate;
@@ -12,7 +14,7 @@ import org.json.JSONObject;
  */
 
 public class ProfileWTCache {
-    static final String CACHED_PROFILE_KEY = "com.watchtime.WatchTimeProfileManager.CachedProfile";
+    private static final String CACHED_PROFILE_KEY = "com.watchtime.WatchTimeProfileManager.CachedProfile";
     private ObscuredSharedPreferences sharedPreferences;
 
     public ProfileWTCache() {
@@ -26,6 +28,7 @@ public class ProfileWTCache {
                 JSONObject jsonObject = new JSONObject(jsonString);
                 return new Profile(jsonObject);
             } catch (JSONException e) {
+                Log.d("WTimeSDK", "JSONError: " + e.getMessage());
                 return null;
             }
         }

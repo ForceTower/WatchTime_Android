@@ -1,13 +1,11 @@
 package com.watchtime.activities;
 
 import android.app.Activity;
-import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.ActivityOptionsCompat;
-import android.support.v4.util.Pair;
 import android.support.v4.view.ViewPager;
 import android.support.v7.widget.Toolbar;
 import android.transition.TransitionInflater;
@@ -161,6 +159,7 @@ public class MediaImagesActivity extends WatchTimeBaseActivity {
                             @Override
                             public void run() {
                                 Snackbar.make(view, getString(R.string.cover_update_success), Snackbar.LENGTH_SHORT).show();
+                                getApp().getDataChangeHandler().igniteListeners();
                             }
                         });
 

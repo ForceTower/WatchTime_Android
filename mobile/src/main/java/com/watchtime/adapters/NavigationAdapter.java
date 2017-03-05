@@ -1,9 +1,7 @@
 package com.watchtime.adapters;
 
 import android.content.Context;
-import android.content.res.Resources;
 import android.graphics.PorterDuff;
-import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
 import android.support.annotation.NonNull;
@@ -18,26 +16,17 @@ import android.widget.ProgressBar;
 import android.widget.Switch;
 import android.widget.TextView;
 
-import com.facebook.AccessToken;
-import com.facebook.GraphRequest;
-import com.facebook.GraphResponse;
-import com.facebook.HttpMethod;
-import com.squareup.picasso.Callback;
 import com.squareup.picasso.Picasso;
 import com.watchtime.R;
 import com.watchtime.base.ApiEndPoints;
 import com.watchtime.base.WatchTimeApplication;
-import com.watchtime.base.backend.User;
+import com.watchtime.base.interfaces.OnDataChangeHandler;
 import com.watchtime.base.utils.AnimUtils;
-import com.watchtime.base.utils.PrefUtils;
 import com.watchtime.fragments.drawer.NavDrawerItem;
 import com.watchtime.sdk.AccessTokenWT;
 import com.watchtime.sdk.Profile;
 
 
-import org.json.JSONException;
-
-import java.io.IOException;
 import java.util.List;
 
 import butterknife.Bind;
@@ -46,24 +35,20 @@ import de.hdodenhof.circleimageview.CircleImageView;
 
 import static com.facebook.FacebookSdk.getApplicationContext;
 
-/**
- * Created by João Paulo on 24/01/2017.
- */
-
-public class NavigationAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>{
+public class NavigationAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> implements OnDataChangeHandler.OnDataChangeListener {
     public interface Callback {
         int getSelectedPosition();
     }
 
-    public void updateInterface() {
+    public void onDataChange() {
+        Log.d("Drawer", "OnDataChanged");
         final Handler handler = new Handler(Looper.getMainLooper());
-        handler.postAtTime(new Runnable() {
+        handler.post(new Runnable() {
             @Override
             public void run() {
                 notifyDataSetChanged();
-                handler.postDelayed(this, 3000 );
             }
-        }, 3000);
+        });
     }
 
     public interface OnItemClickListener {
@@ -100,11 +85,11 @@ public class NavigationAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
 
         holder.getTitleTextView().setVisibility(View.VISIBLE);
         holder.getTitleTextView().setTextColor(normalColor);
-        final HeaderHolder finalOne = holder;
 
-        if (AccessTokenWT.getCurrentAccessToken() != null) {
-            Profile.fetchProfileForCurrentAccessToken();
-            final Profile user = Profile.getCurrentProfile();
+        Profile.fetchProfileForCurrentAccessToken();
+        final Profile user = Profile.getCurrentProfile();
+
+        if (user != null) {
             holder.getSubtitleTextView().setVisibility(View.VISIBLE);
 
             int minutes = user.getTimeWatched()%60;
@@ -128,7 +113,7 @@ public class NavigationAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
                 str = minutes + " minutes watched";
 
             holder.getSubtitleTextView().setText(str);
-            finalOne.getTitleTextView().setText(user.getName());
+            holder.getTitleTextView().setText(user.getName());
 
             final CircleImageView profileImage = holder.getProfileImageView();
             final ImageView coverImage = holder.getBackgroundImageView();
@@ -161,7 +146,6 @@ public class NavigationAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
                     mHandler.post(new Runnable() {
                         @Override
                         public void run() {
-                            System.out.println("Success profile");
                             AnimUtils.fadeIn(profileImage);
                         }
                     });
@@ -229,7 +213,8 @@ public class NavigationAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
         this.checkedColor = ContextCompat.getColor(context, R.color.primary_green);
         this.checkedBackgroundRes = R.color.nav_drawer_selected_bg;
         this.normalBackgroundRes = R.drawable.selectable_nav_background;
-        updateInterface();
+
+        ((WatchTimeApplication)getApplicationContext()).getDataChangeHandler().registerListener("NavDrawer", this);
     }
 
     public void setItems(List<NavDrawerItem> items) {

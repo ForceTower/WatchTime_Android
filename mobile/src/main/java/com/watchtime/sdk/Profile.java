@@ -32,7 +32,6 @@ public class Profile {
 
     public Profile(JSONObject json) throws JSONException {
         Log.d("WTimeSDK", "response: " + json.toString());
-        json = json.getJSONObject("data");
         String name = json.getString("name");
         int id = json.getInt("id");
         String email = json.getString("email");
@@ -95,7 +94,7 @@ public class Profile {
         }
 
         Request request = new Request.Builder()
-                .addHeader("Authorization", "Bearer " + accessToken.getAccessToken())
+                .addHeader("Authorization", accessToken.getTokenType() + " " + accessToken.getAccessToken())
                 .url(ApiEndPoints.PROFILE_ME)
                 .get()
                 .build();
@@ -115,11 +114,12 @@ public class Profile {
                 }
 
                 try {
-                    Profile profile = new Profile(new JSONObject(response.body().string()));
+                    JSONObject obj = new JSONObject(response.body().string());
+                    obj = obj.getJSONObject("data");
+                    Profile profile = new Profile(obj);
                     Profile.setCurrentProfile(profile);
-                    Log.i("WTimeSDK", "Profile Set!");
                 } catch (JSONException e) {
-                    e.printStackTrace();
+                    Log.i("WTimeSDK", e.getMessage());
                 }
             }
         });

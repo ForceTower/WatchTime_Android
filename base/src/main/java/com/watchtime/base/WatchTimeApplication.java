@@ -17,6 +17,7 @@ import com.watchtime.base.backend.User;
 import com.watchtime.base.backend.token.TokenAPI;
 import com.watchtime.base.content.preferences.Prefs;
 import com.watchtime.base.content.preferences.StorageUtils;
+import com.watchtime.base.interfaces.OnDataChangeHandler;
 import com.watchtime.base.utils.LocaleUtils;
 import com.watchtime.base.utils.PrefUtils;
 
@@ -36,6 +37,7 @@ public class WatchTimeApplication extends Application {
     private static String systemLanguage;
     private static OkHttpClient httpClient;
     private static Application app; //Find a better option
+    private OnDataChangeHandler dataChangeHandler = new OnDataChangeHandler();
 
     private User connectedUser = new User();
 
@@ -44,6 +46,11 @@ public class WatchTimeApplication extends Application {
         super.attachBaseContext(context);
         MultiDex.install(this);
     }
+
+    public OnDataChangeHandler getDataChangeHandler() {
+        return dataChangeHandler;
+    }
+
 
     @Override
     public void onCreate() {

@@ -44,6 +44,11 @@ import com.watchtime.base.utils.VersionUtils;
 import com.watchtime.fragments.MediaContainerFragment;
 import com.watchtime.fragments.NavigationDrawerFragment;
 import com.watchtime.fragments.drawer.NavDrawerItem;
+import com.watchtime.sdk.AccessTokenWT;
+import com.watchtime.sdk.LoginManagerWT;
+import com.watchtime.sdk.WatchTimeAccessTokenManager;
+import com.watchtime.sdk.WatchTimeProfileManager;
+import com.watchtime.sdk.WatchTimeSdk;
 import com.watchtime.utils.ToolbarUtils;
 import com.watchtime.widget.ScrimInsetsFrameLayout;
 
@@ -378,8 +383,10 @@ public class MainActivity extends WatchTimeBaseActivity implements NavigationDra
     }
 
     public void onLogoutClicked() {
-        if (logout())
+        if (logout()) {
             LoginManager.getInstance().logOut();
+            LoginManagerWT.getInstance().logout();
+        }
     }
 
     public boolean logout() {

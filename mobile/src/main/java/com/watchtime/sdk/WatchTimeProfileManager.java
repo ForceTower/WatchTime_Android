@@ -1,10 +1,8 @@
 package com.watchtime.sdk;
 
-import com.watchtime.sdk.validators.Validate;
+import android.util.Log;
 
-/**
- * Created by João Paulo on 04/03/2017.
- */
+import com.watchtime.sdk.validators.Validate;
 
 public class WatchTimeProfileManager {
     private static WatchTimeProfileManager instance;
@@ -26,7 +24,7 @@ public class WatchTimeProfileManager {
 
     boolean loadCurrentProfile() {
         Profile profile = profileCache.load();
-
+        Log.d("WTimeSDK", "Profile loaded from cache: " + profile);
         if (profile != null) {
             setCurrentProfile(profile, false);
             return true;
@@ -35,7 +33,7 @@ public class WatchTimeProfileManager {
         return false;
     }
 
-    void setCurrentProfile(Profile currentProfile) {
+    public void setCurrentProfile(Profile currentProfile) {
         setCurrentProfile(currentProfile, true);
     }
 

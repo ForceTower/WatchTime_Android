@@ -36,22 +36,13 @@ public class AccessTokenWT {
         return tokenType;
     }
 
-    static AccessTokenWT createFromJSON(JSONObject json) throws JSONException {
+    public static AccessTokenWT createFromJSON(JSONObject json) throws JSONException {
         String accessToken = json.getString("access_token");
         String refreshToken = json.optString("refresh_token");
         String tokenType = json.getString("token_type");
         int expires = json.getInt("expires_in");
 
         return new AccessTokenWT(accessToken, refreshToken, tokenType, expires);
-    }
-
-    JSONObject toJSONObject() throws JSONException {
-        JSONObject json = new JSONObject();
-        json.put("access_token", accessToken);
-        json.put("refresh_token", refreshToken);
-        json.put("token_type", tokenType);
-        json.put("expires_in", expiration);
-        return json;
     }
 
     public static AccessTokenWT getCurrentAccessToken() {

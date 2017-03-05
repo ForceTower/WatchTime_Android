@@ -6,7 +6,6 @@ import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.app.FragmentManager;
-import android.transition.TransitionInflater;
 import android.util.Log;
 
 import com.facebook.CallbackManager;
@@ -16,14 +15,9 @@ import com.watchtime.activities.base.WatchTimeBaseAuthenticatorActivity;
 import com.watchtime.base.Constants;
 import com.watchtime.base.WatchTimeApplication;
 import com.watchtime.base.backend.User;
-import com.watchtime.base.utils.PrefUtils;
-import com.watchtime.base.utils.VersionUtils;
 import com.watchtime.fragments.account.AccessAccountFragment;
-import com.watchtime.sdk.AccessTokenWTCache;
-
-import org.json.JSONObject;
-
-import java.io.IOException;
+import com.watchtime.sdk.AccessTokenWT;
+import com.watchtime.sdk.LoginManagerWT;
 
 public class AccessAccountBaseActivity extends WatchTimeBaseAuthenticatorActivity {
     CallbackManager callbackManager;
@@ -38,11 +32,6 @@ public class AccessAccountBaseActivity extends WatchTimeBaseAuthenticatorActivit
         callbackManager = CallbackManager.Factory.create();
 
         setupAccountManagerCode();
-
-        if (VersionUtils.isLollipop()) {
-            getWindow().setExitTransition(TransitionInflater.from(this).inflateTransition(android.R.transition.fade));
-            getWindow().setEnterTransition(TransitionInflater.from(this).inflateTransition(android.R.transition.fade));
-        }
 
         if (savedInstanceState == null) {
             AccessAccountFragment accessAccountFragment = new AccessAccountFragment();
@@ -67,7 +56,7 @@ public class AccessAccountBaseActivity extends WatchTimeBaseAuthenticatorActivit
         user.setAuthTokenType(authTokenType);
     }
 
-    public void facebookLoginToken(final String email, final String token) {
+    public void facebookLoginToken(final String email, final AccessTokenWT token) {
         Log.i("AccMgr - AccessAccount", "facebookLoginToken");
 
         new AsyncTask<Void, Void, Intent>() {
@@ -76,7 +65,7 @@ public class AccessAccountBaseActivity extends WatchTimeBaseAuthenticatorActivit
                 Intent intent = new Intent();
                 intent.putExtra(AccountManager.KEY_ACCOUNT_NAME, email);
                 intent.putExtra(AccountManager.KEY_ACCOUNT_TYPE, user.getAccountType());
-                intent.putExtra(AccountManager.KEY_AUTHTOKEN, token);
+                intent.putExtra(AccountManager.KEY_AUTHTOKEN, token.getAccessToken());
 
                 return intent;
             }
@@ -131,6 +120,9 @@ public class AccessAccountBaseActivity extends WatchTimeBaseAuthenticatorActivit
         Account account = new Account(accountName, accountType);
         accountManager.addAccountExplicitly(account, null, null);
         accountManager.setAuthToken(account, user.getAuthTokenType(), token);
+
+        LoginManagerWT.getInstance().onLogin();
+
         setAccountAuthenticatorResult(intent.getExtras());
         finish();
     }

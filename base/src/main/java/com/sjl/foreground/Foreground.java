@@ -152,10 +152,10 @@ public class Foreground implements Application.ActivityLifecycleCallbacks {
         // check if we're becoming foreground and notify listeners
         if (!foreground && (activity != null && !activity.isChangingConfigurations())) {
             foreground = true;
-            Log.w(TAG, "became foreground");
+            //Log.w(TAG, "became foreground");
             listeners.each(becameForeground);
         } else {
-            Log.i(TAG, "still foreground");
+            //Log.i(TAG, "still foreground");
         }
     }
 
@@ -184,13 +184,13 @@ public class Foreground implements Application.ActivityLifecycleCallbacks {
         if (foreground) {
             if ((activity == current) && (activity != null && !activity.isChangingConfigurations())) {
                 foreground = false;
-                Log.w(TAG, "went background");
+                //Log.w(TAG, "went background");
                 listeners.each(becameBackground);
             } else {
-                Log.i(TAG, "still foreground");
+                //Log.i(TAG, "still foreground");
             }
         } else {
-            Log.i(TAG, "still background");
+            //Log.i(TAG, "still background");
         }
     }
 }
