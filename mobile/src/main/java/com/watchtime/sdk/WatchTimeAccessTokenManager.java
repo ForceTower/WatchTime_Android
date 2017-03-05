@@ -31,15 +31,17 @@ public class WatchTimeAccessTokenManager {
     }
 
     public boolean loadCurrentAccessToken() {
-        AccessTokenWT accessToken = null;
-
         Account[] account = accountManager.getAccountsByType(Constants.ACCOUNT_TYPE);
         if (account.length != 0) {
             String token = accountManager.peekAuthToken(account[0], Constants.ACCOUNT_TOKEN_TYPE);
-            accessToken = new AccessTokenWT(token, null, "Bearer", 7200);
+
+            AccessTokenWT accessToken = new AccessTokenWT(token, null, "Bearer", 7200);
+            currentAccessToken = accessToken;
+            return true;
+
         }
 
-        currentAccessToken = accessToken;
+        currentAccessToken = null;
         return false;
     }
 

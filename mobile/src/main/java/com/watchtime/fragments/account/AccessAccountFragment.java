@@ -32,6 +32,7 @@ import com.watchtime.activities.AccessAccountBaseActivity;
 import com.watchtime.base.ApiEndPoints;
 import com.watchtime.base.WatchTimeApplication;
 import com.watchtime.base.backend.token.TokenAPI;
+import com.watchtime.base.interfaces.OnDataChangeHandler;
 import com.watchtime.base.utils.PrefUtils;
 import com.watchtime.base.utils.VersionUtils;
 import com.watchtime.sdk.AccessTokenWT;
@@ -51,12 +52,6 @@ import okhttp3.RequestBody;
 import okhttp3.Response;
 
 public class AccessAccountFragment extends Fragment {
-    public interface OnLoginListener {
-        void onLogin();
-        void onLogout();
-    }
-    public static OnLoginListener loginListener;
-
     public static final String TAG = "AccessAccountFragment";
     private ImageView imageLogo;
 
@@ -308,10 +303,8 @@ public class AccessAccountFragment extends Fragment {
     public void onLoginSuccess(String email, AccessTokenWT token) {
         Message completeMessage = mHandler.obtainMessage(0, getString(R.string.logged_in));
         completeMessage.sendToTarget();
-        if (loginListener != null) {
-           loginListener.onLogin();
-        }
 
+        ((WatchTimeApplication)getActivity().getApplication()).getDataChangeHandler().igniteListeners(OnDataChangeHandler.LOGIN);
         ((AccessAccountBaseActivity)getActivity()).facebookLoginToken(email, token);
     }
 

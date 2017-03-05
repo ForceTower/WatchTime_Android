@@ -43,12 +43,20 @@ public class NavigationAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
     public void onDataChange() {
         Log.d("Drawer", "OnDataChanged");
         final Handler handler = new Handler(Looper.getMainLooper());
-        handler.post(new Runnable() {
+        handler.postDelayed(new Runnable() {
             @Override
             public void run() {
                 notifyDataSetChanged();
+
+                //Updates again in 2 secs to make sure everything is all right (Bad Programming manner)
+                handler.postDelayed(new Runnable() {
+                    @Override
+                    public void run() {
+                        notifyDataSetChanged();
+                    }
+                }, 2000);
             }
-        });
+        }, 500);
     }
 
     public interface OnItemClickListener {
@@ -87,9 +95,10 @@ public class NavigationAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
         holder.getTitleTextView().setTextColor(normalColor);
 
         Profile.fetchProfileForCurrentAccessToken();
-        final Profile user = Profile.getCurrentProfile();
+        Profile user = Profile.getCurrentProfile();
 
         if (user != null) {
+            final int id = user.getId();
             holder.getSubtitleTextView().setVisibility(View.VISIBLE);
 
             int minutes = user.getTimeWatched()%60;
@@ -151,7 +160,7 @@ public class NavigationAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
                     });
                 }
                 @Override
-                public void onError() { System.out.println("Error profile: " + ApiEndPoints.PROFILE + user.getId() + "/profile_image");}
+                public void onError() { System.out.println("Error profile: " + ApiEndPoints.PROFILE + id + "/profile_image");}
             });
         } else {
             holder.getProfileImageView().setImageResource(R.mipmap.app_logo);
@@ -159,7 +168,6 @@ public class NavigationAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
             holder.getSubtitleTextView().setVisibility(View.INVISIBLE);
             holder.getTitleTextView().setText(R.string.guest_name);
         }
-
 
         holder.getSubtitleTextView().setTextColor(normalColor);
     }
@@ -214,7 +222,7 @@ public class NavigationAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
         this.checkedBackgroundRes = R.color.nav_drawer_selected_bg;
         this.normalBackgroundRes = R.drawable.selectable_nav_background;
 
-        ((WatchTimeApplication)getApplicationContext()).getDataChangeHandler().registerListener("NavDrawer", this);
+        ((WatchTimeApplication)getApplicationContext()).getDataChangeHandler().registerListener("NavDrawer", this, new int[] {OnDataChangeHandler.LOGIN, OnDataChangeHandler.LOGOUT});
     }
 
     public void setItems(List<NavDrawerItem> items) {

@@ -51,5 +51,6 @@ public class ProfileWTCache {
                 .edit()
                 .remove(CACHED_PROFILE_KEY)
                 .apply();
+
     }
 }

@@ -278,6 +278,9 @@ public class MainActivity extends WatchTimeBaseActivity implements NavigationDra
 
         if (accountManager.getAccountsByType(Constants.ACCOUNT_TYPE).length != 0) {
             getAccounts();
+        } else {
+            LoginManager.getInstance().logOut();
+            LoginManagerWT.getInstance().logout();
         }
     }
 
@@ -390,7 +393,6 @@ public class MainActivity extends WatchTimeBaseActivity implements NavigationDra
     }
 
     public boolean logout() {
-        Log.i("AccMgr - MainActivity", "logout");
         Account[] accounts = accountManager.getAccountsByType(Constants.ACCOUNT_TYPE);
 
         for (int i = 0; i < accounts.length; i++) {

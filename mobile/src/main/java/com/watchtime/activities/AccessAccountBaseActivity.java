@@ -10,11 +10,13 @@ import android.util.Log;
 
 import com.facebook.CallbackManager;
 
+import com.facebook.login.LoginManager;
 import com.watchtime.R;
 import com.watchtime.activities.base.WatchTimeBaseAuthenticatorActivity;
 import com.watchtime.base.Constants;
 import com.watchtime.base.WatchTimeApplication;
 import com.watchtime.base.backend.User;
+import com.watchtime.base.interfaces.OnDataChangeHandler;
 import com.watchtime.fragments.account.AccessAccountFragment;
 import com.watchtime.sdk.AccessTokenWT;
 import com.watchtime.sdk.LoginManagerWT;
@@ -46,6 +48,11 @@ public class AccessAccountBaseActivity extends WatchTimeBaseAuthenticatorActivit
     private void setupAccountManagerCode() {
         accountManager = AccountManager.get(this);
         user = ((WatchTimeApplication)getApplication()).getUser();
+
+        if (accountManager.getAccountsByType(Constants.ACCOUNT_TYPE).length == 0) {
+            LoginManagerWT.getInstance().logout();
+            LoginManager.getInstance().logOut();
+        }
 
         String accountType = getIntent().getStringExtra(Constants.ARG_ACCOUNT_TYPE);
         String accountName = getIntent().getStringExtra(Constants.ARG_ACCOUNT_NAME);
@@ -122,6 +129,7 @@ public class AccessAccountBaseActivity extends WatchTimeBaseAuthenticatorActivit
         accountManager.setAuthToken(account, user.getAuthTokenType(), token);
 
         LoginManagerWT.getInstance().onLogin();
+        ((WatchTimeApplication)getApplication()).getDataChangeHandler().igniteListeners(OnDataChangeHandler.LOGIN);
 
         setAccountAuthenticatorResult(intent.getExtras());
         finish();

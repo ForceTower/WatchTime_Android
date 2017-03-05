@@ -31,7 +31,6 @@ public class Profile {
 
 
     public Profile(JSONObject json) throws JSONException {
-        Log.d("WTimeSDK", "response: " + json.toString());
         String name = json.getString("name");
         int id = json.getInt("id");
         String email = json.getString("email");

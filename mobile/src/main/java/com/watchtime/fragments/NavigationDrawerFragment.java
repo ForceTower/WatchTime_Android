@@ -28,13 +28,17 @@ import com.watchtime.R;
 import com.watchtime.activities.AccessAccountBaseActivity;
 import com.watchtime.adapters.NavigationAdapter;
 import com.watchtime.adapters.decorators.OneShotDividerDecorator;
+import com.watchtime.base.WatchTimeApplication;
 import com.watchtime.base.content.preferences.Prefs;
+import com.watchtime.base.interfaces.OnDataChangeHandler;
 import com.watchtime.base.providers.media.MoviesProvider;
 import com.watchtime.base.utils.PrefUtils;
 import com.watchtime.base.utils.VersionUtils;
 import com.watchtime.fragments.account.AccessAccountFragment;
 import com.watchtime.fragments.account.LoginFragment;
 import com.watchtime.fragments.drawer.NavDrawerItem;
+import com.watchtime.sdk.AccessTokenWT;
+import com.watchtime.sdk.LoginManagerWT;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -45,7 +49,7 @@ import java.util.List;
  */
 
 @SuppressWarnings("unchecked")
-public class NavigationDrawerFragment extends Fragment implements NavigationAdapter.Callback, AccessAccountFragment.OnLoginListener {
+public class NavigationDrawerFragment extends Fragment implements NavigationAdapter.Callback, OnDataChangeHandler.OnDataChangeListener{
 
     public interface Callbacks {
         void onNavigationDrawerItemSelected(NavDrawerItem item, String s);
@@ -53,7 +57,8 @@ public class NavigationDrawerFragment extends Fragment implements NavigationAdap
         void onLogoutClicked();
     }
 
-    public void onLogin() {
+    @Override
+    public void onDataChange() {
         Handler handler = new Handler(Looper.getMainLooper());
         handler.post(new Runnable() {
             @Override
@@ -61,11 +66,7 @@ public class NavigationDrawerFragment extends Fragment implements NavigationAdap
                 mAdapter.setItems(initItems());
             }
         });
-    }
 
-    public void onLogout() {
-        mAdapter.setItems(initItems());
-        mDrawerLayout.closeDrawer(mNavigationDrawerContainer);
     }
 
     private NavDrawerItem.OnClickListener settingsClickListener = new NavDrawerItem.OnClickListener() {
@@ -88,11 +89,12 @@ public class NavigationDrawerFragment extends Fragment implements NavigationAdap
         @Override
         public void onClick(View v, NavigationAdapter.ItemRowHolder rowHolder, int position) {
             mCallbacks.onLogoutClicked();
+            mDrawerLayout.closeDrawer(mNavigationDrawerContainer);
             Handler handler = new Handler(Looper.getMainLooper());
             handler.post(new Runnable() {
                 @Override
                 public void run() {
-                    onLogout();
+                    mAdapter.setItems(initItems());
                 }
             });
         }
@@ -147,7 +149,6 @@ public class NavigationDrawerFragment extends Fragment implements NavigationAdap
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        AccessAccountFragment.loginListener = this;
 
         mUserLearnedDrawer = PrefUtils.get(getActivity(), Prefs.DRAWER_LEARNED, false);
 
@@ -161,6 +162,7 @@ public class NavigationDrawerFragment extends Fragment implements NavigationAdap
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
         setHasOptionsMenu(true);
+        ((WatchTimeApplication)WatchTimeApplication.getAppContext()).getDataChangeHandler().registerListener("NavDrawerFragment", this, new int[] {OnDataChangeHandler.LOGIN, OnDataChangeHandler.LOGOUT});
     }
 
     @Override
@@ -192,7 +194,8 @@ public class NavigationDrawerFragment extends Fragment implements NavigationAdap
 
         navItems.add(new NavDrawerItem(true));
 
-        if (AccessToken.getCurrentAccessToken() != null) {
+        boolean connected = LoginManagerWT.getInstance().isConnected(getContext());
+        if (connected) {
             navItems.add(new NavDrawerItem(getString(R.string.your_profile), R.drawable.my_profile_icons, NavDrawerItem.ItemTags.PROFILE));
         } else {
             navItems.add(new NavDrawerItem(getString(R.string.title_login), R.drawable.ic_login_image, loginClickListener));
@@ -201,7 +204,7 @@ public class NavigationDrawerFragment extends Fragment implements NavigationAdap
         navItems.add(new NavDrawerItem(getString(R.string.title_movies), R.drawable.ic_nav_movies, new MoviesProvider()));
         navItems.add(new NavDrawerItem(getString(R.string.title_shows), R.drawable.ic_nav_tv/*, new ShowsProvider()*/));
 
-        if (AccessToken.getCurrentAccessToken() != null) {
+        if (connected) {
             navItems.add(new NavDrawerItem(getString(R.string.title_my_watch_list), R.drawable.ic_your_list, NavDrawerItem.ItemTags.USER_LIST));
             navItems.add(new NavDrawerItem(getString(R.string.title_friends_activities), R.drawable.ic_friends_watch, NavDrawerItem.ItemTags.FRIENDS));
             navItems.add(new NavDrawerItem(getString(R.string.title_discover_movies), R.drawable.ic_discover/*, new FriendsWatchsProvider()*/));
@@ -209,7 +212,7 @@ public class NavigationDrawerFragment extends Fragment implements NavigationAdap
         }
 
         navItems.add(new NavDrawerItem(getString(R.string.preferences), R.drawable.ic_nav_settings, settingsClickListener));
-        if (AccessToken.getCurrentAccessToken() != null) {
+        if (connected) {
             navItems.add(new NavDrawerItem(getString(R.string.logout), R.drawable.ic_login_image, logoutClickListener));
         }
 

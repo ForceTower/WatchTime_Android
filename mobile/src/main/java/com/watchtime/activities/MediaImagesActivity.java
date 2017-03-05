@@ -20,6 +20,7 @@ import com.watchtime.activities.base.WatchTimeBaseActivity;
 import com.watchtime.adapters.ImagePagerAdapter;
 import com.watchtime.adapters.transformers.ZoomOutPageTransformer;
 import com.watchtime.base.ApiEndPoints;
+import com.watchtime.base.interfaces.OnDataChangeHandler;
 import com.watchtime.base.providers.media.models.Media;
 import com.watchtime.base.utils.PixelUtils;
 import com.watchtime.base.utils.VersionUtils;
@@ -159,7 +160,7 @@ public class MediaImagesActivity extends WatchTimeBaseActivity {
                             @Override
                             public void run() {
                                 Snackbar.make(view, getString(R.string.cover_update_success), Snackbar.LENGTH_SHORT).show();
-                                getApp().getDataChangeHandler().igniteListeners();
+                                getApp().getDataChangeHandler().igniteListeners(OnDataChangeHandler.ALL);
                             }
                         });
 

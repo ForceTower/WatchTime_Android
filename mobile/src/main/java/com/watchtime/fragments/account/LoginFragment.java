@@ -22,6 +22,7 @@ import com.watchtime.R;
 import com.watchtime.base.ApiEndPoints;
 import com.watchtime.base.WatchTimeApplication;
 import com.watchtime.base.backend.token.TokenAPI;
+import com.watchtime.base.interfaces.OnDataChangeHandler;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -36,7 +37,6 @@ import okhttp3.Request;
 import okhttp3.RequestBody;
 import okhttp3.Response;
 
-import static com.watchtime.fragments.account.AccessAccountFragment.loginListener;
 
 public class LoginFragment extends Fragment {
     public static final String TAG = "LoginFragment";
@@ -191,9 +191,8 @@ public class LoginFragment extends Fragment {
     public void onLoginSuccess() {
         Message completeMessage = mHandler.obtainMessage(0, getString(R.string.logged_in));
         completeMessage.sendToTarget();
-        if (loginListener != null) {
-            loginListener.onLogin();
-        }
+
+        ((WatchTimeApplication)getActivity().getApplication()).getDataChangeHandler().igniteListeners(OnDataChangeHandler.LOGIN);
 
         getActivity().finish();
     }
