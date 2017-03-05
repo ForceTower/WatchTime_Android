@@ -29,4 +29,5 @@ public class ApiEndPoints {
     public static final String PROFILE_BASIC = BASE_URL + "/user/";
 
     public static final String UPDATE_COVER_PICTURE = PROFILE_ME + "/cover";
+    public static final String MARK_MOVIE_WATCHED = PROFILE_ME + "/movie_watched";
 }

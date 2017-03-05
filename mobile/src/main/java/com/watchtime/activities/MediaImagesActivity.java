@@ -117,7 +117,7 @@ public class MediaImagesActivity extends WatchTimeBaseActivity {
         floatingBtn.setColorPressed(pressed);
         floatingBtn.setColorRipple(ripple);
 
-        if (AccessToken.getCurrentAccessToken() != null) {
+        if (AccessTokenWT.getCurrentAccessToken() != null) {
             floatingBtn.setVisibility(View.VISIBLE);
         } else {
             floatingBtn.setVisibility(GONE);

@@ -75,4 +75,8 @@
     <string name="only_one_account">Only one account can be created</string>
     <string name="cover_update_success">Cover Updated</string>
     <string name="one_account_allowed">Only one account allowed</string>
+    <string name="marked_as_watched">Marked as watched</string>
+    <string name="mark_failed">Failed marking media</string>
+    <string name="no_permission">Insufficient Permissions</string>
+    <string name="already_marked">Already watched</string>
 </resources>
