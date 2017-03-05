@@ -289,11 +289,6 @@ public class MediaListFragment extends Fragment implements LoadingDetailDialogFr
 
         @Override
         public void onFailure(Exception e) {
-            if (e == null)
-                Log.i("MediaListFrag", "Exception NULL " + e);
-            else
-                Log.i("MediaListFrag", "Exception " + e.getMessage());
-
             if (isDetached() || (e.getMessage().equals("Canceled"))) {
                 ThreadUtils.runOnUiThread(new Runnable() {
                     @Override
@@ -320,7 +315,8 @@ public class MediaListFragment extends Fragment implements LoadingDetailDialogFr
                     }
                 });
             } else {
-                e.printStackTrace();
+                Log.i("MediaList", e.getMessage());
+                //e.printStackTrace();
                 if (retries > 1) {
                     ThreadUtils.runOnUiThread(new Runnable() {
                         @Override
