@@ -35,7 +35,7 @@ public class OnDataChangeHandler {
 
     public void igniteListeners(int option) {
         for (MicroListener ml : listeners.values()) {
-            if (ml.list.contains(option) || ml.list.contains(ALL))
+            if (ml.list.contains(option))
                 ml.listener.onDataChange();
         }
     }
