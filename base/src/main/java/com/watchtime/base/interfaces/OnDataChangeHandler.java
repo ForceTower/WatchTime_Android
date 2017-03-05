@@ -1,5 +1,7 @@
 package com.watchtime.base.interfaces;
 
+import android.util.Log;
+
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
@@ -24,13 +26,18 @@ public class OnDataChangeHandler {
     }
 
     public void registerListener(String key, OnDataChangeListener listener, int[] options) {
-        if (!listeners.containsKey(key)) {
+        Log.i("DataChangeListener", "Attempt to add: " + key);
+        //if (!listeners.containsKey(key)) {
             listeners.put(key, new MicroListener(listener, options));
-        }
+            Log.i("DataChangeListener", key + " added");
+        //} else {
+            //Log.i("DataChangeListener", key + " not added");
+        //}
     }
 
     public void unregisterListener(String key) {
-        listeners.remove(key);
+        MicroListener l = listeners.remove(key);
+        Log.i("DataChangeListener", "Unregister " + key + ". Result: " + Boolean.toString(l != null));
     }
 
     public void igniteListeners(int option) {

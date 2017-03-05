@@ -17,6 +17,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.transition.TransitionInflater;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
@@ -59,6 +60,7 @@ public class NavigationDrawerFragment extends Fragment implements NavigationAdap
 
     @Override
     public void onDataChange() {
+        Log.i("NavDrawerFrag", "Data Changed Ignited. Added? " + isAdded() + ". Visible? " + isVisible() + ". Detached? " + isDetached());
         Handler handler = new Handler(Looper.getMainLooper());
         handler.post(new Runnable() {
             @Override
@@ -135,6 +137,8 @@ public class NavigationDrawerFragment extends Fragment implements NavigationAdap
         super.onAttach(activity);
         try {
             mCallbacks = (Callbacks) activity;
+            Log.i("NavDrawerFrag", "Attach");
+            ((WatchTimeApplication)WatchTimeApplication.getAppContext()).getDataChangeHandler().registerListener("NavDrawerFragment", this, new int[] {OnDataChangeHandler.LOGIN, OnDataChangeHandler.LOGOUT});
         } catch (ClassCastException e) {
             throw new ClassCastException("Activity must implement NavigationDrawerCallbacks.");
         }
@@ -143,6 +147,8 @@ public class NavigationDrawerFragment extends Fragment implements NavigationAdap
     @Override
     public void onDetach() {
         super.onDetach();
+        Log.i("NavDrawerFrag", "Detach");
+        ((WatchTimeApplication)WatchTimeApplication.getAppContext()).getDataChangeHandler().unregisterListener("NavDrawerFragment");
         mCallbacks = null;
     }
 
@@ -162,7 +168,6 @@ public class NavigationDrawerFragment extends Fragment implements NavigationAdap
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
         setHasOptionsMenu(true);
-        ((WatchTimeApplication)WatchTimeApplication.getAppContext()).getDataChangeHandler().registerListener("NavDrawerFragment", this, new int[] {OnDataChangeHandler.LOGIN, OnDataChangeHandler.LOGOUT});
     }
 
     @Override

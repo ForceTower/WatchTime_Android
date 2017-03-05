@@ -25,6 +25,9 @@ public class LoginManagerWT {
     }
 
     public boolean isConnected(Context context) {
+        if (context == null)
+            context = WatchTimeApplication.getAppContext();
+
         AccountManager manager = AccountManager.get(context);
         Account[] accounts = manager.getAccountsByType(Constants.ACCOUNT_TYPE);
         if (accounts.length != 0) {

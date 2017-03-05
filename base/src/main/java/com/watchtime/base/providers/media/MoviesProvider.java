@@ -81,6 +81,10 @@ public class MoviesProvider extends MediaProvider{
         return enqueue(requestBuilder.build(), new okhttp3.Callback() {
             @Override
             public void onFailure(Call call, IOException e) {
+                if (e.getMessage() == null) {
+                    e.printStackTrace();
+                    e = new IOException("Failed Fetching for a random reason");
+                }
                 callback.onFailure(e);
             }
 

@@ -154,12 +154,14 @@ public class AccessAccountFragment extends Fragment {
             @Override
             public void onFailure(Call call, IOException e) {
                 Log.d("AccessAccountFacebook", "Failed: " + e.getMessage());
+                LoginManager.getInstance().logOut();
             }
 
             @Override
             public void onResponse(Call call, Response response) throws IOException {
                 if (!response.isSuccessful()) {
                     onLoginFailed("Unsuccessful response");
+                    LoginManager.getInstance().logOut();
                     return;
                 }
 
@@ -206,6 +208,7 @@ public class AccessAccountFragment extends Fragment {
         tokenCall.enqueue(new Callback() {
             @Override
             public void onFailure(Call call, IOException e) {
+                LoginManager.getInstance().logOut();
                 onLoginFailed(e.getMessage());
             }
 
@@ -221,6 +224,7 @@ public class AccessAccountFragment extends Fragment {
                     AccessTokenWT accessToken = AccessTokenWT.createFromJSON(token);
                     onLoginSuccess(email, accessToken);
                 } catch (JSONException e) {
+                    LoginManager.getInstance().logOut();
                     onLoginFailed(e.getMessage());
                 }
 

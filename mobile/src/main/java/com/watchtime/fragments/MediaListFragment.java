@@ -14,6 +14,7 @@ import android.support.v7.graphics.Palette;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.transition.TransitionInflater;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -288,7 +289,12 @@ public class MediaListFragment extends Fragment implements LoadingDetailDialogFr
 
         @Override
         public void onFailure(Exception e) {
-            if (isDetached() || e.getMessage().equals("Canceled")) {
+            if (e == null)
+                Log.i("MediaListFrag", "Exception NULL " + e);
+            else
+                Log.i("MediaListFrag", "Exception " + e.getMessage());
+
+            if (isDetached() || (e.getMessage().equals("Canceled"))) {
                 ThreadUtils.runOnUiThread(new Runnable() {
                     @Override
                     public void run() {

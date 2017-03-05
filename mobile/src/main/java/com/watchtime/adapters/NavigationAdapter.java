@@ -221,8 +221,6 @@ public class NavigationAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
         this.checkedColor = ContextCompat.getColor(context, R.color.primary_green);
         this.checkedBackgroundRes = R.color.nav_drawer_selected_bg;
         this.normalBackgroundRes = R.drawable.selectable_nav_background;
-
-        ((WatchTimeApplication)getApplicationContext()).getDataChangeHandler().registerListener("NavDrawer", this, new int[] {OnDataChangeHandler.LOGIN, OnDataChangeHandler.LOGOUT, OnDataChangeHandler.ALL});
     }
 
     public void setItems(List<NavDrawerItem> items) {
@@ -328,5 +326,19 @@ public class NavigationAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
         public TextView getTitleTextView() {
             return titleTextView;
         }
+    }
+
+    @Override
+    public void onAttachedToRecyclerView(RecyclerView recyclerView) {
+        super.onAttachedToRecyclerView(recyclerView);
+        Log.i("NavDrawer", "Attached To RecyclerView");
+        ((WatchTimeApplication)getApplicationContext()).getDataChangeHandler().registerListener("NavAdapter", this, new int[] {OnDataChangeHandler.LOGIN, OnDataChangeHandler.LOGOUT, OnDataChangeHandler.ALL});
+    }
+
+    @Override
+    public void onDetachedFromRecyclerView(RecyclerView recyclerView) {
+        super.onDetachedFromRecyclerView(recyclerView);
+        Log.i("NavDrawer", "Detached To RecyclerView");
+        ((WatchTimeApplication)getApplicationContext()).getDataChangeHandler().unregisterListener("NavAdapter");
     }
 }
