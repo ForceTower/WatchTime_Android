@@ -1,9 +1,7 @@
 package com.watchtime.adapters;
 
 import android.content.Context;
-import android.content.res.Resources;
 import android.graphics.PorterDuff;
-import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
 import android.support.annotation.NonNull;
@@ -18,24 +16,17 @@ import android.widget.ProgressBar;
 import android.widget.Switch;
 import android.widget.TextView;
 
-import com.facebook.AccessToken;
-import com.facebook.GraphRequest;
-import com.facebook.GraphResponse;
-import com.facebook.HttpMethod;
-import com.squareup.picasso.Callback;
 import com.squareup.picasso.Picasso;
 import com.watchtime.R;
 import com.watchtime.base.ApiEndPoints;
 import com.watchtime.base.WatchTimeApplication;
-import com.watchtime.base.backend.User;
+import com.watchtime.base.interfaces.OnDataChangeHandler;
 import com.watchtime.base.utils.AnimUtils;
-import com.watchtime.base.utils.PrefUtils;
 import com.watchtime.fragments.drawer.NavDrawerItem;
+import com.watchtime.sdk.AccessTokenWT;
+import com.watchtime.sdk.Profile;
 
 
-import org.json.JSONException;
-
-import java.io.IOException;
 import java.util.List;
 
 import butterknife.Bind;
@@ -44,13 +35,28 @@ import de.hdodenhof.circleimageview.CircleImageView;
 
 import static com.facebook.FacebookSdk.getApplicationContext;
 
-/**
- * Created by João Paulo on 24/01/2017.
- */
-
-public class NavigationAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>{
+public class NavigationAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> implements OnDataChangeHandler.OnDataChangeListener {
     public interface Callback {
         int getSelectedPosition();
+    }
+
+    public void onDataChange() {
+        Log.d("Drawer", "OnDataChanged");
+        final Handler handler = new Handler(Looper.getMainLooper());
+        handler.postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                notifyDataSetChanged();
+
+                //Updates again in 2 secs to make sure everything is all right (Bad Programming manner)
+                handler.postDelayed(new Runnable() {
+                    @Override
+                    public void run() {
+                        notifyDataSetChanged();
+                    }
+                }, 2000);
+            }
+        }, 500);
     }
 
     public interface OnItemClickListener {
@@ -87,10 +93,12 @@ public class NavigationAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
 
         holder.getTitleTextView().setVisibility(View.VISIBLE);
         holder.getTitleTextView().setTextColor(normalColor);
-        final HeaderHolder finalOne = holder;
 
-        if (WatchTimeApplication.token != null) {
-            final User user = WatchTimeApplication.connectedUser;
+        Profile.fetchProfileForCurrentAccessToken();
+        Profile user = Profile.getCurrentProfile();
+
+        if (user != null) {
+            final int id = user.getId();
             holder.getSubtitleTextView().setVisibility(View.VISIBLE);
 
             int minutes = user.getTimeWatched()%60;
@@ -114,7 +122,7 @@ public class NavigationAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
                 str = minutes + " minutes watched";
 
             holder.getSubtitleTextView().setText(str);
-            finalOne.getTitleTextView().setText(user.getName());
+            holder.getTitleTextView().setText(user.getName());
 
             final CircleImageView profileImage = holder.getProfileImageView();
             final ImageView coverImage = holder.getBackgroundImageView();
@@ -124,7 +132,6 @@ public class NavigationAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
             if (user.getCover() == null)
                 coverImage.setImageResource(R.drawable.background_test_image3);
             else {
-                System.out.println("Cover is: " + user.getCover());
                 Picasso.with(getApplicationContext()).load("https://image.tmdb.org/t/p/w780" + user.getCover()).into(coverImage, new com.squareup.picasso.Callback() {
                     @Override
                     public void onSuccess() {
@@ -141,79 +148,26 @@ public class NavigationAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
                 });
             }
 
-            Picasso.with(getApplicationContext()).load(ApiEndPoints.PROFILE + user.getId() + "/profile_image").into(profileImage, new com.squareup.picasso.Callback() {
+            Picasso.with(getApplicationContext()).load(ApiEndPoints.PROFILE_BASIC + user.getId() + "/profile_image").into(profileImage, new com.squareup.picasso.Callback() {
                 @Override
                 public void onSuccess() {
                     Handler mHandler = new Handler(Looper.getMainLooper());
                     mHandler.post(new Runnable() {
                         @Override
                         public void run() {
-                            System.out.println("Success profile");
                             AnimUtils.fadeIn(profileImage);
                         }
                     });
                 }
                 @Override
-                public void onError() { System.out.println("Error profile: " + ApiEndPoints.PROFILE + user.getId() + "/profile_image");}
+                public void onError() { System.out.println("Error profile: " + ApiEndPoints.PROFILE + id + "/profile_image");}
             });
-/*
-            Bundle params = new Bundle();
-            params.putBoolean("redirect", false);
-            params.putString("type", "large");
-            new GraphRequest(
-                    AccessToken.getCurrentAccessToken(),
-                    "me/?fields=name,picture.type(large),cover",
-                    params,
-                    HttpMethod.GET,
-                    new GraphRequest.Callback() {
-                        public void onCompleted(GraphResponse response) {
-                            try {
-                                String name = response.getJSONObject().getString("name");
-                                finalOne.getTitleTextView().setText(name);
-                                String picUrlString = (String) response.getJSONObject().getJSONObject("picture").getJSONObject("data").get("url");
-                                String coverUrlString = (String) response.getJSONObject().getJSONObject("cover").get("source");
-                                Picasso.with(getApplicationContext()).load(picUrlString).into(profileImage, new com.squareup.picasso.Callback() {
-                                    @Override
-                                    public void onSuccess() {
-                                        Handler mHandler = new Handler(Looper.getMainLooper());
-                                        mHandler.post(new Runnable() {
-                                            @Override
-                                            public void run() {
-                                                AnimUtils.fadeIn(profileImage);
-                                            }
-                                        });
-                                    }
-                                    @Override
-                                    public void onError() {}
-                                });
-                                Picasso.with(getApplicationContext()).load(coverUrlString).into(coverImage, new com.squareup.picasso.Callback() {
-                                    @Override
-                                    public void onSuccess() {
-                                        Handler mHandler = new Handler(Looper.getMainLooper());
-                                        mHandler.post(new Runnable() {
-                                            @Override
-                                            public void run() {
-                                                AnimUtils.fadeIn(coverImage);
-                                            }
-                                        });
-                                    }
-                                    @Override
-                                    public void onError() {}
-                                });
-                            } catch (JSONException e) {
-                                e.printStackTrace();
-                            }
-                        }
-                    }
-
-            ).executeAsync();*/
         } else {
             holder.getProfileImageView().setImageResource(R.mipmap.app_logo);
             holder.getBackgroundImageView().setImageResource(R.drawable.background_test_image3);
             holder.getSubtitleTextView().setVisibility(View.INVISIBLE);
             holder.getTitleTextView().setText(R.string.guest_name);
         }
-
 
         holder.getSubtitleTextView().setTextColor(normalColor);
     }
@@ -267,6 +221,8 @@ public class NavigationAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
         this.checkedColor = ContextCompat.getColor(context, R.color.primary_green);
         this.checkedBackgroundRes = R.color.nav_drawer_selected_bg;
         this.normalBackgroundRes = R.drawable.selectable_nav_background;
+
+        ((WatchTimeApplication)getApplicationContext()).getDataChangeHandler().registerListener("NavDrawer", this, new int[] {OnDataChangeHandler.LOGIN, OnDataChangeHandler.LOGOUT, OnDataChangeHandler.ALL});
     }
 
     public void setItems(List<NavDrawerItem> items) {

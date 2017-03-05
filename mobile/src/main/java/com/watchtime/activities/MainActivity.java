@@ -1,6 +1,12 @@
 package com.watchtime.activities;
 
 import android.Manifest;
+import android.accounts.Account;
+import android.accounts.AccountManager;
+import android.accounts.AccountManagerCallback;
+import android.accounts.AccountManagerFuture;
+import android.accounts.AuthenticatorException;
+import android.accounts.OperationCanceledException;
 import android.content.Intent;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
@@ -24,18 +30,29 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
+import android.widget.Toast;
 
+import com.facebook.login.LoginManager;
 import com.watchtime.R;
 import com.watchtime.activities.base.WatchTimeBaseActivity;
+import com.watchtime.base.Constants;
+import com.watchtime.base.WatchTimeApplication;
+import com.watchtime.base.backend.User;
 import com.watchtime.base.content.preferences.Prefs;
 import com.watchtime.base.utils.PrefUtils;
 import com.watchtime.base.utils.VersionUtils;
 import com.watchtime.fragments.MediaContainerFragment;
 import com.watchtime.fragments.NavigationDrawerFragment;
 import com.watchtime.fragments.drawer.NavDrawerItem;
+import com.watchtime.sdk.AccessTokenWT;
+import com.watchtime.sdk.LoginManagerWT;
+import com.watchtime.sdk.WatchTimeAccessTokenManager;
+import com.watchtime.sdk.WatchTimeProfileManager;
+import com.watchtime.sdk.WatchTimeSdk;
 import com.watchtime.utils.ToolbarUtils;
 import com.watchtime.widget.ScrimInsetsFrameLayout;
 
+import java.io.IOException;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 
@@ -72,6 +89,9 @@ public class MainActivity extends WatchTimeBaseActivity implements NavigationDra
     //Navigation Drawer used when user slides to the right
     NavigationDrawerFragment mNavigationDrawerFragment;
 
+    private AccountManager accountManager;
+    private User user;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState, R.layout.activity_main);
@@ -80,6 +100,8 @@ public class MainActivity extends WatchTimeBaseActivity implements NavigationDra
         if (ContextCompat.checkSelfPermission(this, Manifest.permission.WRITE_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
             ActivityCompat.requestPermissions(this, new String[]{ Manifest.permission.WRITE_EXTERNAL_STORAGE }, PERMISSIONS_REQUEST);
         }
+
+        setupAccountManagerCode();
 
         if (VersionUtils.isLollipop()) {
             getWindow().setExitTransition(TransitionInflater.from(this).inflateTransition(android.R.transition.fade));
@@ -248,5 +270,139 @@ public class MainActivity extends WatchTimeBaseActivity implements NavigationDra
                 }
             }
         }
+    }
+
+    private void setupAccountManagerCode() {
+        accountManager = AccountManager.get(this);
+        user = ((WatchTimeApplication)getApplication()).getUser();
+
+        if (accountManager.getAccountsByType(Constants.ACCOUNT_TYPE).length != 0) {
+            getAccounts();
+        } else {
+            LoginManager.getInstance().logOut();
+            LoginManagerWT.getInstance().logout();
+        }
+    }
+
+    public void onLoginClicked() {
+        addAccount();
+    }
+
+    /**
+     * Use this method instead of creating the access account activity explicitly
+     */
+    public void addAccount() {
+        Log.i("AccMgr - MainActivity", "addAccount");
+        AccountManagerCallback<Bundle> callback = new AccountManagerCallback<Bundle>() {
+            @Override
+            public void run(AccountManagerFuture<Bundle> future) {
+                try {
+                    Bundle bundle = future.getResult();
+                    String accountName = bundle.getString(AccountManager.KEY_ACCOUNT_NAME);
+                    String accountType = bundle.getString(AccountManager.KEY_ACCOUNT_TYPE);
+                    String token       = bundle.getString(AccountManager.KEY_AUTHTOKEN);
+                    Log.i("AccMgr - MainActivity", "Name: " + accountName+ "\nType: " + accountType + "\nToken: " + token);
+                    getAccount(accountName, accountType);
+                } catch (OperationCanceledException | IOException | AuthenticatorException e) {
+                    e.printStackTrace();
+                }
+            }
+        };
+
+        accountManager.addAccount(Constants.ACCOUNT_TYPE, Constants.ACCOUNT_TOKEN_TYPE, null, null, this, callback, null);
+    }
+
+    public void getAccount(String accountName, String accountType) {
+        Log.i("AccMgr - MainActivity", "getAccount");
+        AccountManagerCallback<Bundle> callback = new AccountManagerCallback<Bundle>() {
+            @Override
+            public void run(AccountManagerFuture<Bundle> future) {
+                try {
+                    Bundle bundle = future.getResult();
+                    String accountName = bundle.getString(AccountManager.KEY_ACCOUNT_NAME);
+                    String accountType = bundle.getString(AccountManager.KEY_ACCOUNT_TYPE);
+                    String token       = bundle.getString(AccountManager.KEY_AUTHTOKEN);
+                    Log.i("AccMgr - MainActivity", "Name: " + accountName+ "\nType: " + accountType + "\nToken: " + token);
+
+                    user.setAccountName(accountName);
+                    user.setAccountType(accountType);
+                    user.setToken(token);
+                } catch (OperationCanceledException | IOException | AuthenticatorException e) {
+                    e.printStackTrace();
+                }
+            }
+        };
+
+        accountManager.getAuthToken(new Account(accountName, accountType), Constants.ACCOUNT_TOKEN_TYPE, null, null, callback, null);
+    }
+
+    public void getAccounts() {
+        Log.i("AccMgr - MainActivity", "getAccounts");
+        AccountManagerCallback<Bundle> callback = new AccountManagerCallback<Bundle>() {
+            @Override
+            public void run(AccountManagerFuture<Bundle> future) {
+                try {
+                    Bundle bundle = future.getResult();
+                    String accountName = bundle.getString(AccountManager.KEY_ACCOUNT_NAME);
+                    String accountType = bundle.getString(AccountManager.KEY_ACCOUNT_TYPE);
+                    String token       = bundle.getString(AccountManager.KEY_AUTHTOKEN);
+                    Log.i("AccMgr - MainActivity", "Name: " + accountName+ "\nType: " + accountType + "\nToken: " + token);
+
+                    user.setAccountName(accountName);
+                    user.setAccountType(accountType);
+                    user.setToken(token);
+                } catch (OperationCanceledException | IOException | AuthenticatorException e) {
+                    e.printStackTrace();
+                }
+            }
+        };
+
+        accountManager.getAuthTokenByFeatures(Constants.ACCOUNT_TYPE, Constants.ACCOUNT_TOKEN_TYPE, null, this, null, null, callback, null);
+    }
+
+    public void changePassword() {
+        Log.i("AccMgr - MainActivity", "changePassword");
+        Account account = new Account(user.getAccountName(), Constants.ACCOUNT_TYPE);
+        AccountManagerCallback<Bundle> callback = new AccountManagerCallback<Bundle>() {
+            @Override
+            public void run(AccountManagerFuture<Bundle> future) {
+                try {
+                    Bundle bundle = future.getResult();
+                    String accountName = bundle.getString(AccountManager.KEY_ACCOUNT_NAME);
+                    String accountType = bundle.getString(AccountManager.KEY_ACCOUNT_TYPE);
+                    String token       = bundle.getString(AccountManager.KEY_AUTHTOKEN);
+                    Log.i("AccMgr - MainActivity", "Name: " + accountName+ "\nType: " + accountType + "\nToken: " + token);
+
+                    user.setAccountName(accountName);
+                    user.setAccountType(accountType);
+                    user.setToken(token);
+                } catch (OperationCanceledException | IOException | AuthenticatorException e) {
+                    e.printStackTrace();
+                }
+            }
+        };
+
+        accountManager.updateCredentials(account, Constants.ACCOUNT_TOKEN_TYPE, null, this, callback, null);
+    }
+
+    public void onLogoutClicked() {
+        if (logout()) {
+            LoginManager.getInstance().logOut();
+            LoginManagerWT.getInstance().logout();
+        }
+    }
+
+    public boolean logout() {
+        Account[] accounts = accountManager.getAccountsByType(Constants.ACCOUNT_TYPE);
+
+        for (int i = 0; i < accounts.length; i++) {
+            if (accounts[i].name.equals(user.getAccountName())) {
+                accountManager.removeAccount(accounts[i], null, null);
+                return true;
+            }
+        }
+
+        Toast.makeText(this, "Failed", Toast.LENGTH_SHORT).show();
+        return false;
     }
 }

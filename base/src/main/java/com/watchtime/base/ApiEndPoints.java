@@ -24,5 +24,9 @@ public class ApiEndPoints {
 
     public static final String BASE_CONNECTED = BASE_URL + "/api/watch_time";
 
-    public static final String PROFILE = BASE_URL + "/user/";
+    public static final String PROFILE = BASE_CONNECTED + "/user/";
+    public static final String PROFILE_ME = BASE_CONNECTED + "/user/me";
+    public static final String PROFILE_BASIC = BASE_URL + "/user/";
+
+    public static final String UPDATE_COVER_PICTURE = PROFILE_ME + "/cover";
 }

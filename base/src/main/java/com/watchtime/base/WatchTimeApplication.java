@@ -17,6 +17,7 @@ import com.watchtime.base.backend.User;
 import com.watchtime.base.backend.token.TokenAPI;
 import com.watchtime.base.content.preferences.Prefs;
 import com.watchtime.base.content.preferences.StorageUtils;
+import com.watchtime.base.interfaces.OnDataChangeHandler;
 import com.watchtime.base.utils.LocaleUtils;
 import com.watchtime.base.utils.PrefUtils;
 
@@ -36,15 +37,20 @@ public class WatchTimeApplication extends Application {
     private static String systemLanguage;
     private static OkHttpClient httpClient;
     private static Application app; //Find a better option
-    public static TokenAPI token;
-    public static User connectedUser;
-    public static AccessToken facebookToken;
+    private OnDataChangeHandler dataChangeHandler = new OnDataChangeHandler();
+
+    private User connectedUser = new User();
 
     @Override
     protected void attachBaseContext(Context context) {
         super.attachBaseContext(context);
         MultiDex.install(this);
     }
+
+    public OnDataChangeHandler getDataChangeHandler() {
+        return dataChangeHandler;
+    }
+
 
     @Override
     public void onCreate() {
@@ -94,16 +100,16 @@ public class WatchTimeApplication extends Application {
         return app;
     }
 
-    public static void tokenFromJSON(JSONObject json) throws JSONException {
+    public static TokenAPI tokenFromJSON(JSONObject json) throws JSONException {
         String accessToken = json.getString("access_token");
         String refreshToken = json.optString("refresh_token");
         String tokenType = json.getString("token_type");
         int expires = json.getInt("expires_in");
 
-        token = new TokenAPI(accessToken, refreshToken, tokenType, expires);
+        return new TokenAPI(accessToken, refreshToken, tokenType, expires);
     }
 
-    public static void userFromJSON(JSONObject json) throws JSONException {
+    public User userFromJSON(JSONObject json) throws JSONException {
         Log.d("Here", "Arrived");
         String name = json.getString("name");
         int id = json.getInt("id");
@@ -116,5 +122,14 @@ public class WatchTimeApplication extends Application {
 
         connectedUser = new User(id, name, email, timeWatched, cover);
         Log.d("Created User", "User created");
+        return connectedUser;
+    }
+
+    public User getUser() {
+        return connectedUser;
+    }
+
+    public void setUser(User connectedUser) {
+        this.connectedUser = connectedUser;
     }
 }

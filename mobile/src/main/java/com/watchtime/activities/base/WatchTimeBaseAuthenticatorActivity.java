@@ -1,19 +1,15 @@
 package com.watchtime.activities.base;
 
+import android.accounts.AccountAuthenticatorActivity;
 import android.content.Intent;
-import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.v4.app.NavUtils;
 import android.support.v4.app.TaskStackBuilder;
-import android.support.v7.app.AppCompatActivity;
-import android.transition.Slide;
-import android.view.Gravity;
 import android.view.Menu;
 import android.view.MenuItem;
 
 import com.facebook.FacebookSdk;
-import com.watchtime.R;
 import com.watchtime.base.WatchTimeApplication;
 import com.watchtime.base.content.preferences.Prefs;
 import com.watchtime.base.utils.LocaleUtils;
@@ -22,11 +18,7 @@ import com.watchtime.sdk.WatchTimeSdk;
 
 import butterknife.ButterKnife;
 
-/**
- * Created by João Paulo on 23/01/2017.
- */
-
-public abstract class WatchTimeBaseActivity extends AppCompatActivity {
+public class WatchTimeBaseAuthenticatorActivity extends AccountAuthenticatorActivity{
     protected Handler mHandler;
 
     /**

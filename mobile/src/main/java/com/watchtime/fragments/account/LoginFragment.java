@@ -7,7 +7,7 @@ import android.os.Handler;
 import android.os.Looper;
 import android.os.Message;
 import android.support.annotation.Nullable;
-import android.support.v4.app.Fragment;
+import android.app.Fragment;
 import android.util.Log;
 import android.util.Patterns;
 import android.view.LayoutInflater;
@@ -16,13 +16,13 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
-import android.widget.TextView;
 import android.widget.Toast;
 
 import com.watchtime.R;
 import com.watchtime.base.ApiEndPoints;
 import com.watchtime.base.WatchTimeApplication;
 import com.watchtime.base.backend.token.TokenAPI;
+import com.watchtime.base.interfaces.OnDataChangeHandler;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -37,7 +37,6 @@ import okhttp3.Request;
 import okhttp3.RequestBody;
 import okhttp3.Response;
 
-import static com.watchtime.fragments.account.AccessAccountFragment.loginListener;
 
 public class LoginFragment extends Fragment {
     public static final String TAG = "LoginFragment";
@@ -51,7 +50,7 @@ public class LoginFragment extends Fragment {
     Handler mHandler = new Handler(Looper.getMainLooper()) {
         @Override
         public void handleMessage(Message message) {
-            Toast.makeText(getContext(), message.obj.toString(), Toast.LENGTH_LONG).show();
+            Toast.makeText(getActivity(), message.obj.toString(), Toast.LENGTH_LONG).show();
             if (progressDialog != null) progressDialog.dismiss();
         }
     };
@@ -155,7 +154,7 @@ public class LoginFragment extends Fragment {
                         String token_type = json.getString("token_type");
                         int expiration = json.getInt("expires_in");
 
-                        WatchTimeApplication.token = new TokenAPI(access_token, refresh_token, token_type, expiration);
+                        //WatchTimeApplication.token = new TokenAPI(access_token, refresh_token, token_type, expiration);
                         onLoginSuccess();
                     }
                 } catch (JSONException e) {
@@ -192,9 +191,8 @@ public class LoginFragment extends Fragment {
     public void onLoginSuccess() {
         Message completeMessage = mHandler.obtainMessage(0, getString(R.string.logged_in));
         completeMessage.sendToTarget();
-        if (loginListener != null) {
-            loginListener.onLogin();
-        }
+
+        ((WatchTimeApplication)getActivity().getApplication()).getDataChangeHandler().igniteListeners(OnDataChangeHandler.LOGIN);
 
         getActivity().finish();
     }

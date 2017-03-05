@@ -34,7 +34,6 @@ import okhttp3.Response;
 
 public class MoviesProvider extends MediaProvider{
     private static final MoviesProvider mediaProvider = new MoviesProvider();
-    private static final String API_URL = ApiEndPoints.BASE_MOVIES_POPULAR;
     private static Filters filters = new Filters();
 
     @Override
@@ -59,12 +58,10 @@ public class MoviesProvider extends MediaProvider{
             list = (ArrayList<Media>) currentList.clone();
         }
 
-        Log.d("MoviesProvider", "Filter.Sort:" + filter.sort);
 
         String requestWebsite = ApiEndPoints.BASE_MOVIES_POPULAR;
         if (filter.sort == Filters.Sort.RELEASE) {
             requestWebsite = ApiEndPoints.BASE_MOVIES_RELEASE;
-            Log.d("MoviesProvider", "It's Release!!");
         } else if (filter.sort == Filters.Sort.RATING) {
             requestWebsite = ApiEndPoints.BASE_MOVIES_RATING;
         } else if (filter.sort == Filters.Sort.NOW_PLAYING) {
@@ -125,7 +122,7 @@ public class MoviesProvider extends MediaProvider{
             }
 
             void onFailure(Exception ex) {
-                Log.d("MoviesProviderError", "Error: " + ex.toString());
+                Log.d("MoviesProviderError", "Error: " + ex.getMessage());
                 callback.onFailure(ex);
             }
         });
@@ -150,7 +147,6 @@ public class MoviesProvider extends MediaProvider{
 
             @Override
             public void onResponse(Call call, Response response) throws IOException {
-                Log.d("MoviesProvider", "Details Response Arrived");
 
                 if (response.isSuccessful()) {
                     String responseStr;
@@ -174,7 +170,7 @@ public class MoviesProvider extends MediaProvider{
             }
 
             void onFailure(Exception ex) {
-                Log.d("MoviesProviderError", "Error: " + ex.toString());
+                Log.d("MoviesProviderError", "Error: " + ex.getMessage());
                 callback.onFailure(ex);
             }
         });
@@ -314,7 +310,6 @@ public class MoviesProvider extends MediaProvider{
             }
 
             movie.allGenres = genres;
-            Log.d("MovieProvider", "Title: " + movie.title + " has " + movie.allGenres.size() + " genres");
             if (!genres.isEmpty())
                 movie.genre = firstGenre;
 
@@ -335,7 +330,6 @@ public class MoviesProvider extends MediaProvider{
             }
 
             returnList.add(movie);
-            Log.d("MoviesProvider", "Executed");
             return returnList;
         }
 
@@ -388,16 +382,17 @@ public class MoviesProvider extends MediaProvider{
             return returnList;
         }
 
-        public ArrayList<String> parseBackdrops(JSONObject object) throws JSONException {
-            ArrayList<String> backdrops = new ArrayList<>();
+        public HashMap<String, Integer> parseBackdrops(JSONObject object) throws JSONException {
+            HashMap<String, Integer> backdrops = new HashMap<>();
 
             JSONArray array = object.optJSONArray("data");
             if (array != null) {
                 for (int i = 0; i < array.length(); i++) {
                     JSONObject backdrop = array.getJSONObject(i);
                     String url = backdrop.optString("image_path");
+                    int id = backdrop.getInt("id");
                     if (url != null)
-                        backdrops.add("https://image.tmdb.org/t/p/w780" + url);
+                        backdrops.put("https://image.tmdb.org/t/p/w780" + url, id);
                 }
             }
 
