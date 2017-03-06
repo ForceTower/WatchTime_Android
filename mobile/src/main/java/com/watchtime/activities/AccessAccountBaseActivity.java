@@ -73,13 +73,13 @@ public class AccessAccountBaseActivity extends WatchTimeBaseAuthenticatorActivit
                 intent.putExtra(AccountManager.KEY_ACCOUNT_NAME, email);
                 intent.putExtra(AccountManager.KEY_ACCOUNT_TYPE, user.getAccountType());
                 intent.putExtra(AccountManager.KEY_AUTHTOKEN, token.getAccessToken());
-
+                //intent.putExtra(AccountManager.KEY_USERDATA, token.getRefreshToken());
                 return intent;
             }
 
             @Override
             protected void onPostExecute(Intent intent) {
-                finish(intent);
+                finish(intent, token.getRefreshToken());
             }
         }.execute();
     }
@@ -118,7 +118,7 @@ public class AccessAccountBaseActivity extends WatchTimeBaseAuthenticatorActivit
         finish();
     }
 
-    public void finish(Intent intent) {
+    public void finish(Intent intent, String refresh_token) {
         Log.i("AccMgr - AccessAccount", "Finishing...");
         String accountName = intent.getStringExtra(AccountManager.KEY_ACCOUNT_NAME);
         String accountType = intent.getStringExtra(AccountManager.KEY_ACCOUNT_TYPE);
@@ -127,6 +127,7 @@ public class AccessAccountBaseActivity extends WatchTimeBaseAuthenticatorActivit
         Account account = new Account(accountName, accountType);
         accountManager.addAccountExplicitly(account, null, null);
         accountManager.setAuthToken(account, user.getAuthTokenType(), token);
+        accountManager.setUserData(account, "refresh_token", refresh_token);
 
         LoginManagerWT.getInstance().onLogin();
         ((WatchTimeApplication)getApplication()).getDataChangeHandler().igniteListeners(OnDataChangeHandler.LOGIN);
