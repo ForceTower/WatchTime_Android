@@ -37,6 +37,7 @@ import com.watchtime.base.utils.PixelUtils;
 import com.watchtime.fragments.base.DetailMediaBaseFragment;
 import com.watchtime.sdk.AccessTokenWT;
 import com.watchtime.sdk.Profile;
+import com.watchtime.sdk.WatchTimeBaseMethods;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -416,73 +417,6 @@ public class MovieDetailsFragment extends DetailMediaBaseFragment implements Med
     };
 
     private void markMovieWatched(String id) {
-        RequestBody requestBody = new FormBody.Builder()
-                .add("tmdb", id)
-                .build();
-
-        Request request = new Request.Builder()
-                .addHeader("Authorization", "Bearer " + AccessTokenWT.getCurrentAccessToken().getAccessToken())
-                .url(ApiEndPoints.MARK_MOVIE_WATCHED)
-                .post(requestBody)
-                .build();
-
-        Call call = new OkHttpClient().newCall(request);
-        call.enqueue(new okhttp3.Callback() {
-            @Override
-            public void onFailure(Call call, IOException e) {
-                Log.i("MovieDetailsFrag", "Failed to mark watched: " + e.getMessage());
-                Toast.makeText(getContext(), getString(R.string.mark_failed), Toast.LENGTH_SHORT).show();
-            }
-
-            @Override
-            public void onResponse(Call call, Response response) throws IOException {
-                if (!response.isSuccessful()) {
-                    final String strResp = response.body().string();
-                    Handler handler = new Handler(Looper.getMainLooper());
-                    handler.post(new Runnable() {
-                        @Override
-                         public void run() {
-                             Log.i("MovieDetailsFrag", "Unsuccessful response: " + strResp);
-                             Toast.makeText(getContext(), getString(R.string.mark_failed), Toast.LENGTH_SHORT).show();
-                         }
-                     });
-                    return;
-                }
-
-                try {
-                    JSONObject obj = new JSONObject(response.body().string());
-                    if (obj.has("error")) {
-                        final int code = obj.getInt("error_code");
-                        Handler handler = new Handler(Looper.getMainLooper());
-                        handler.post(new Runnable() {
-                            @Override
-                            public void run() {
-                                if (code == -1)
-                                    Toast.makeText(getContext(), getString(R.string.no_permission), Toast.LENGTH_SHORT).show();
-                                else if (code == 0)
-                                    Toast.makeText(getContext(), getString(R.string.mark_failed), Toast.LENGTH_SHORT).show();
-                                else if (code == 1)
-                                    Toast.makeText(getContext(), getString(R.string.already_marked), Toast.LENGTH_SHORT).show();
-                            }
-                        });
-                        return;
-                    }
-                } catch (JSONException e) {
-                    return;
-                }
-
-                Log.i("MovieDetailsFrag", "Success marking");
-                Handler handler = new Handler(Looper.getMainLooper());
-                handler.post(new Runnable() {
-                    @Override
-                    public void run() {
-                        Toast.makeText(getContext(), getString(R.string.marked_as_watched), Toast.LENGTH_SHORT).show();
-                    }
-                });
-
-                Profile.fetchProfileForCurrentAccessToken();
-                ((WatchTimeApplication)getActivity().getApplication()).getDataChangeHandler().igniteListeners(OnDataChangeHandler.ALL);
-            }
-        });
+        WatchTimeBaseMethods.getInstance().markMovieAsWatched(id);
     }
 }

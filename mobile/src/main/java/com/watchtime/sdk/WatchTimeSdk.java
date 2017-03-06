@@ -37,6 +37,7 @@ public final class WatchTimeSdk {
                     Profile.fetchProfileForCurrentAccessToken();
                 }
 
+                WatchTimeBaseMethods.instantiate();
                 return null;
             }
         });

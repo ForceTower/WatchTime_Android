@@ -38,7 +38,6 @@ public class WatchTimeApplication extends Application {
     private static OkHttpClient httpClient;
     private static Application app; //Find a better option
     private OnDataChangeHandler dataChangeHandler = new OnDataChangeHandler();
-
     private User connectedUser = new User();
 
     @Override
@@ -100,17 +99,7 @@ public class WatchTimeApplication extends Application {
         return app;
     }
 
-    public static TokenAPI tokenFromJSON(JSONObject json) throws JSONException {
-        String accessToken = json.getString("access_token");
-        String refreshToken = json.optString("refresh_token");
-        String tokenType = json.getString("token_type");
-        int expires = json.getInt("expires_in");
-
-        return new TokenAPI(accessToken, refreshToken, tokenType, expires);
-    }
-
     public User userFromJSON(JSONObject json) throws JSONException {
-        Log.d("Here", "Arrived");
         String name = json.getString("name");
         int id = json.getInt("id");
         String email = json.getString("email");
@@ -121,7 +110,6 @@ public class WatchTimeApplication extends Application {
             cover = null;
 
         connectedUser = new User(id, name, email, timeWatched, cover);
-        Log.d("Created User", "User created");
         return connectedUser;
     }
 
