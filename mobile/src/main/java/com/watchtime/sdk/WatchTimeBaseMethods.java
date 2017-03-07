@@ -72,7 +72,7 @@ public final class WatchTimeBaseMethods {
         return requestBody.build();
     }
 
-    private boolean refreshToken() {
+    public boolean refreshToken() {
         Account[] accounts = accountManager.getAccountsByType(Constants.ACCOUNT_TYPE);
 
         if (accounts.length != 1)
@@ -281,6 +281,61 @@ public final class WatchTimeBaseMethods {
         call.enqueue(callback);
     }
 
+    public void updateCoverPicture(final int id) {
+        RequestBody requestBody = new FormBody.Builder()
+                .add("id", Integer.toString(id))
+                .build();
 
+        Request request = new Request.Builder()
+                .addHeader("Authorization", "Bearer " + AccessTokenWT.getCurrentAccessToken().getAccessToken())
+                .url(ApiEndPoints.UPDATE_COVER_PICTURE)
+                .post(requestBody)
+                .build();
+
+        Call call = new OkHttpClient().newCall(request);
+        call.enqueue(new Callback() {
+            @Override
+            public void onFailure(Call call, IOException e) {
+                Log.i("MediaImageActivity", "Failed to update cover: " + e.getMessage());
+            }
+
+            @Override
+            public void onResponse(Call call, Response response) throws IOException {
+                if (!response.isSuccessful()) {
+                    String strResp = response.body().string();
+                    Log.i("MediaImageActivity", "Unsuccessful response: " + strResp);
+                    try {
+
+                        JSONObject json = new JSONObject(strResp);
+                        if (json.has("error")) {
+                            if (json.optString("error", "empty").equals("access_denied")) {
+                                Log.i("CoverUpdate", "Token is invalid");
+
+                                if (refreshToken()) {
+                                    updateCoverPicture(id);
+                                }
+                            }
+                        }
+                    } catch (JSONException e) {
+                        Log.i("CoverUpdate", "Exception is: " + e.getMessage());
+                        return;
+                    }
+                    return;
+                }
+
+                Log.i("MediaImageActivity", "Success Changing cover");
+                Handler handler = new Handler(Looper.getMainLooper());
+                handler.post(new Runnable() {
+                    @Override
+                    public void run() {
+                        Toast.makeText(getContext(), R.string.cover_update_success, Toast.LENGTH_SHORT).show();
+                        ((WatchTimeApplication)getContext()).getDataChangeHandler().igniteListeners(OnDataChangeHandler.ALL);
+                    }
+                });
+
+                Profile.fetchProfileForCurrentAccessToken();
+            }
+        });
+    }
 
 }

@@ -20,12 +20,14 @@ import com.watchtime.activities.base.WatchTimeBaseActivity;
 import com.watchtime.adapters.ImagePagerAdapter;
 import com.watchtime.adapters.transformers.ZoomOutPageTransformer;
 import com.watchtime.base.ApiEndPoints;
+import com.watchtime.base.WatchTimeApplication;
 import com.watchtime.base.interfaces.OnDataChangeHandler;
 import com.watchtime.base.providers.media.models.Media;
 import com.watchtime.base.utils.PixelUtils;
 import com.watchtime.base.utils.VersionUtils;
 import com.watchtime.sdk.AccessTokenWT;
 import com.watchtime.sdk.Profile;
+import com.watchtime.sdk.WatchTimeBaseMethods;
 import com.watchtime.utils.ActionBarBackground;
 
 import java.io.IOException;
@@ -130,43 +132,7 @@ public class MediaImagesActivity extends WatchTimeBaseActivity {
                 List<String> urls = new ArrayList<>(media.backdrops.keySet());
                 int id = media.backdrops.get(urls.get(position));
 
-                RequestBody requestBody = new FormBody.Builder()
-                        .add("id", Integer.toString(id))
-                        .build();
-
-                Request request = new Request.Builder()
-                        .addHeader("Authorization", "Bearer " + AccessTokenWT.getCurrentAccessToken().getAccessToken())
-                        .url(ApiEndPoints.UPDATE_COVER_PICTURE)
-                        .post(requestBody)
-                        .build();
-
-                Call call = new OkHttpClient().newCall(request);
-                call.enqueue(new Callback() {
-                    @Override
-                    public void onFailure(Call call, IOException e) {
-                        Log.i("MediaImageActivity", "Failed to update cover: " + e.getMessage());
-                    }
-
-                    @Override
-                    public void onResponse(Call call, Response response) throws IOException {
-                        if (!response.isSuccessful()) {
-                            Log.i("MediaImageActivity", "Unsuccessful response: " + response.body().string());
-                            return;
-                        }
-
-                        Log.i("MediaImageActivity", "Success Changing cover");
-                        Handler handler = new Handler(getMainLooper());
-                        handler.post(new Runnable() {
-                            @Override
-                            public void run() {
-                                Snackbar.make(view, getString(R.string.cover_update_success), Snackbar.LENGTH_SHORT).show();
-                                getApp().getDataChangeHandler().igniteListeners(OnDataChangeHandler.ALL);
-                            }
-                        });
-
-                        Profile.fetchProfileForCurrentAccessToken();
-                    }
-                });
+                WatchTimeBaseMethods.getInstance().updateCoverPicture(id);
             }
         });
     }

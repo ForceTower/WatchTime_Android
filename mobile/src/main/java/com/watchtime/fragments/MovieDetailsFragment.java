@@ -349,7 +349,7 @@ public class MovieDetailsFragment extends DetailMediaBaseFragment implements Med
                 new Handler(Looper.getMainLooper()).post(new Runnable() {
                     @Override
                     public void run() {
-                        Snackbar.make(v, getString(R.string.add_to_watchlist), Snackbar.LENGTH_SHORT).show();
+                        Snackbar.make(v, getString(R.string.not_yet_implemented), Snackbar.LENGTH_SHORT).show();
                     }
                 });
                 actionsBtn.close(true);
@@ -362,7 +362,7 @@ public class MovieDetailsFragment extends DetailMediaBaseFragment implements Med
                 new Handler(Looper.getMainLooper()).post(new Runnable() {
                     @Override
                     public void run() {
-                        Snackbar.make(v, getString(R.string.mark_as_watched), Snackbar.LENGTH_SHORT).show();
+                        //Snackbar.make(v, getString(R.string.mark_as_watched), Snackbar.LENGTH_SHORT).show();
                     }
                 });
                 actionsBtn.close(true);
@@ -376,7 +376,7 @@ public class MovieDetailsFragment extends DetailMediaBaseFragment implements Med
                 new Handler(Looper.getMainLooper()).post(new Runnable() {
                     @Override
                     public void run() {
-                        Snackbar.make(v, getString(R.string.recommend_title), Snackbar.LENGTH_SHORT).show();
+                        Snackbar.make(v, getString(R.string.not_yet_implemented), Snackbar.LENGTH_SHORT).show();
                     }
                 });
                 actionsBtn.close(true);

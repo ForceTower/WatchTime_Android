@@ -108,8 +108,25 @@ public class Profile {
             @Override
             public void onResponse(Call call, Response response) throws IOException {
                 if (!response.isSuccessful()) {
-                    Log.i("WTimeSDK", "Unsuccessful response");
-                    return;
+                    String strResp = response.body().string();
+                    Log.i("WTimeSDK", "Unsuccessful response" + strResp);
+                    try {
+                        JSONObject json = new JSONObject(strResp);
+                        if (json.has("error")) {
+                            if (json.optString("error", "empty").equals("access_denied")) {
+                                Log.i("WTimeSDK", "Token is invalid");
+
+                                if (WatchTimeBaseMethods.getInstance().refreshToken()) {
+                                    fetchProfileForCurrentAccessToken();
+                                    Log.i("WTimeSDK", "Token Updated to: " + AccessTokenWT.getCurrentAccessToken().getAccessToken());
+                                }
+                                return;
+                            }
+                        }
+                    } catch (JSONException e) {
+                        Log.i("WTimeSDK", "Exception is: " + e.getMessage());
+                        return;
+                    }
                 }
 
                 try {
