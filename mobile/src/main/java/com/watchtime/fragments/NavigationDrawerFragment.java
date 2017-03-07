@@ -61,13 +61,20 @@ public class NavigationDrawerFragment extends Fragment implements NavigationAdap
     @Override
     public void onDataChange() {
         Log.i("NavDrawerFrag", "Data Changed Ignited. Added? " + isAdded() + ". Visible? " + isVisible() + ". Detached? " + isDetached());
-        Handler handler = new Handler(Looper.getMainLooper());
-        handler.post(new Runnable() {
+        final Handler handler = new Handler(Looper.getMainLooper());
+        handler.postDelayed(new Runnable() {
             @Override
             public void run() {
                 mAdapter.setItems(initItems());
+
+                handler.postDelayed(new Runnable() {
+                    @Override
+                    public void run() {
+                        mAdapter.setItems(initItems());
+                    }
+                }, 1500);
             }
-        });
+        }, 500);
 
     }
 
