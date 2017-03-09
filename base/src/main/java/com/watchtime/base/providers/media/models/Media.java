@@ -100,4 +100,8 @@ public class Media implements Parcelable{
     public MediaProvider getMediaProvider() {
         return provider;
     }
+
+    public String toString() {
+        return title;
+    }
 }

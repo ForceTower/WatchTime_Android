@@ -4,23 +4,28 @@ import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.drawable.BitmapDrawable;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Looper;
 import android.support.annotation.Nullable;
 import android.support.design.widget.Snackbar;
-import android.support.v4.app.ActivityOptionsCompat;
 import android.support.v4.app.Fragment;
 import android.support.v4.content.ContextCompat;
-import android.support.v4.util.Pair;
 import android.support.v7.graphics.Palette;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.transition.TransitionInflater;
 import android.util.Log;
+import android.view.ContextMenu;
 import android.view.LayoutInflater;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.watchtime.R;
 import com.watchtime.activities.MediaDetailsActivity;
@@ -34,6 +39,7 @@ import com.watchtime.base.utils.PrefUtils;
 import com.watchtime.base.utils.ThreadUtils;
 import com.watchtime.base.utils.VersionUtils;
 import com.watchtime.fragments.dialog.LoadingDetailDialogFragment;
+import com.watchtime.sdk.WatchTimeBaseMethods;
 
 import java.util.ArrayList;
 
@@ -69,6 +75,8 @@ public class MediaListFragment extends Fragment implements LoadingDetailDialogFr
     private Mode mode;
     private MediaProvider.Filters.Sort sortDefinition;
     private MediaProvider.Filters.Order orderDefinition;
+
+    private Media currentSelectedMedia;
 
 
     public enum Mode {
@@ -140,8 +148,55 @@ public class MediaListFragment extends Fragment implements LoadingDetailDialogFr
 
         layoutManager = new GridLayoutManager(context, columns);
         recyclerView.setLayoutManager(layoutManager);
+        registerForContextMenu(recyclerView);
 
         return rootView;
+    }
+
+    @Override
+    public void onCreateContextMenu(ContextMenu menu, View v, ContextMenu.ContextMenuInfo menuInfo) {
+        menuInfo = new AdapterView.AdapterContextMenuInfo(v, -1, -1);
+        super.onCreateContextMenu(menu, v, menuInfo);
+
+        MenuInflater inflater = getActivity().getMenuInflater();
+        inflater.inflate(R.menu.context_menu_media_list, menu);
+    }
+
+    @Override
+    public boolean onContextItemSelected(final MenuItem item) {
+        Handler handler = new Handler(Looper.getMainLooper());
+        int val;
+
+        switch (item.getItemId()) {
+            case R.id.mark_watched:
+                val = 0;
+                break;
+            case R.id.add_to_list:
+                val = 1;
+                break;
+            case R.id.recommend:
+                val = 2;
+                break;
+            default:
+                return super.onContextItemSelected(item);
+        }
+
+        final int variable = val;
+        
+        handler.post(new Runnable() {
+            @Override
+            public void run() {
+                if (variable == 0) {
+                    WatchTimeBaseMethods.getInstance().markMovieAsWatched(currentSelectedMedia.videoId);
+                } else if (variable == 1) {
+                    Toast.makeText(getActivity().getApplication(), getString(R.string.not_yet_implemented), Toast.LENGTH_SHORT).show();
+                } else if (variable == 2) {
+                    Toast.makeText(getActivity().getApplication(), getString(R.string.not_yet_implemented), Toast.LENGTH_SHORT).show();
+                }
+            }
+        });
+
+        return true;
     }
 
     @Override
@@ -391,6 +446,11 @@ public class MediaListFragment extends Fragment implements LoadingDetailDialogFr
             } else {
                 showLoadingDialog(position);
             }
+        }
+
+        @Override
+        public void onItemLongClick(View v, Media item, int position) {
+            currentSelectedMedia = item;
         }
     };
 

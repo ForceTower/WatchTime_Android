@@ -44,6 +44,7 @@ import butterknife.ButterKnife;
 public class MediaGridAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
     public interface OnItemClickListener {
         void onItemClick(View v, Media item, int position);
+        void onItemLongClick(View v, Media item, int position);
     }
     private int itemWidth, itemHeight, margin, columns;
     private ArrayList<OverviewItem> items = new ArrayList<>();
@@ -221,8 +222,8 @@ public class MediaGridAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
 
     }
 
-    private class OverviewItem {
-        Media media;
+    public class OverviewItem {
+        public Media media;
         boolean isLoadingItem = false;
         boolean isImageError = true;
 
@@ -235,7 +236,7 @@ public class MediaGridAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
         }
     }
 
-    public class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
+    public class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener, View.OnLongClickListener {
         View itemView;
         @Bind(R.id.focus_overlay)
         View focusOverlay;
@@ -262,7 +263,9 @@ public class MediaGridAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
             ButterKnife.bind(this, itemView);
             this.itemView = itemView;
 
+            itemView.setTag(getLayoutPosition());
             itemView.setOnClickListener(this);
+            itemView.setOnLongClickListener(this);
             coverImage.setMinimumHeight(itemHeight);
             itemView.setOnFocusChangeListener(onFocusChangeListener);
         }
@@ -279,6 +282,17 @@ public class MediaGridAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
                 itemClickListener.onItemClick(v, item, position);
             }
         }
+
+        @Override
+        public boolean onLongClick(View v) {
+            if (itemClickListener != null) {
+                int position = getLayoutPosition();
+                Media item = getItem(position).media;
+                itemClickListener.onItemLongClick(v, item, position);
+            }
+            return false;
+        }
+
     }
 
     private static class DrawGradient implements Transformation {

@@ -81,4 +81,5 @@
     <string name="already_marked">Already watched</string>
     <string name="login_again">Failed in login, log in again</string>
     <string name="not_yet_implemented">Not implemented yet</string>
+    <string name="options">Options</string>
 </resources>
