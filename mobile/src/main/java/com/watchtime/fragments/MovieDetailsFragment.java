@@ -346,12 +346,6 @@ public class MovieDetailsFragment extends DetailMediaBaseFragment implements Med
         addToList.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(final View v) {
-                new Handler(Looper.getMainLooper()).post(new Runnable() {
-                    @Override
-                    public void run() {
-                        Snackbar.make(v, getString(R.string.not_yet_implemented), Snackbar.LENGTH_SHORT).show();
-                    }
-                });
                 addToWatchList(movie.videoId);
                 actionsBtn.close(true);
             }

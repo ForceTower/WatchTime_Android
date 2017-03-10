@@ -189,7 +189,7 @@ public class MediaListFragment extends Fragment implements LoadingDetailDialogFr
                 if (variable == 0) {
                     WatchTimeBaseMethods.getInstance().markMovieAsWatched(currentSelectedMedia.videoId);
                 } else if (variable == 1) {
-                    Toast.makeText(getActivity().getApplication(), getString(R.string.not_yet_implemented), Toast.LENGTH_SHORT).show();
+                    WatchTimeBaseMethods.getInstance().addMovieToWatchList(currentSelectedMedia.videoId);
                 } else {
                     Toast.makeText(getActivity().getApplication(), getString(R.string.not_yet_implemented), Toast.LENGTH_SHORT).show();
                 }

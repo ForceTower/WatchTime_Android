@@ -378,6 +378,30 @@ public final class WatchTimeBaseMethods {
                         Log.i("WTMethods", "JSONException message: " + e.getMessage());
                     }
                 } else {
+                    try {
+                        JSONObject obj = new JSONObject(response.body().string());
+                        if (obj.has("error")) {
+                            final int code = obj.getInt("error_code");
+                            Handler handler = new Handler(Looper.getMainLooper());
+                            handler.post(new Runnable() {
+                                @Override
+                                public void run() {
+                                    if (code == -1)
+                                        Toast.makeText(getContext(), getContext().getString(R.string.no_permission), Toast.LENGTH_SHORT).show();
+                                    else if (code == 0)
+                                        Toast.makeText(getContext(), getContext().getString(R.string.mark_failed), Toast.LENGTH_SHORT).show();
+                                    else if (code == 1)
+                                        Toast.makeText(getContext(), getContext().getString(R.string.already_added), Toast.LENGTH_SHORT).show();
+                                }
+                            });
+                            return;
+                        }
+                    } catch (JSONException e) {
+                        Log.i("WTMethods", "JSONException message: " + e.getMessage());
+                        return;
+                    }
+
+
                     Log.i("WTMethods", "Successfully added to watchlist");
                     Handler handler = new Handler(Looper.getMainLooper());
                     handler.post(new Runnable() {

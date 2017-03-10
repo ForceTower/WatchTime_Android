@@ -85,4 +85,5 @@
     <string name="failed_to_update_cover">Failed to update cover</string>
     <string name="failed_performing_request">Failed performing request</string>
     <string name="add_to_watchlist_success">Added to watchlist</string>
+    <string name="already_added">Already added</string>
 </resources>
