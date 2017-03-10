@@ -182,7 +182,7 @@ public class MediaListFragment extends Fragment implements LoadingDetailDialogFr
         }
 
         final int variable = val;
-        
+
         handler.post(new Runnable() {
             @Override
             public void run() {
@@ -190,7 +190,7 @@ public class MediaListFragment extends Fragment implements LoadingDetailDialogFr
                     WatchTimeBaseMethods.getInstance().markMovieAsWatched(currentSelectedMedia.videoId);
                 } else if (variable == 1) {
                     Toast.makeText(getActivity().getApplication(), getString(R.string.not_yet_implemented), Toast.LENGTH_SHORT).show();
-                } else if (variable == 2) {
+                } else {
                     Toast.makeText(getActivity().getApplication(), getString(R.string.not_yet_implemented), Toast.LENGTH_SHORT).show();
                 }
             }

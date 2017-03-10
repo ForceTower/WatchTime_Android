@@ -352,6 +352,7 @@ public class MovieDetailsFragment extends DetailMediaBaseFragment implements Med
                         Snackbar.make(v, getString(R.string.not_yet_implemented), Snackbar.LENGTH_SHORT).show();
                     }
                 });
+                addToWatchList(movie.videoId);
                 actionsBtn.close(true);
             }
         });
@@ -359,12 +360,6 @@ public class MovieDetailsFragment extends DetailMediaBaseFragment implements Med
         markWatched.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(final View v) {
-                new Handler(Looper.getMainLooper()).post(new Runnable() {
-                    @Override
-                    public void run() {
-                        //Snackbar.make(v, getString(R.string.mark_as_watched), Snackbar.LENGTH_SHORT).show();
-                    }
-                });
                 actionsBtn.close(true);
                 markMovieWatched(movie.videoId);
             }
@@ -419,5 +414,9 @@ public class MovieDetailsFragment extends DetailMediaBaseFragment implements Med
 
     private void markMovieWatched(String id) {
         WatchTimeBaseMethods.getInstance().markMovieAsWatched(id);
+    }
+
+    private void addToWatchList(String id) {
+        WatchTimeBaseMethods.getInstance().addMovieToWatchList(id);
     }
 }

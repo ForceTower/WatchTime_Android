@@ -297,6 +297,7 @@ public final class WatchTimeBaseMethods {
             @Override
             public void onFailure(Call call, IOException e) {
                 Log.i("MediaImageActivity", "Failed to update cover: " + e.getMessage());
+                Toast.makeText(getContext(), R.string.failed_to_update_cover, Toast.LENGTH_SHORT).show();
             }
 
             @Override
@@ -338,4 +339,55 @@ public final class WatchTimeBaseMethods {
         });
     }
 
+    public void addMovieToWatchList(final String id) {
+        RequestBody requestBody = new FormBody.Builder()
+                .add("tmdb", id)
+                .build();
+
+        Request request = new Request.Builder()
+                .addHeader("Authorization", "Bearer " + AccessTokenWT.getCurrentAccessToken().getAccessToken())
+                .url(ApiEndPoints.ADD_MOVIE_TO_WATCHLIST)
+                .post(requestBody)
+                .build();
+
+        Call call = new OkHttpClient().newCall(request);
+        call.enqueue(new Callback() {
+            @Override
+            public void onFailure(Call call, IOException e) {
+                Toast.makeText(getContext(), R.string.failed_performing_request, Toast.LENGTH_SHORT).show();
+            }
+
+            @Override
+            public void onResponse(Call call, Response response) throws IOException {
+                if (!response.isSuccessful()) {
+                    String strResp = response.body().string();
+
+                    try {
+                        JSONObject json = new JSONObject(strResp);
+                        if (json.has("error")) {
+                            if (json.optString("error", "empty").equals("access_denied")) {
+                                Log.i("Media WatchList", "Token is invalid");
+                                if (refreshToken()) {
+                                    addMovieToWatchList(id);
+                                } else {
+                                    Log.i("WTMethods", "Failed updating token...");
+                                }
+                            }
+                        }
+                    } catch (JSONException e) {
+                        Log.i("WTMethods", "JSONException message: " + e.getMessage());
+                    }
+                } else {
+                    Log.i("WTMethods", "Successfully added to watchlist");
+                    Handler handler = new Handler(Looper.getMainLooper());
+                    handler.post(new Runnable() {
+                        @Override
+                        public void run() {
+                            Toast.makeText(getContext(), R.string.add_to_watchlist_success, Toast.LENGTH_SHORT).show();
+                        }
+                    });
+                }
+            }
+        });
+    }
 }
