@@ -13,6 +13,7 @@ import com.watchtime.R;
 import com.watchtime.activities.MainActivity;
 import com.watchtime.adapters.MediaPageAdapter;
 import com.watchtime.base.providers.media.MediaProvider;
+import com.watchtime.fragments.drawer.NavDrawerItem;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
@@ -23,15 +24,17 @@ import butterknife.ButterKnife;
 
 public class MediaContainerFragment extends Fragment{
     public static final String EXTRA_PROVIDER = "provider";
+    public static final String ITEM_TAG = "item_tag";
     private Integer selection = 0;
 
     @Bind(R.id.pager)
     ViewPager viewPager;
 
-    public static MediaContainerFragment newInstance(MediaProvider provider) {
+    public static MediaContainerFragment newInstance(MediaProvider provider, NavDrawerItem info) {
         MediaContainerFragment fragment = new MediaContainerFragment();
         Bundle args = new Bundle();
         args.putParcelable(EXTRA_PROVIDER, provider);
+        args.putInt(ITEM_TAG, info.getTag());;
         fragment.setArguments(args);
         return fragment;
     }
@@ -48,12 +51,13 @@ public class MediaContainerFragment extends Fragment{
         ButterKnife.bind(this, view);
 
         MediaProvider provider = getArguments().getParcelable(EXTRA_PROVIDER);
+        int tag = getArguments().getInt(ITEM_TAG);
         if (provider == null) {
             Log.d("MediaContainer", "Provider is null");
             return;
         }
 
-        MediaPageAdapter pagerAdapter = new MediaPageAdapter(provider, getChildFragmentManager(), provider.getNavigation());
+        MediaPageAdapter pagerAdapter = new MediaPageAdapter(provider, getChildFragmentManager(), provider.getNavigation(), tag);
         viewPager.setAdapter(pagerAdapter);
         viewPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
             @Override

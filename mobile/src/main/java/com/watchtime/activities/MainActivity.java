@@ -7,10 +7,7 @@ import android.accounts.AccountManagerCallback;
 import android.accounts.AccountManagerFuture;
 import android.accounts.AuthenticatorException;
 import android.accounts.OperationCanceledException;
-import android.content.Intent;
-import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
-import android.content.pm.Signature;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -23,13 +20,10 @@ import android.support.v4.view.ViewPager;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.widget.Toolbar;
 import android.transition.TransitionInflater;
-import android.util.Base64;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.view.Window;
-import android.view.WindowManager;
 import android.widget.Toast;
 
 import com.facebook.login.LoginManager;
@@ -44,22 +38,13 @@ import com.watchtime.base.utils.VersionUtils;
 import com.watchtime.fragments.MediaContainerFragment;
 import com.watchtime.fragments.NavigationDrawerFragment;
 import com.watchtime.fragments.drawer.NavDrawerItem;
-import com.watchtime.sdk.AccessTokenWT;
 import com.watchtime.sdk.LoginManagerWT;
-import com.watchtime.sdk.WatchTimeAccessTokenManager;
-import com.watchtime.sdk.WatchTimeProfileManager;
-import com.watchtime.sdk.WatchTimeSdk;
 import com.watchtime.utils.ToolbarUtils;
 import com.watchtime.widget.ScrimInsetsFrameLayout;
 
 import java.io.IOException;
-import java.security.MessageDigest;
-import java.security.NoSuchAlgorithmException;
 
 import butterknife.Bind;
-
-import static android.view.WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS;
-import static android.view.WindowManager.LayoutParams.FLAG_TRANSLUCENT_NAVIGATION;
 
 /**
  * Main Application Activity, all starts from here.
@@ -187,7 +172,7 @@ public class MainActivity extends WatchTimeBaseActivity implements NavigationDra
 
         if (mCurrentFragment == null) {
             if (item.hasProvider())
-                mCurrentFragment = MediaContainerFragment.newInstance(item.getMediaProvider());
+                mCurrentFragment = MediaContainerFragment.newInstance(item.getMediaProvider(), item);
             else {
                 /*
                 if (item.getTag() == NavDrawerItem.ItemTags.PROFILE)
@@ -201,7 +186,6 @@ public class MainActivity extends WatchTimeBaseActivity implements NavigationDra
                     */
             }
         }
-
         //Selects the first tab on the fragment
         if(mTabs.getTabCount() > 0)
             mTabs.getTabAt(0).select();

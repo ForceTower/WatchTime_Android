@@ -5,4 +5,5 @@
     <drawable name="filter_now_playing">@android:color/transparent</drawable>
     <drawable name="filter_release">@android:color/transparent</drawable>
     <drawable name="filter_rating">@android:color/transparent</drawable>
+    <drawable name="filter_movie_watchlist">@android:color/transparent</drawable>
 </resources>

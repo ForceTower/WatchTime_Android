@@ -11,6 +11,7 @@ import com.watchtime.base.providers.media.MediaProvider;
 import com.watchtime.base.utils.LocaleUtils;
 import com.watchtime.fragments.MediaGenreSelectionFragment;
 import com.watchtime.fragments.MediaListFragment;
+import com.watchtime.fragments.UserListsFragment;
 
 import java.util.HashMap;
 import java.util.List;
@@ -28,13 +29,15 @@ public class MediaPageAdapter extends FragmentPagerAdapter {
     private MediaProvider provider;
     private String genre;
     private int hasGenreTab = 0;
+    private int itemTag;
     private Fragment genreTabFragment;
 
-    public MediaPageAdapter(MediaProvider provider, FragmentManager manager, List<MediaProvider.NavInfo> tabs) {
+    public MediaPageAdapter(MediaProvider provider, FragmentManager manager, List<MediaProvider.NavInfo> tabs, int itemTag) {
         super(manager);
         fragmentManager = manager;
         this.tabs = tabs;
         this.provider = provider;
+        this.itemTag = itemTag;
         hasGenreTab = (provider.getGenres() != null && provider.getGenres().size() > 0) ? 1 : 0;
     }
 
@@ -62,7 +65,10 @@ public class MediaPageAdapter extends FragmentPagerAdapter {
         }
 
         position -= hasGenreTab;
-        return MediaListFragment.newInstance(MediaListFragment.Mode.NORMAL, provider, tabs.get(position).getFilter(), tabs.get(position).getOrder(), genre);
+        if (itemTag == 0)
+            return MediaListFragment.newInstance(MediaListFragment.Mode.NORMAL, provider, tabs.get(position).getFilter(), tabs.get(position).getOrder(), genre);
+        else
+            return UserListsFragment.newInstance(provider, tabs.get(position).getCategory());
     }
 
     @Override

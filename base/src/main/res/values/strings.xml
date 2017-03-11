@@ -21,4 +21,6 @@
 
     <string name="account_type">com.watchtime</string>
     <string name="default_token_type">Default Token Type</string>
+    <string name="loading_lists_message">Loading Lists...</string>
+    <string name="watchlist">WATCHLIST</string>
 </resources>

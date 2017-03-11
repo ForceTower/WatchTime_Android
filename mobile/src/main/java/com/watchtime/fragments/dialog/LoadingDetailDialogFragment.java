@@ -119,7 +119,7 @@ public class LoadingDetailDialogFragment extends DialogFragment {
                     }
                 });
             }
-        });
+        }, null);
 
 
 

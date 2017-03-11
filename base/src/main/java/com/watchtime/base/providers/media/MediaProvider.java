@@ -23,13 +23,13 @@ public abstract class MediaProvider extends BaseProvider implements Parcelable {
     public static final String MEDIA_CALL = "media_http_call";
 
     public Call getList(Filters filters, Callback callback) {
-        return getList(null, filters, callback);
+        return getList(null, filters, callback, null);
     }
-    public abstract Call getList(ArrayList<Media> currentList, Filters filters, Callback callback);
+    public abstract Call getList(ArrayList<Media> currentList, Filters filters, Callback callback, String token);
     public List<Genre> getGenres() {
         return new ArrayList<>();
     }
-    public abstract Call getDetail(ArrayList<Media> currentList, Integer index, Callback callback);
+    public abstract Call getDetail(ArrayList<Media> currentList, Integer index, Callback callback, String token);
     public abstract int getLoadingMessage();
     public abstract List<NavInfo> getNavigation();
     public int getDefaultNavigationIndex() {
@@ -44,11 +44,13 @@ public abstract class MediaProvider extends BaseProvider implements Parcelable {
     public static class Filters {
         public enum Order {ASC, DESC}
         public enum Sort {POPULARITY, RELEASE, NOW_PLAYING, RATING, UPCOMING}
+        public enum Category {WATCHLIST, WATCHED, IGNORED}
 
         public String keywords = null;
         public String genre = null;
         public Order order = Order.DESC;
         public Sort sort = Sort.POPULARITY;
+        public Category category = Category.WATCHLIST;
         public Integer page = null;
         public String langCode = "en";
 
@@ -61,6 +63,7 @@ public abstract class MediaProvider extends BaseProvider implements Parcelable {
             sort = filters.sort;
             page = filters.page;
             langCode = filters.langCode;
+            category = filters.category;
         }
     }
 
@@ -69,6 +72,7 @@ public abstract class MediaProvider extends BaseProvider implements Parcelable {
         private int mId;
         private Filters.Sort mSort;
         private Filters.Order mDefOrder;
+        private Filters.Category mCategory;
         private String mLabel;
 
         NavInfo(int id, Filters.Sort sort, Filters.Order defOrder, String label,@Nullable @DrawableRes Integer icon) {
@@ -77,6 +81,15 @@ public abstract class MediaProvider extends BaseProvider implements Parcelable {
             mDefOrder = defOrder;
             mLabel = label;
             mIconId = icon;
+        }
+
+        NavInfo(int id, Filters.Sort sort, Filters.Order defOrder, String label,@Nullable @DrawableRes Integer icon, Filters.Category category) {
+            mId = id;
+            mSort = sort;
+            mDefOrder = defOrder;
+            mLabel = label;
+            mIconId = icon;
+            mCategory = category;
         }
 
         public Filters.Sort getFilter() {
@@ -94,6 +107,10 @@ public abstract class MediaProvider extends BaseProvider implements Parcelable {
 
         public Filters.Order getOrder() {
             return mDefOrder;
+        }
+
+        public Filters.Category getCategory() {
+            return mCategory;
         }
 
         public String getLabel() {

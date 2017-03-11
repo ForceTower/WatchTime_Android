@@ -381,7 +381,7 @@ public class MediaListFragment extends Fragment implements LoadingDetailDialogFr
                         }
                     });
                 } else {
-                    currentCall = provider.getList(items, new MediaProvider.Filters(filters), this);
+                    currentCall = provider.getList(items, new MediaProvider.Filters(filters), this, null);
                 }
                 retries++;
             }
@@ -407,7 +407,7 @@ public class MediaListFragment extends Fragment implements LoadingDetailDialogFr
                     loadingTreshold)) {
 
                 filters.page = page;
-                currentCall = provider.getList(items, new MediaProvider.Filters(filters), callback);
+                currentCall = provider.getList(items, new MediaProvider.Filters(filters), callback, null);
 
                 previousTotal = totalItemCount = layoutManager.getItemCount();
                 setState(State.LOADING_PAGE);

@@ -47,7 +47,7 @@ public class MoviesProvider extends MediaProvider{
     }
 
     @Override
-    public Call getList(ArrayList<Media> currentList, Filters filter, Callback callback) {
+    public Call getList(ArrayList<Media> currentList, Filters filter, Callback callback, String token) {
         filters = filter;
 
         final ArrayList<Media> list;
@@ -77,7 +77,7 @@ public class MoviesProvider extends MediaProvider{
         return fetchList(list, requestBuilder, filter, callback);
     }
 
-    private Call fetchList(final ArrayList<Media> currentList, final Request.Builder requestBuilder, final Filters filters, final Callback callback) {
+    protected Call fetchList(final ArrayList<Media> currentList, final Request.Builder requestBuilder, final Filters filters, final Callback callback) {
         return enqueue(requestBuilder.build(), new okhttp3.Callback() {
             @Override
             public void onFailure(Call call, IOException e) {
@@ -133,7 +133,7 @@ public class MoviesProvider extends MediaProvider{
     }
 
     @Override
-    public Call getDetail(ArrayList<Media> currentList, Integer index, Callback callback) {
+    public Call getDetail(ArrayList<Media> currentList, Integer index, Callback callback, String token) {
         Media media = currentList.get(index);
         Request.Builder requestBuilder = new Request.Builder();
         requestBuilder.url(ApiEndPoints.BASE_MOVIES_DETAILS + media.videoId);

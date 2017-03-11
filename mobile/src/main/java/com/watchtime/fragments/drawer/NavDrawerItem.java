@@ -42,6 +42,13 @@ public class NavDrawerItem {
         this.tag = tag;
     }
 
+    public NavDrawerItem(String title, int icon, int tag, MediaProvider provider) {
+        this.title = title;
+        this.icon = icon;
+        this.tag = tag;
+        this.mediaProvider = provider;
+    }
+
     public NavDrawerItem(String title, int icon, MediaProvider provider) {
         this(title, icon);
         mediaProvider = provider;

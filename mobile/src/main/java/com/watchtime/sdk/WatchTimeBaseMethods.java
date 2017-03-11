@@ -375,6 +375,7 @@ public final class WatchTimeBaseMethods {
                             }
                         }
                     } catch (JSONException e) {
+                        Log.i("WTMethods", "Resp: " + strResp);
                         Log.i("WTMethods", "JSONException message: " + e.getMessage());
                     }
                 } else {

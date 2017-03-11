@@ -33,6 +33,7 @@ import com.watchtime.base.WatchTimeApplication;
 import com.watchtime.base.content.preferences.Prefs;
 import com.watchtime.base.interfaces.OnDataChangeHandler;
 import com.watchtime.base.providers.media.MoviesProvider;
+import com.watchtime.base.providers.media.UserListsProvider;
 import com.watchtime.base.utils.PrefUtils;
 import com.watchtime.base.utils.VersionUtils;
 import com.watchtime.fragments.account.AccessAccountFragment;
@@ -217,7 +218,7 @@ public class NavigationDrawerFragment extends Fragment implements NavigationAdap
         navItems.add(new NavDrawerItem(getString(R.string.title_shows), R.drawable.ic_nav_tv/*, new ShowsProvider()*/));
 
         if (connected) {
-            navItems.add(new NavDrawerItem(getString(R.string.title_my_watch_list), R.drawable.ic_your_list, NavDrawerItem.ItemTags.USER_LIST));
+            navItems.add(new NavDrawerItem(getString(R.string.title_my_watch_list), R.drawable.ic_your_list, NavDrawerItem.ItemTags.USER_LIST, new UserListsProvider()));
             navItems.add(new NavDrawerItem(getString(R.string.title_friends_activities), R.drawable.ic_friends_watch, NavDrawerItem.ItemTags.FRIENDS));
             navItems.add(new NavDrawerItem(getString(R.string.title_discover_movies), R.drawable.ic_discover/*, new FriendsWatchsProvider()*/));
             navItems.add(new NavDrawerItem(getString(R.string.your_activity), R.drawable.ic_your_activity, NavDrawerItem.ItemTags.USER_ACTIVITY));
