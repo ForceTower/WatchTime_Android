@@ -55,9 +55,14 @@ public class MediaListRowsAdapter extends RecyclerView.Adapter<RecyclerView.View
             WatchlistItem media = (WatchlistItem)listItem.media;
 
             viewHolder.title.setText(media.title);
-            viewHolder.dateAdded.setText(media.year);
-            viewHolder.genres.setText(media.genres);
-            viewHolder.runtime.setText(media.runtime);
+            viewHolder.genres.setText(viewHolder.itemView.getContext().getString(R.string.score) + " " + media.rating);
+
+            if (media.tagline.equals("")) {
+                viewHolder.tagline.setVisibility(View.GONE);
+            } else {
+                viewHolder.tagline.setVisibility(View.VISIBLE);
+                viewHolder.tagline.setText(media.tagline);
+            }
 
             if (media.image != null && !media.image.equals("")) {
                 Picasso.with(viewHolder.cover.getContext()).load(media.image).into(viewHolder.cover, new Callback() {
@@ -65,6 +70,7 @@ public class MediaListRowsAdapter extends RecyclerView.Adapter<RecyclerView.View
                     public void onSuccess() {
                         listItem.isImageError = false;
                         AnimUtils.fadeIn(viewHolder.cover);
+                        AnimUtils.fadeOut(viewHolder.placeholder);
                     }
 
                     @Override
@@ -164,12 +170,12 @@ public class MediaListRowsAdapter extends RecyclerView.Adapter<RecyclerView.View
         ImageView cover;
         @Bind(R.id.title)
         TextView title;
-        @Bind(R.id.runtime)
-        TextView runtime;
         @Bind(R.id.genres)
         TextView genres;
-        @Bind(R.id.date_added)
-        TextView dateAdded;
+        @Bind(R.id.tag_line)
+        TextView tagline;
+        @Bind(R.id.placeholder_image)
+        ImageView placeholder;
 
         public ViewHolder(View itemView) {
             super(itemView);

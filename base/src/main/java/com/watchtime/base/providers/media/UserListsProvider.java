@@ -125,8 +125,11 @@ public class UserListsProvider extends MediaProvider {
             String title = entry.getString("name");
             String image = entry.getString("image");
             int runtime = entry.getInt("runtime");
+            String rating = entry.getString("rating");
             String added = entry.getString("date_added");
             String genresStr = "";
+
+            String tagline = entry.getString("tag_line");
 
             JSONObject genresObj = entry.getJSONObject("genres");
             JSONArray genres = genresObj.getJSONArray("data");
@@ -143,11 +146,14 @@ public class UserListsProvider extends MediaProvider {
             if (image.trim().equals("") || image.equals("null")) {
                 image = "";
             } else {
-                image = "https://image.tmdb.org/t/p/w780/" + image;
+                image = "https://image.tmdb.org/t/p/w185/" + image;
             }
 
-            Log.i("UserListsProv", "Item fetch: " + title);
-            WatchlistItem mediaWatchlist = new WatchlistItem(tmdb, title, image, mediaProvider, added, runtime, genresStr);
+            if (tagline.trim().equals("") || tagline.equals("null")) {
+                tagline = "";
+            }
+
+            WatchlistItem mediaWatchlist = new WatchlistItem(tmdb, title, image, mediaProvider, added, runtime, rating, genresStr, tagline);
             media.add(mediaWatchlist);
         }
 
