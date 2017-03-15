@@ -137,12 +137,10 @@ public class UserListsFragment extends Fragment {
 
                 if(direction == ItemTouchHelper.LEFT) {
                     Log.i("Swipe", "Left Swiped: " + media.title);
-                    //markWatchedRemoveWatchlist(media.videoId);
+                    markWatchedRemoveWatchlist(media.videoId);
                 } else if (direction == ItemTouchHelper.RIGHT) {
                     Log.i("Swipe", "Right Swiped: " + media.title);
                     //removeWatchlist(media.videoId);
-
-
                 }
             }
 
@@ -368,4 +366,8 @@ public class UserListsFragment extends Fragment {
             }
         }
     };
+
+    private void markWatchedRemoveWatchlist(String tmdb) {
+        WatchTimeBaseMethods.getInstance().markMovieAsWatched(tmdb);
+    }
 }
