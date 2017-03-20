@@ -29,7 +29,7 @@
     <string name="btn_create_account">Create Account</string>
     <string name="login_account_label">Already have an Account? Login</string>
     <string name="repeat_password">Repeat Password</string>
-    <string name="invalid_name">Name must be alphanumeric and have at least 3 characters</string>
+    <string name="invalid_name">Name must be alphanumeric and have at least 5 characters</string>
     <string name="confirm_password_failed">Password confirmation does not match</string>
     <string name="creating_account">Creating account…</string>
     <string name="account_created">Account created</string>

@@ -231,6 +231,7 @@ public class MovieDetailsFragment extends DetailMediaBaseFragment implements Med
     }
 
     public void setupAllGenresInfo() {
+        //TODO Continue Mima's interface idea
         if (movie.allGenres == null || movie.allGenres.isEmpty()) {
             allGenresLayout.setVisibility(View.GONE);
             hasOtherGenres = false;

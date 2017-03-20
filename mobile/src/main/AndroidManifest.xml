@@ -43,7 +43,6 @@
             </intent-filter>
         </activity>
         <activity android:name=".activities.TermsActivity" />
-        <activity android:name=".activities.SignUpActivity" />
         <activity
             android:name=".activities.AccessAccountBaseActivity"
             android:theme="@style/Theme.WatchTime.TransparentStatusBar"
