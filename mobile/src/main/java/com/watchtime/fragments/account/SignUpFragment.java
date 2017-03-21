@@ -118,14 +118,14 @@ public class SignUpFragment extends Fragment {
             nameText.setError(null);
         }
 
-        if (email.isEmpty() || !Patterns.EMAIL_ADDRESS.matcher(email).matches()) {
+        if (!Patterns.EMAIL_ADDRESS.matcher(email).matches()) {
             emailText.setError(getString(R.string.invalid_email));
             valid = false;
         } else {
             emailText.setError(null);
         }
 
-        if (password.isEmpty() || (password.length() < 4 && password.length() > 16)) {
+        if (password.length() < 4 && password.length() > 16) {
             passwordText.setError(getString(R.string.invalid_password));
             valid = false;
         } else {

@@ -1,5 +1,7 @@
 package com.watchtime.fragments.account;
 
+import android.app.Fragment;
+import android.app.FragmentManager;
 import android.app.ProgressDialog;
 import android.content.Intent;
 import android.os.Build;
@@ -8,8 +10,6 @@ import android.os.Handler;
 import android.os.Looper;
 import android.os.Message;
 import android.support.annotation.Nullable;
-import android.app.Fragment;
-import android.app.FragmentManager;
 import android.transition.TransitionInflater;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -31,12 +31,10 @@ import com.watchtime.R;
 import com.watchtime.activities.AccessAccountBaseActivity;
 import com.watchtime.base.ApiEndPoints;
 import com.watchtime.base.WatchTimeApplication;
-import com.watchtime.base.backend.token.TokenAPI;
 import com.watchtime.base.interfaces.OnDataChangeHandler;
 import com.watchtime.base.utils.PrefUtils;
 import com.watchtime.base.utils.VersionUtils;
 import com.watchtime.sdk.AccessTokenWT;
-import com.watchtime.sdk.WatchTimeSdk;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -66,7 +64,6 @@ public class AccessAccountFragment extends Fragment {
         public void handleMessage(Message message) {
             if (message.what != 2)
                 if (progressDialog != null) progressDialog.dismiss();
-
 
             if (getActivity() != null)
                 Toast.makeText(getActivity(), message.obj.toString(), Toast.LENGTH_SHORT).show();
