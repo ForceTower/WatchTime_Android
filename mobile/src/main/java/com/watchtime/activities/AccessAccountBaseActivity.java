@@ -63,8 +63,8 @@ public class AccessAccountBaseActivity extends WatchTimeBaseAuthenticatorActivit
         user.setAuthTokenType(authTokenType);
     }
 
-    public void facebookLoginToken(final String email, final AccessTokenWT token) {
-        Log.i("AccMgr - AccessAccount", "facebookLoginToken");
+    public void createLoginToken(final String email, final AccessTokenWT token) {
+        Log.i("AccMgr - AccessAccount", "createLoginToken");
 
         new AsyncTask<Void, Void, Intent>() {
             @Override
@@ -73,7 +73,6 @@ public class AccessAccountBaseActivity extends WatchTimeBaseAuthenticatorActivit
                 intent.putExtra(AccountManager.KEY_ACCOUNT_NAME, email);
                 intent.putExtra(AccountManager.KEY_ACCOUNT_TYPE, user.getAccountType());
                 intent.putExtra(AccountManager.KEY_AUTHTOKEN, token.getAccessToken());
-                //intent.putExtra(AccountManager.KEY_USERDATA, token.getRefreshToken());
                 return intent;
             }
 

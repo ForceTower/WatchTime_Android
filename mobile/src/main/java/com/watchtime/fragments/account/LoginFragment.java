@@ -18,11 +18,14 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.Toast;
 
+import com.facebook.login.LoginManager;
 import com.watchtime.R;
+import com.watchtime.activities.AccessAccountBaseActivity;
 import com.watchtime.base.ApiEndPoints;
 import com.watchtime.base.WatchTimeApplication;
-import com.watchtime.base.backend.token.TokenAPI;
 import com.watchtime.base.interfaces.OnDataChangeHandler;
+import com.watchtime.sdk.AccessTokenWT;
+import com.watchtime.sdk.LoginManagerWT;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -119,13 +122,13 @@ public class LoginFragment extends Fragment {
         performLoginCall(email, password);
     }
 
-    public void performLoginCall(String email, String password) {
+    public void performLoginCall(final String email, final String password) {
         RequestBody requestBody = new FormBody.Builder()
                 .add("grant_type", "password")
                 .add("username", email)
                 .add("password", password)
-                .add("client_id", "appid_1")
-                .add("client_secret", "secret")
+                .add("client_id", ApiEndPoints.CLIENT_ID)
+                .add("client_secret", ApiEndPoints.CLIENT_SECRET)
                 .build();
 
         Request request = new Request.Builder()
@@ -143,23 +146,18 @@ public class LoginFragment extends Fragment {
 
             @Override
             public void onResponse(Call call, Response response) throws IOException {
-                try {
-                    JSONObject json = new JSONObject(response.body().string());
-                    if (json.has("error")) {
-                        String error = json.getString("error_description");
-                        onLoginFailed(error);
-                    } else {
-                        String access_token = json.getString("access_token");
-                        String refresh_token = json.getString("refresh_token");
-                        String token_type = json.getString("token_type");
-                        int expiration = json.getInt("expires_in");
-
-                        //WatchTimeApplication.token = new TokenAPI(access_token, refresh_token, token_type, expiration);
-                        onLoginSuccess();
+                if (!response.isSuccessful()) {
+                    onLoginFailed("Unsuccessful Response");
+                } else {
+                    JSONObject token;
+                    try {
+                        token = new JSONObject(response.body().string());
+                        AccessTokenWT accessToken = AccessTokenWT.createFromJSON(token);
+                        onLoginSuccess(email, accessToken);
+                    } catch (JSONException e) {
+                        onLoginFailed(getString(R.string.error_on_response));
+                        Log.e("LoginActivity:Response", e.getMessage());
                     }
-                } catch (JSONException e) {
-                    onLoginFailed(getString(R.string.error_on_response));
-                    Log.e("LoginActivity:Response", e.getMessage());
                 }
             }
         });
@@ -171,14 +169,14 @@ public class LoginFragment extends Fragment {
         String email = emailText.getText().toString();
         String password = passwordText.getText().toString();
 
-        if (email.isEmpty() || !Patterns.EMAIL_ADDRESS.matcher(email).matches()) {
+        if (!Patterns.EMAIL_ADDRESS.matcher(email).matches()) {
             emailText.setError(getString(R.string.invalid_email));
             valid = false;
         } else {
             emailText.setError(null);
         }
 
-        if (password.isEmpty() || (password.length() < 4 && password.length() > 16)) {
+        if (password.length() < 4 && password.length() > 16) {
             passwordText.setError(getString(R.string.invalid_password));
             valid = false;
         } else {
@@ -188,17 +186,21 @@ public class LoginFragment extends Fragment {
         return valid;
     }
 
-    public void onLoginSuccess() {
+    public void onLoginSuccess(String email, AccessTokenWT token) {
         Message completeMessage = mHandler.obtainMessage(0, getString(R.string.logged_in));
         completeMessage.sendToTarget();
 
         ((WatchTimeApplication)getActivity().getApplication()).getDataChangeHandler().igniteListeners(OnDataChangeHandler.LOGIN);
-
-        getActivity().finish();
+        ((AccessAccountBaseActivity)getActivity()).createLoginToken(email, token);
     }
 
     public void onLoginFailed(String reason) {
         Message completeMessage = mHandler.obtainMessage(0, reason);
         completeMessage.sendToTarget();
+
+        ((WatchTimeApplication)getActivity().getApplication()).setUser(null);
+
+        LoginManager.getInstance().logOut();
+        LoginManagerWT.getInstance().logout();
     }
 }

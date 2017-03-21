@@ -31,12 +31,11 @@ import com.watchtime.R;
 import com.watchtime.activities.AccessAccountBaseActivity;
 import com.watchtime.base.ApiEndPoints;
 import com.watchtime.base.WatchTimeApplication;
-import com.watchtime.base.backend.token.TokenAPI;
 import com.watchtime.base.interfaces.OnDataChangeHandler;
 import com.watchtime.base.utils.PrefUtils;
 import com.watchtime.base.utils.VersionUtils;
 import com.watchtime.sdk.AccessTokenWT;
-import com.watchtime.sdk.WatchTimeSdk;
+import com.watchtime.sdk.LoginManagerWT;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -309,7 +308,7 @@ public class AccessAccountFragment extends Fragment {
         completeMessage.sendToTarget();
 
         ((WatchTimeApplication)getActivity().getApplication()).getDataChangeHandler().igniteListeners(OnDataChangeHandler.LOGIN);
-        ((AccessAccountBaseActivity)getActivity()).facebookLoginToken(email, token);
+        ((AccessAccountBaseActivity)getActivity()).createLoginToken(email, token);
     }
 
     public void onLoginFailed(String reason) {
@@ -318,6 +317,7 @@ public class AccessAccountFragment extends Fragment {
         ((WatchTimeApplication)getActivity().getApplication()).setUser(null);
 
         LoginManager.getInstance().logOut();
+        LoginManagerWT.getInstance().logout();
     }
 
     @Override
