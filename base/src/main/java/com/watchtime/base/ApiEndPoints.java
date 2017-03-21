@@ -11,6 +11,7 @@ public class ApiEndPoints {
 
     public static final String BASE_URL = "https://oqv.000webhostapp.com";
     public static final String OAUTH2_BASE = BASE_URL + "/oauth/access_token";
+    public static final String PROFILE_IMAGE = BASE_URL + "/profile_img/";
 
     public static final String BASE_MOVIES_POPULAR = BASE_URL + "/movies/popular/";
     public static final String BASE_MOVIES_RELEASE = BASE_URL + "/movies/release?page=";
