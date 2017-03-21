@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    xmlns:fab="http://schemas.android.com/apk/res-auto"
+    android:orientation="vertical"
+    android:layout_height="match_parent">
+
+    <View
+        android:id="@+id/top"
+        android:layout_width="match_parent"
+        android:layout_height="16dp"
+        android:layout_marginTop="12dp"
+        android:alpha="0.7"
+        android:background="@drawable/base_gradient"/>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/top"
+        android:background="@color/bg"
+        android:gravity="center_horizontal"
+        android:orientation="vertical">
+
+        <include
+            android:id="@+id/about_fragment"
+            layout="@layout/fragment_detail_about"/>
+
+    </LinearLayout>
+
+    <com.github.clans.fab.FloatingActionMenu
+        android:id="@+id/actions_button"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentEnd="true"
+        android:layout_alignParentRight="true"
+        android:layout_marginEnd="16dp"
+        android:layout_marginRight="16dp"
+        android:elevation="5dp"
+        fab:menu_openDirection="down">
+
+        <com.github.clans.fab.FloatingActionButton
+            android:id="@+id/recommend"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            fab:fab_label="N"
+            android:src="@drawable/ic_recommend" />
+
+        <com.github.clans.fab.FloatingActionButton
+            android:id="@+id/add_to_list"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            fab:fab_label="N"
+            android:src="@drawable/ic_your_list"/>
+
+        <com.github.clans.fab.FloatingActionButton
+            android:id="@+id/mark_watched"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            fab:fab_label="N"
+            android:src="@drawable/ic_mark_watched"/>
+
+    </com.github.clans.fab.FloatingActionMenu>
+
+</RelativeLayout>

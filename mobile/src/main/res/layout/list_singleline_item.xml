@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="@dimen/navlist_item_height"
+    android:focusable="true"
+    android:focusableInTouchMode="false"
+    android:background="@drawable/selectable_background_list">
+
+    <com.devspark.robototextview.widget.RobotoTextView
+        android:id="@android:id/text1"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="@dimen/list_text_margin_horizontal"
+        android:layout_marginStart="@dimen/list_text_margin_horizontal"
+        android:layout_marginRight="@dimen/list_text_margin_horizontal"
+        android:layout_marginEnd="@dimen/list_text_margin_horizontal"
+        android:layout_gravity="center_vertical"
+        android:maxLines="1"
+        android:textSize="@dimen/list_text_size"
+        android:textColor="@color/text_color"
+        tools:text="Title Text" />
+
+    <CheckBox
+        android:id="@android:id/checkbox"
+        android:visibility="gone"
+        tools:visibility="visible"
+        android:clickable="false"
+        android:focusable="false"
+        android:layout_gravity="end|center_vertical"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginRight="@dimen/iconlist_icon_margin_horizontal"
+        android:layout_marginEnd="@dimen/iconlist_icon_margin_horizontal" />
+
+</FrameLayout>

@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="bg">#1F2224</color>
+    <color name="overlay">#33000000</color>
+
+    <color name="selectable_focused">#22FFFFFF</color>
+
+    <!--<color name="primary">#FF3F51B5</color>
+    <color name="primary_dark">#FF303F9F</color> -->
+    <color name="primary">#68d305</color>
+    <color name="primary_dark">#5ABA00</color>
+    <color name="primary_green">#5ABA00</color>
+    <color name="accent">#5ABA00</color>
+    <!--<color name="accent">#FF5C6BC0</color>-->
+
+
+    <color name="iron">#CCCCCC</color>
+    <color name="white">#FFFFFF</color>
+    <color name="red">#D40E00</color>
+
+    <color name="trans_white">#99FFFFFF</color>
+
+    <color name="text_color">#FFFFFF</color>
+    <color name="secondary_text_color">#AAFFFFFF</color>
+
+    <!-- Video player colors-->
+
+    <!-- Nav drawer colors -->
+    <color name="nav_drawer_color">#16171A</color>
+    <color name="nav_drawer_selected_bg">#1D1D21</color>
+    <color name="nav_drawer_focused_bg">#414144</color>
+    <color name="nav_drawer_pressed_bg">#313134</color>
+    <color name="nav_drawer_deselected">#CFFF</color>
+
+    <!-- Detail view colors -->
+    <color name="transparent">#00000000</color>
+</resources>

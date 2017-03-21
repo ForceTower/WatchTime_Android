@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <item name="movies_now_playing" type="id" />
+    <item name="movies_popular" type="id" />
+    <item name="movies_rating" type="id" />
+    <item name="movies_upcoming" type="id" />
+    <item name="movies_release" type="id" />
+    <item name="movies_watch_list" type="id" />
+</resources>

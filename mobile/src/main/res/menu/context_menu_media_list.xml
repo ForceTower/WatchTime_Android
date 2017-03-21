@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu
+    xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <item
+        android:id="@+id/mark_watched"
+        android:icon="@drawable/ic_mark_watched"
+        android:title="@string/mark_as_watched" />
+    <item
+        android:id="@+id/add_to_list"
+        android:title="@string/add_to_watchlist"
+        android:icon="@drawable/ic_your_list"/>
+    <item
+        android:id="@+id/recommend"
+        android:title="@string/recommend_title"
+        android:icon="@drawable/ic_recommend" />
+</menu>

@@ -1,0 +1,178 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/content"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:gravity="center_horizontal">
+
+    <RelativeLayout
+        android:id="@+id/base_info_block"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:minHeight="100dp"
+        android:paddingLeft="@dimen/detail_horizontal_offset"
+        android:paddingRight="@dimen/detail_horizontal_offset"
+        android:paddingStart="@dimen/detail_horizontal_offset"
+        android:paddingEnd="@dimen/detail_horizontal_offset"
+        android:paddingBottom="@dimen/detail_vertical_offset"
+        android:paddingTop="@dimen/detail_vertical_offset"
+        android:gravity="center_vertical"
+        android:orientation="vertical">
+
+        <com.devspark.robototextview.widget.RobotoTextView
+            android:id="@+id/title"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            tools:text="Title"
+            android:textColor="@color/text_color"
+            android:textSize="@dimen/detail_title_text_size"
+            app:typeface="roboto_medium" />
+
+        <LinearLayout
+            android:id="@+id/extras"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/detail_rating_margin_top"
+            android:gravity="center_vertical"
+            android:layout_below="@id/title">
+
+            <RatingBar
+                android:id="@+id/rating"
+                android:layout_width="80dp"
+                android:layout_height="16dp"
+                android:clickable="true"
+                android:focusable="false"
+                android:isIndicator="true"
+                style="@style/RatingBar.WatchTime"
+                android:max="10"
+                android:progress="5"/>
+        </LinearLayout>
+
+        <com.devspark.robototextview.widget.RobotoTextView
+            android:id="@+id/year_time"
+            android:layout_below="@id/extras"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/detail_meta_margin_top"
+            android:gravity="center_vertical"
+            tools:text="2017 - 1h 56min"
+            android:textSize="@dimen/detail_meta_text_size"
+            android:textColor="@color/secondary_text_color" />
+<!--
+        <com.devspark.robototextview.widget.RobotoTextView
+            android:id="@+id/genres"
+            android:layout_below="@id/year_time"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/detail_meta_margin_top"
+            android:gravity="center_vertical"
+            android:textSize="@dimen/detail_meta_text_size"
+            android:textColor="@color/secondary_text_color"
+            tools:text="Sci-Fi - Action - Drama" />
+-->
+
+        <com.devspark.robototextview.widget.RobotoTextView
+            android:id="@+id/plot_short"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/year_time"
+            android:layout_marginTop="@dimen/detail_vertical_offset"
+            tools:text="This will be the a short plot of the media"
+            android:textDirection="locale"
+            android:maxLines="5"
+            android:ellipsize="end"
+            android:textSize="@dimen/detail_desc_text_size"
+            android:textColor="@color/text_color" />
+
+        <LinearLayout
+            android:id="@+id/genres"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/plot_short"
+            android:layout_marginTop="@dimen/detail_vertical_offset"
+            android:orientation="vertical">
+
+            <com.devspark.robototextview.widget.RobotoTextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:paddingBottom="10dp"
+                android:text="@string/all_genres"
+                android:textColor="@color/text_color" />
+
+            <android.support.v7.widget.RecyclerView
+                android:id="@+id/all_genre_recycler_view"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content" />
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/director_layout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/detail_vertical_offset"
+            android:layout_below="@id/genres"
+            android:orientation="vertical">
+
+            <com.devspark.robototextview.widget.RobotoTextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textColor="@color/text_color"
+
+                android:text="@string/director"
+                android:paddingBottom="10dp"/>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal">
+                <de.hdodenhof.circleimageview.CircleImageView
+                    android:id="@+id/director_image"
+                    android:layout_width="70dp"
+                    android:layout_height="70dp"
+                    android:src="@mipmap/app_logo"
+                    android:layout_marginEnd="10dp"/>
+
+                <com.devspark.robototextview.widget.RobotoTextView
+                    android:id="@+id/director_name"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    tools:text="Director Name"
+                    android:textSize="17sp"
+                    android:layout_marginStart="10dp"
+                    android:layout_gravity="center_vertical"/>
+            </LinearLayout>
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/cast_layout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/detail_vertical_offset"
+            android:layout_below="@id/director_layout"
+            android:orientation="vertical">
+
+            <com.devspark.robototextview.widget.RobotoTextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textColor="@color/text_color"
+
+                android:text="@string/cast"
+                android:paddingBottom="10dp"/>
+
+            <ScrollView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+                <android.support.v7.widget.RecyclerView
+                    android:id="@+id/cast_recycler_view"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"/>
+            </ScrollView>
+        </LinearLayout>
+
+    </RelativeLayout>
+
+</ScrollView>

@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <style name="Theme.WatchTime" parent="Theme.Base">
+        <item name="android:windowContentTransitions">true</item>
+        <item name="android:windowActivityTransitions">true</item>
+        <!-- v21 specific customisations here -->
+        <item name="toolbarStyle">@style/Custom.Widget.Toolbar</item>
+        <item name="toolbarNavigationButtonStyle">@style/Custom.Widget.Toolbar.Button.Navigation</item>
+        <item name="actionOverflowButtonStyle">@style/Custom.Widget.ActionButton.Overflow</item>
+    </style>
+
+    <style name="Theme.WatchTime.NavigationDrawer" parent="Theme.WatchTime">
+        <item name="android:windowDrawsSystemBarBackgrounds">true</item>
+        <!-- This line below adds it "behind" -->
+        <item name="android:windowTranslucentStatus">true</item>
+        <item name="android:statusBarColor">@android:color/transparent</item>
+    </style>
+
+    <style name="Theme.WatchTime.TransparentStatusBar" parent="Theme.WatchTime">
+        <item name="android:windowDrawsSystemBarBackgrounds">true</item>
+        <!-- This line below adds it "behind" -->
+        <item name="android:windowTranslucentStatus">true</item>
+        <item name="android:statusBarColor">@android:color/transparent</item>
+        <item name="android:windowTranslucentNavigation">false</item>
+    </style>
+
+    <style name="Theme.WatchTime.Detail" parent="Theme.WatchTime.TransparentStatusBar">
+        <item name="android:windowExitTransition">@transition/movie_detail_exit</item>
+        <item name="android:windowReenterTransition">@transition/movie_detail_exit</item>
+
+        <item name="android:windowSharedElementEnterTransition">@transition/movie_detail_shared_element</item>
+        <item name="android:windowSharedElementExitTransition">@transition/movie_detail_shared_element</item>
+    </style>
+
+
+</resources>
