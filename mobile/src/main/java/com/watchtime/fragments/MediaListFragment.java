@@ -450,6 +450,7 @@ public class MediaListFragment extends Fragment implements LoadingDetailDialogFr
 
         @Override
         public void onItemLongClick(View v, Media item, int position) {
+            Log.i("MediaListFrag", "Item Long Click: " + item.title);
             currentSelectedMedia = item;
         }
     };

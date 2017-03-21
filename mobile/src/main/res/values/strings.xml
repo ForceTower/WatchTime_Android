@@ -87,4 +87,5 @@
     <string name="add_to_watchlist_success">Added to watchlist</string>
     <string name="already_added">Already added</string>
     <string name="score">Rating</string>
+    <string name="select_profile_image">Select a Profile Image</string>
 </resources>

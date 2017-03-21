@@ -20,7 +20,23 @@
             android:layout_height="72dp"
             android:layout_marginBottom="24dp"
             android:layout_gravity="center_horizontal"
-            android:src="@drawable/app_logo_writen"/>
+            android:src="@drawable/app_logo_writen"
+            android:contentDescription="@string/app_name"/>
+
+        <com.devspark.robototextview.widget.RobotoTextView
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:textSize="17sp"
+            android:textColor="@color/trans_white"
+            android:text="@string/select_profile_image"/>
+
+        <de.hdodenhof.circleimageview.CircleImageView
+            android:id="@+id/profile_image"
+            android:layout_width="100dp"
+            android:layout_height="100dp"
+            android:layout_marginBottom="8dp"
+            android:layout_gravity="center_horizontal"
+            android:src="@drawable/ic_no_profile_image"/>
 
         <!--  Name Label -->
         <android.support.design.widget.TextInputLayout
@@ -41,12 +57,13 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="8dp"
             android:layout_marginBottom="8dp">
+
             <EditText
                 android:id="@+id/input_email"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:inputType="textEmailAddress"
-                android:hint="@string/email" />
+                android:hint="@string/email"
+                android:inputType="textEmailAddress"/>
         </android.support.design.widget.TextInputLayout>
 
         <!-- Password Label -->

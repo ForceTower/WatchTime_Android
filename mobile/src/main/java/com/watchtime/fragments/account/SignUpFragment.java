@@ -1,13 +1,22 @@
 package com.watchtime.fragments.account;
 
 
+import android.Manifest;
 import android.app.ProgressDialog;
+import android.content.Intent;
+import android.content.pm.PackageManager;
+import android.graphics.Bitmap;
+import android.graphics.drawable.BitmapDrawable;
+import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
 import android.os.Message;
 import android.app.Fragment;
+import android.provider.MediaStore;
+import android.support.v4.content.ContextCompat;
+import android.util.Log;
 import android.util.Patterns;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -19,18 +28,24 @@ import android.widget.Toast;
 
 import com.watchtime.R;
 
+import java.io.IOException;
+
+import static android.app.Activity.RESULT_OK;
+
 /**
  * A simple {@link Fragment} subclass.
  */
 public class SignUpFragment extends Fragment {
     public static final String TAG = "SignUpFragment";
+    private static final int PICK_IMAGE_REQUEST = 100;
 
-    private ImageView imageLogo;
     private EditText nameText;
     private EditText emailText;
     private EditText passwordText;
     private EditText repeatText;
+    private ImageView profileImage;
     private Button signUpBtn;
+    private Uri imageUri;
 
     private ProgressDialog progressDialog;
     private Handler mHandler = new Handler(Looper.getMainLooper()) {
@@ -56,12 +71,13 @@ public class SignUpFragment extends Fragment {
 
         View view = inflater.inflate(R.layout.fragment_sign_up, container, false);
 
-        imageLogo = (ImageView) view.findViewById(R.id.sign_up_image_view);
+        ImageView imageLogo = (ImageView) view.findViewById(R.id.sign_up_image_view);
         nameText = (EditText) view.findViewById(R.id.input_name);
         emailText = (EditText) view.findViewById(R.id.input_email);
         passwordText = (EditText) view.findViewById(R.id.input_password);
         repeatText = (EditText) view.findViewById(R.id.input_repeat_password);
         signUpBtn = (Button) view.findViewById(R.id.btn_sign_up);
+        profileImage = (ImageView) view.findViewById(R.id.profile_image);
 
         if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
             imageLogo.setTransitionName(transitionName);
@@ -79,6 +95,28 @@ public class SignUpFragment extends Fragment {
                 signUp();
             }
         });
+        profileImage.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                selectProfileImage();
+            }
+        });
+
+        profileImage.setOnLongClickListener(new View.OnLongClickListener() {
+            @Override
+            public boolean onLongClick(View v) {
+                profileImage.setImageDrawable(ContextCompat.getDrawable(getActivity(), R.drawable.ic_no_profile_image));
+                imageUri = null;
+                return true;
+            }
+        });
+    }
+
+    private void selectProfileImage() {
+        Intent intent = new Intent();
+        intent.setType("image/*");
+        intent.setAction(Intent.ACTION_GET_CONTENT);
+        startActivityForResult(Intent.createChooser(intent, "Select Picture"), PICK_IMAGE_REQUEST);
     }
 
     public void signUp() {
@@ -88,6 +126,9 @@ public class SignUpFragment extends Fragment {
         String name = nameText.getText().toString();
         String email = emailText.getText().toString();
         String password = passwordText.getText().toString();
+        Bitmap image = ((BitmapDrawable)profileImage.getDrawable()).getBitmap();
+
+        Log.i("SignUpFrag", "Bit map: " + image.toString());
 
         progressDialog = new ProgressDialog(getActivity(), R.style.Theme_WatchTime_Dark_Dialog);
         progressDialog.setIndeterminate(true);
@@ -125,7 +166,7 @@ public class SignUpFragment extends Fragment {
             emailText.setError(null);
         }
 
-        if (password.length() < 4 && password.length() > 16) {
+        if (password.length() < 4 || password.length() > 16) {
             passwordText.setError(getString(R.string.invalid_password));
             valid = false;
         } else {
@@ -149,4 +190,19 @@ public class SignUpFragment extends Fragment {
         getFragmentManager().popBackStack();
     }
 
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+
+        if (requestCode == PICK_IMAGE_REQUEST  && resultCode == RESULT_OK && data != null && data.getData() != null) {
+            Uri uri = data.getData();
+            try {
+                Bitmap bitmap = MediaStore.Images.Media.getBitmap(getActivity().getContentResolver(), uri);
+                profileImage.setImageBitmap(bitmap);
+                imageUri = uri;
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+    }
 }

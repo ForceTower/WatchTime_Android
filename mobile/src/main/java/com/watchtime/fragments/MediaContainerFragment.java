@@ -34,7 +34,7 @@ public class MediaContainerFragment extends Fragment{
         MediaContainerFragment fragment = new MediaContainerFragment();
         Bundle args = new Bundle();
         args.putParcelable(EXTRA_PROVIDER, provider);
-        args.putInt(ITEM_TAG, info.getTag());;
+        args.putInt(ITEM_TAG, info.getTag());
         fragment.setArguments(args);
         return fragment;
     }

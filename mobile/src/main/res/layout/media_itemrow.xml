@@ -5,8 +5,9 @@
     android:orientation="vertical"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:paddingTop="10dp"
-    android:paddingBottom="10dp">
+    android:paddingTop="1dp"
+    android:paddingBottom="1dp"
+    android:background="@color/white">
 
     <ImageView
         android:id="@+id/placeholder_image"

@@ -26,6 +26,7 @@ import com.watchtime.adapters.MediaListRowsAdapter;
 import com.watchtime.adapters.decorators.DividerItemDecoration;
 import com.watchtime.base.WatchTimeApplication;
 import com.watchtime.base.content.preferences.Prefs;
+import com.watchtime.base.interfaces.OnDataChangeHandler;
 import com.watchtime.base.providers.media.MediaProvider;
 import com.watchtime.base.providers.media.models.Media;
 import com.watchtime.base.utils.LocaleUtils;
@@ -117,7 +118,7 @@ public class UserListsFragment extends Fragment {
 
         listRowsAdapter = new MediaListRowsAdapter(context, items);
         //listRowsAdapter.setOnItemClickListener(onItemClickListener);
-        recyclerView.addItemDecoration(new DividerItemDecoration(context, DividerItemDecoration.VERTICAL_LIST));
+        //recyclerView.addItemDecoration(new DividerItemDecoration(context, DividerItemDecoration.VERTICAL_LIST));
         recyclerView.setAdapter(listRowsAdapter);
 
         setupSwipeActions();
@@ -179,7 +180,14 @@ public class UserListsFragment extends Fragment {
     @Override
     public void onViewStateRestored(@Nullable Bundle savedInstanceState) {
         super.onViewStateRestored(savedInstanceState);
+        ((WatchTimeApplication)getActivity().getApplication()).getDataChangeHandler().registerListener("user-lists", dataChanged, new int[] {OnDataChangeHandler.ALL});
         //listRowsAdapter.setOnItemClickListener(onItemClickListener);
+    }
+
+    @Override
+    public void onDetach() {
+        super.onDetach();
+        ((WatchTimeApplication)getActivity().getApplication()).getDataChangeHandler().unregisterListener("user-lists");
     }
 
     @Override
@@ -192,6 +200,8 @@ public class UserListsFragment extends Fragment {
         filters.category = (MediaProvider.Filters.Category) getArguments().getSerializable(EXTRA_CATEGORY);
         provider.getList(new ArrayList<Media>(), new MediaProvider.Filters(filters), callback, AccessTokenWT.getCurrentAccessToken().getAccessToken());
         setState(State.LOADING);
+
+        ((WatchTimeApplication)getActivity().getApplication()).getDataChangeHandler().registerListener("user-lists", dataChanged, new int[] {OnDataChangeHandler.ALL});
     }
 
     private void setState(State state) {
@@ -364,6 +374,15 @@ public class UserListsFragment extends Fragment {
                 previousTotal = totalItemCount = layoutManager.getItemCount();
                 setState(State.LOADING_PAGE);
             }
+        }
+    };
+
+    private OnDataChangeHandler.OnDataChangeListener dataChanged = new OnDataChangeHandler.OnDataChangeListener() {
+        @Override
+        public void onDataChange() {
+            provider.getList(new ArrayList<Media>(), new MediaProvider.Filters(filters), callback, AccessTokenWT.getCurrentAccessToken().getAccessToken());
+            setState(State.LOADING);
+            Log.d("UserListsFrag", "onDataChange: Changed!");
         }
     };
 

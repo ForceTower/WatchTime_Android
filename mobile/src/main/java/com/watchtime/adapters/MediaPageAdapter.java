@@ -11,7 +11,6 @@ import com.watchtime.base.providers.media.MediaProvider;
 import com.watchtime.base.utils.LocaleUtils;
 import com.watchtime.fragments.MediaGenreSelectionFragment;
 import com.watchtime.fragments.MediaListFragment;
-import com.watchtime.fragments.UserListsFragment;
 
 import java.util.HashMap;
 import java.util.List;
@@ -65,10 +64,8 @@ public class MediaPageAdapter extends FragmentPagerAdapter {
         }
 
         position -= hasGenreTab;
-        if (itemTag == 0)
-            return MediaListFragment.newInstance(MediaListFragment.Mode.NORMAL, provider, tabs.get(position).getFilter(), tabs.get(position).getOrder(), genre);
-        else
-            return UserListsFragment.newInstance(provider, tabs.get(position).getCategory());
+        //only if tag == 0
+        return MediaListFragment.newInstance(MediaListFragment.Mode.NORMAL, provider, tabs.get(position).getFilter(), tabs.get(position).getOrder(), genre);
     }
 
     @Override

@@ -37,6 +37,7 @@ import com.watchtime.base.utils.PrefUtils;
 import com.watchtime.base.utils.VersionUtils;
 import com.watchtime.fragments.MediaContainerFragment;
 import com.watchtime.fragments.NavigationDrawerFragment;
+import com.watchtime.fragments.UserListsFragment;
 import com.watchtime.fragments.drawer.NavDrawerItem;
 import com.watchtime.sdk.LoginManagerWT;
 import com.watchtime.utils.ToolbarUtils;
@@ -67,7 +68,6 @@ public class MainActivity extends WatchTimeBaseActivity implements NavigationDra
     ScrimInsetsFrameLayout mNavigationDrawerContainer;
 
     //Tab layout for a view
-    @Nullable
     @Bind(R.id.tabs)
     TabLayout mTabs;
 
@@ -171,9 +171,14 @@ public class MainActivity extends WatchTimeBaseActivity implements NavigationDra
         mCurrentFragment = fragmentManager.findFragmentByTag(tag);
 
         if (mCurrentFragment == null) {
-            if (item.hasProvider())
+            if (item.hasProvider() && item.getTag() == 0) {
                 mCurrentFragment = MediaContainerFragment.newInstance(item.getMediaProvider(), item);
-            else {
+                mTabs.setVisibility(View.VISIBLE);
+            } else {
+                if (item.getTag() == NavDrawerItem.ItemTags.USER_LIST) {
+                    mTabs.setVisibility(View.GONE);
+                    mCurrentFragment = UserListsFragment.newInstance(item.getMediaProvider(), item.getMediaProvider().getNavigation().get(item.getMediaProvider().getDefaultNavigationIndex()-1).getCategory());
+                }
                 /*
                 if (item.getTag() == NavDrawerItem.ItemTags.PROFILE)
                     mCurrentFragment = new ProfileFragment();

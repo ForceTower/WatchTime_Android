@@ -176,7 +176,7 @@ public class LoginFragment extends Fragment {
             emailText.setError(null);
         }
 
-        if (password.length() < 4 && password.length() > 16) {
+        if (password.length() < 4 || password.length() > 16) {
             passwordText.setError(getString(R.string.invalid_password));
             valid = false;
         } else {

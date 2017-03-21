@@ -253,8 +253,10 @@ public final class WatchTimeBaseMethods {
                                     Toast.makeText(getContext(), getContext().getString(R.string.no_permission), Toast.LENGTH_SHORT).show();
                                 else if (code == 0)
                                     Toast.makeText(getContext(), getContext().getString(R.string.mark_failed), Toast.LENGTH_SHORT).show();
-                                else if (code == 1)
+                                else if (code == 1) {
                                     Toast.makeText(getContext(), getContext().getString(R.string.already_marked), Toast.LENGTH_SHORT).show();
+                                    ((WatchTimeApplication)getContext()).getDataChangeHandler().igniteListeners(OnDataChangeHandler.ALL);
+                                }
                             }
                         });
                         return;

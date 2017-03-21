@@ -15,6 +15,7 @@ public class OnDataChangeHandler {
     public static final int ALL = 0;
     public static final int LOGIN = 1;
     public static final int LOGOUT = 2;
+    public static final int USER_LIST_UPDATE = 3;
     private HashMap<String, MicroListener> listeners = new HashMap<>();
 
     public interface OnDataChangeListener {
