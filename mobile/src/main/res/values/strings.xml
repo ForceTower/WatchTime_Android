@@ -90,4 +90,5 @@
     <string name="select_profile_image">Select a Profile Image</string>
     <string name="not_on_watchlist">Title is not on watchlist</string>
     <string name="removed_from_watchlist_success">Removed from watchlist</string>
+    <string name="failed_to_login">Invalid username or password</string>
 </resources>

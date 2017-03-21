@@ -76,7 +76,7 @@ public class MediaListFragment extends Fragment implements LoadingDetailDialogFr
     private MediaProvider.Filters.Sort sortDefinition;
     private MediaProvider.Filters.Order orderDefinition;
 
-    private Media currentSelectedMedia;
+    private static String currentSelectedMedia;
 
 
     public enum Mode {
@@ -187,9 +187,9 @@ public class MediaListFragment extends Fragment implements LoadingDetailDialogFr
             @Override
             public void run() {
                 if (variable == 0) {
-                    WatchTimeBaseMethods.getInstance().markMovieAsWatched(currentSelectedMedia.videoId);
+                    WatchTimeBaseMethods.getInstance().markMovieAsWatched(currentSelectedMedia);
                 } else if (variable == 1) {
-                    WatchTimeBaseMethods.getInstance().addMovieToWatchList(currentSelectedMedia.videoId);
+                    WatchTimeBaseMethods.getInstance().addMovieToWatchList(currentSelectedMedia);
                 } else {
                     Toast.makeText(getActivity().getApplication(), getString(R.string.not_yet_implemented), Toast.LENGTH_SHORT).show();
                 }
@@ -450,8 +450,8 @@ public class MediaListFragment extends Fragment implements LoadingDetailDialogFr
 
         @Override
         public void onItemLongClick(View v, Media item, int position) {
-            Log.i("MediaListFrag", "Item Long Click: " + item.title);
-            currentSelectedMedia = item;
+            Log.i("MediaListFrag", "Item Long Click: " + item.title + " -- item id: " + item.videoId);
+            currentSelectedMedia = item.videoId;
         }
     };
 

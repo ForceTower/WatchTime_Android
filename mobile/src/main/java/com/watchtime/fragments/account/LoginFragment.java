@@ -147,7 +147,7 @@ public class LoginFragment extends Fragment {
             @Override
             public void onResponse(Call call, Response response) throws IOException {
                 if (!response.isSuccessful()) {
-                    onLoginFailed("Unsuccessful Response");
+                    onLoginFailed(getString(R.string.failed_to_login));
                 } else {
                     JSONObject token;
                     try {
