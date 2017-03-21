@@ -1,6 +1,5 @@
 package com.watchtime.fragments.account;
 
-import android.app.Fragment;
 import android.app.ProgressDialog;
 import android.os.Build;
 import android.os.Bundle;
@@ -8,6 +7,7 @@ import android.os.Handler;
 import android.os.Looper;
 import android.os.Message;
 import android.support.annotation.Nullable;
+import android.app.Fragment;
 import android.util.Log;
 import android.util.Patterns;
 import android.view.LayoutInflater;
@@ -21,6 +21,7 @@ import android.widget.Toast;
 import com.watchtime.R;
 import com.watchtime.base.ApiEndPoints;
 import com.watchtime.base.WatchTimeApplication;
+import com.watchtime.base.backend.token.TokenAPI;
 import com.watchtime.base.interfaces.OnDataChangeHandler;
 
 import org.json.JSONException;
