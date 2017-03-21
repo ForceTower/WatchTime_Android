@@ -30,6 +30,7 @@ public class ApiEndPoints {
 
     public static final String UPDATE_COVER_PICTURE = PROFILE_ME + "/cover";
     public static final String MARK_MOVIE_WATCHED = PROFILE_ME + "/movie_watched";
-    public static final String ADD_MOVIE_TO_WATCHLIST = PROFILE_ME + "/watchlist/movie";
+    public static final String ADD_MOVIE_TO_WATCHLIST = PROFILE_ME + "/watchlist/add/movie";
+    public static final String REMOVE_MOVIE_FROM_WATCHLIST = PROFILE_ME + "/watchlist/remove/movie";
     public static final String MY_WATCHLIST = PROFILE_ME + "/watchlist";
 }

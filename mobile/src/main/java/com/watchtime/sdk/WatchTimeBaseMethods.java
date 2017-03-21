@@ -213,6 +213,7 @@ public final class WatchTimeBaseMethods {
             public void onFailure(Call call, IOException e) {
                 Log.i("MovieDetailsFrag", "Failed to mark watched: " + e.getMessage());
                 Toast.makeText(getContext(), getContext().getString(R.string.mark_failed), Toast.LENGTH_SHORT).show();
+                ((WatchTimeApplication)getContext()).getDataChangeHandler().igniteListeners(OnDataChangeHandler.ALL);
             }
 
             @Override
@@ -237,7 +238,7 @@ public final class WatchTimeBaseMethods {
                         Log.i("MovieMark", "Exception is: " + e.getMessage());
                         return;
                     }
-
+                    ((WatchTimeApplication)getContext()).getDataChangeHandler().igniteListeners(OnDataChangeHandler.ALL);
                     return;
                 }
 
@@ -253,12 +254,11 @@ public final class WatchTimeBaseMethods {
                                     Toast.makeText(getContext(), getContext().getString(R.string.no_permission), Toast.LENGTH_SHORT).show();
                                 else if (code == 0)
                                     Toast.makeText(getContext(), getContext().getString(R.string.mark_failed), Toast.LENGTH_SHORT).show();
-                                else if (code == 1) {
+                                else if (code == 1)
                                     Toast.makeText(getContext(), getContext().getString(R.string.already_marked), Toast.LENGTH_SHORT).show();
-                                    ((WatchTimeApplication)getContext()).getDataChangeHandler().igniteListeners(OnDataChangeHandler.ALL);
-                                }
                             }
                         });
+                        ((WatchTimeApplication)getContext()).getDataChangeHandler().igniteListeners(OnDataChangeHandler.ALL);
                         return;
                     }
                 } catch (JSONException e) {
@@ -411,6 +411,89 @@ public final class WatchTimeBaseMethods {
                         @Override
                         public void run() {
                             Toast.makeText(getContext(), R.string.add_to_watchlist_success, Toast.LENGTH_SHORT).show();
+                        }
+                    });
+                }
+            }
+        });
+    }
+
+    public void removeFromWatchlist(final String id) {
+        RequestBody requestBody = new FormBody.Builder()
+                .add("tmdb", id)
+                .build();
+
+        Request request = new Request.Builder()
+                .addHeader("Authorization", "Bearer " + AccessTokenWT.getCurrentAccessToken().getAccessToken())
+                .url(ApiEndPoints.REMOVE_MOVIE_FROM_WATCHLIST)
+                .post(requestBody)
+                .build();
+
+        Call call = new OkHttpClient().newCall(request);
+        call.enqueue(new Callback() {
+            @Override
+            public void onFailure(Call call, IOException e) {
+                Toast.makeText(getContext(), R.string.failed_performing_request, Toast.LENGTH_SHORT).show();
+                ((WatchTimeApplication)getContext()).getDataChangeHandler().igniteListeners(OnDataChangeHandler.ALL);
+            }
+
+            @Override
+            public void onResponse(Call call, Response response) throws IOException {
+                if (!response.isSuccessful()) {
+                    String strResp = response.body().string();
+
+                    try {
+                        JSONObject json = new JSONObject(strResp);
+                        if (json.has("error")) {
+                            if (json.optString("error", "empty").equals("access_denied")) {
+                                Log.i("Media RM WatchList", "Token is invalid");
+                                if (refreshToken()) {
+                                    removeFromWatchlist(id);
+                                } else {
+                                    Log.i("WTMethods", "Failed updating token...");
+                                }
+                            }
+                        }
+                    } catch (JSONException e) {
+                        Log.i("WTMethods", "Resp: " + strResp);
+                        Log.i("WTMethods", "JSONException message: " + e.getMessage());
+                    }
+                    ((WatchTimeApplication)getContext()).getDataChangeHandler().igniteListeners(OnDataChangeHandler.ALL);
+                } else {
+                    try {
+                        JSONObject obj = new JSONObject(response.body().string());
+                        if (obj.has("error")) {
+                            final int code = obj.getInt("error_code");
+                            Handler handler = new Handler(Looper.getMainLooper());
+                            handler.post(new Runnable() {
+                                @Override
+                                public void run() {
+                                    if (code == -1)
+                                        Toast.makeText(getContext(), getContext().getString(R.string.no_permission), Toast.LENGTH_SHORT).show();
+                                    else if (code == 0)
+                                        Toast.makeText(getContext(), getContext().getString(R.string.mark_failed), Toast.LENGTH_SHORT).show();
+                                    else if (code == 1)
+                                        Toast.makeText(getContext(), getContext().getString(R.string.not_on_watchlist), Toast.LENGTH_SHORT).show();
+                                }
+                            });
+                            ((WatchTimeApplication)getContext()).getDataChangeHandler().igniteListeners(OnDataChangeHandler.ALL);
+                            return;
+                        }
+                    } catch (JSONException e) {
+                        Log.i("WTMethods", "JSONException message: " + e.getMessage());
+
+                        ((WatchTimeApplication)getContext()).getDataChangeHandler().igniteListeners(OnDataChangeHandler.ALL);
+                        return;
+                    }
+
+
+                    Log.i("WTMethods", "Successfully removed from watchlist");
+                    Handler handler = new Handler(Looper.getMainLooper());
+                    handler.post(new Runnable() {
+                        @Override
+                        public void run() {
+                            Toast.makeText(getContext(), R.string.removed_from_watchlist_success, Toast.LENGTH_SHORT).show();
+                            ((WatchTimeApplication)getContext()).getDataChangeHandler().igniteListeners(OnDataChangeHandler.ALL);
                         }
                     });
                 }
