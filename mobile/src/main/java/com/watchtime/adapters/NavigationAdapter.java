@@ -148,7 +148,7 @@ public class NavigationAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
                 });
             }
 
-            Picasso.with(getApplicationContext()).load(ApiEndPoints.PROFILE_IMAGE + user.getId() + ".png").into(profileImage, new com.squareup.picasso.Callback() {
+            Picasso.with(getApplicationContext()).load(ApiEndPoints.PROFILE_IMAGE + id + ".png").into(profileImage, new com.squareup.picasso.Callback() {
                 @Override
                 public void onSuccess() {
                     Handler mHandler = new Handler(Looper.getMainLooper());
@@ -161,7 +161,7 @@ public class NavigationAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
                 }
                 @Override
                 public void onError() {
-                    Log.i("NavAdapter", "Error profile: " + ApiEndPoints.PROFILE + id + "/profile_image");
+                    Log.i("NavAdapter", "Error profile: " + ApiEndPoints.PROFILE_IMAGE + id + ".png");
                     profileImage.setImageDrawable(ContextCompat.getDrawable(getApplicationContext(), R.drawable.ic_no_profile_image));
                 }
             });

@@ -8,8 +8,7 @@ public class ApiEndPoints {
     public static final String CLIENT_ID = "1watch_time1";
     public static final String CLIENT_SECRET = "8suw9ff9122s919slc013";
 
-
-    public static final String BASE_URL = "https://oqv.000webhostapp.com";
+    public static final String BASE_URL = "http://192.168.15.7";
     public static final String OAUTH2_BASE = BASE_URL + "/oauth/access_token";
     public static final String PROFILE_IMAGE = BASE_URL + "/profile_img/";
 
