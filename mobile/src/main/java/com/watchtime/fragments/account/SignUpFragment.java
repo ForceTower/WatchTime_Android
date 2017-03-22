@@ -13,6 +13,7 @@ import android.os.Message;
 import android.app.Fragment;
 import android.provider.MediaStore;
 import android.support.v4.content.ContextCompat;
+import android.util.Base64;
 import android.util.Log;
 import android.util.Patterns;
 import android.view.LayoutInflater;
@@ -23,9 +24,28 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.Toast;
 
+import com.facebook.login.LoginManager;
 import com.watchtime.R;
+import com.watchtime.activities.AccessAccountBaseActivity;
+import com.watchtime.base.ApiEndPoints;
+import com.watchtime.base.WatchTimeApplication;
+import com.watchtime.base.interfaces.OnDataChangeHandler;
+import com.watchtime.sdk.AccessTokenWT;
+import com.watchtime.sdk.LoginManagerWT;
 
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.io.ByteArrayOutputStream;
 import java.io.IOException;
+
+import okhttp3.Call;
+import okhttp3.Callback;
+import okhttp3.FormBody;
+import okhttp3.OkHttpClient;
+import okhttp3.Request;
+import okhttp3.RequestBody;
+import okhttp3.Response;
 
 import static android.app.Activity.RESULT_OK;
 
@@ -42,7 +62,7 @@ public class SignUpFragment extends Fragment {
     private EditText repeatText;
     private ImageView profileImage;
     private Button signUpBtn;
-    private Uri imageUri;
+    private Bitmap imageDrawable;
 
     private ProgressDialog progressDialog;
     private Handler mHandler = new Handler(Looper.getMainLooper()) {
@@ -103,7 +123,7 @@ public class SignUpFragment extends Fragment {
             @Override
             public boolean onLongClick(View v) {
                 profileImage.setImageDrawable(ContextCompat.getDrawable(getActivity(), R.drawable.ic_no_profile_image));
-                imageUri = null;
+                imageDrawable = null;
                 return true;
             }
         });
@@ -123,20 +143,121 @@ public class SignUpFragment extends Fragment {
         String name = nameText.getText().toString();
         String email = emailText.getText().toString();
         String password = passwordText.getText().toString();
-        Bitmap image = ((BitmapDrawable)profileImage.getDrawable()).getBitmap();
+        //Bitmap image = ((BitmapDrawable)profileImage.getDrawable()).getBitmap();
 
         progressDialog = new ProgressDialog(getActivity(), R.style.Theme_WatchTime_Dark_Dialog);
         progressDialog.setIndeterminate(true);
         progressDialog.setMessage(getString(R.string.creating_account));
         progressDialog.show();
 
+        serverSignUp(name, email, password, imageDrawable);
+
+        /*
         new Handler().postDelayed(new Runnable() {
             @Override
             public void run() {
                 onSignUpSuccess();
                 progressDialog.dismiss();
             }
-        }, 3000);
+        }, 3000);*/
+    }
+
+    private void serverSignUp(final String name, final String email, final String password, final Bitmap image) {
+        RequestBody requestBody = new FormBody.Builder()
+                .add("name", name)
+                .add("email", email)
+                .add("password", password)
+                .add("image", toBase64(image))
+                .build();
+
+        Request request = new Request.Builder()
+                .url(ApiEndPoints.REGISTER_USER)
+                .post(requestBody)
+                .build();
+
+        Call call = new OkHttpClient().newCall(request);
+
+        call.enqueue(new Callback() {
+            @Override
+            public void onFailure(Call call, IOException e) {
+                onSignUpFailed(getString(R.string.error_getting_response));
+                Log.i(TAG, "IOEx: " + e.getMessage());
+            }
+
+            @Override
+            public void onResponse(Call call, Response response) throws IOException {
+                if (!response.isSuccessful()) {
+                    onSignUpFailed(getString(R.string.unknown_error));
+                    Log.i(TAG, "Unsuccessful Response: " + response.body().string());
+                } else {
+                    try {
+                        String strResp = response.body().string();
+                        JSONObject json = new JSONObject(strResp);
+                        if (json.has("error")) {
+                            Log.i(TAG, "Error... " + json.optString("error_description"));
+                        } else {
+                            Message completeMessage = mHandler.obtainMessage(0, getString(R.string.account_created));
+                            completeMessage.sendToTarget();
+
+                            mHandler.postDelayed(new Runnable() {
+                                @Override
+                                public void run() {
+                                    loginToCreatedAccount(email, password);
+                                }
+                            }, 500);
+                        }
+                    } catch (JSONException e) {
+                        Log.i(TAG, "JSONException: " + e.getMessage());
+                    }
+                }
+            }
+        });
+    }
+
+    private void loginToCreatedAccount(final String email, final String password) {
+        progressDialog = new ProgressDialog(getActivity(), R.style.Theme_WatchTime_Dark_Dialog);
+        progressDialog.setIndeterminate(true);
+        progressDialog.setMessage(getString(R.string.connecting));
+        progressDialog.show();
+
+        RequestBody requestBody = new FormBody.Builder()
+                .add("grant_type", "password")
+                .add("username", email)
+                .add("password", password)
+                .add("client_id", ApiEndPoints.CLIENT_ID)
+                .add("client_secret", ApiEndPoints.CLIENT_SECRET)
+                .build();
+
+        Request request = new Request.Builder()
+                .url(ApiEndPoints.OAUTH2_BASE)
+                .post(requestBody)
+                .build();
+
+        Call loginCall = new OkHttpClient().newCall(request);
+        loginCall.enqueue(new Callback() {
+            @Override
+            public void onFailure(Call call, IOException e) {
+                Log.d("Resp: ", "Failed: " + e.toString());
+                onSignUpFailed(getString(R.string.error_getting_response));
+            }
+
+            @Override
+            public void onResponse(Call call, Response response) throws IOException {
+                if (!response.isSuccessful()) {
+                    onSignUpFailed(getString(R.string.failed_to_login));
+                } else {
+                    JSONObject token;
+                    try {
+                        token = new JSONObject(response.body().string());
+                        AccessTokenWT accessToken = AccessTokenWT.createFromJSON(token);
+                        onSignUpSuccess(email, accessToken);
+                    } catch (JSONException e) {
+                        onSignUpFailed(getString(R.string.error_on_response));
+                        Log.e("SignUp:Response", e.getMessage());
+                    }
+                }
+            }
+        });
     }
 
     private boolean validate() {
@@ -178,11 +299,29 @@ public class SignUpFragment extends Fragment {
         return valid;
     }
 
-    public void onSignUpSuccess() {
+    public void onSignUpFailed(String reason) {
+        Message completeMessage = mHandler.obtainMessage(0, reason);
+        completeMessage.sendToTarget();
+
+        ((WatchTimeApplication)getActivity().getApplication()).setUser(null);
+
+        LoginManager.getInstance().logOut();
+        LoginManagerWT.getInstance().logout();
+    }
+
+    public void onSignUpSuccess(final String email, final AccessTokenWT tokenWT) {
         Message completeMessage = mHandler.obtainMessage(0, getString(R.string.account_created));
         completeMessage.sendToTarget();
 
-        getFragmentManager().popBackStack();
+        ((WatchTimeApplication)getActivity().getApplication()).getDataChangeHandler().igniteListeners(OnDataChangeHandler.LOGIN);
+        ((AccessAccountBaseActivity)getActivity()).createLoginToken(email, tokenWT);
+    }
+
+    public String toBase64(Bitmap bitmap) {
+        ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
+        bitmap.compress(Bitmap.CompressFormat.PNG, 100, byteArrayOutputStream);
+        byte[] byteArray = byteArrayOutputStream .toByteArray();
+        return Base64.encodeToString(byteArray, Base64.DEFAULT);
     }
 
     @Override
@@ -194,7 +333,7 @@ public class SignUpFragment extends Fragment {
             try {
                 Bitmap bitmap = MediaStore.Images.Media.getBitmap(getActivity().getContentResolver(), uri);
                 profileImage.setImageBitmap(bitmap);
-                imageUri = uri;
+                imageDrawable = bitmap;
             } catch (IOException e) {
                 e.printStackTrace();
             }
