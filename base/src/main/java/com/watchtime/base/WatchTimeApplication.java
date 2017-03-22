@@ -114,6 +114,8 @@ public class WatchTimeApplication extends Application {
     }
 
     public User getUser() {
+        if (connectedUser == null)
+            connectedUser = new User();
         return connectedUser;
     }
 

@@ -303,7 +303,7 @@ public class SignUpFragment extends Fragment {
     }
 
     public void onSignUpSuccess(final String email, final AccessTokenWT tokenWT) {
-        Message completeMessage = mHandler.obtainMessage(0, getString(R.string.account_created));
+        Message completeMessage = mHandler.obtainMessage(0, getString(R.string.logged_in));
         completeMessage.sendToTarget();
 
         ((WatchTimeApplication)getActivity().getApplication()).getDataChangeHandler().igniteListeners(OnDataChangeHandler.LOGIN);
