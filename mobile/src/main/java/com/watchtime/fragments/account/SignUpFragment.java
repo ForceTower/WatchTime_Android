@@ -125,8 +125,6 @@ public class SignUpFragment extends Fragment {
         String password = passwordText.getText().toString();
         Bitmap image = ((BitmapDrawable)profileImage.getDrawable()).getBitmap();
 
-        Log.i("SignUpFrag", "Bit map: " + image.toString());
-
         progressDialog = new ProgressDialog(getActivity(), R.style.Theme_WatchTime_Dark_Dialog);
         progressDialog.setIndeterminate(true);
         progressDialog.setMessage(getString(R.string.creating_account));
