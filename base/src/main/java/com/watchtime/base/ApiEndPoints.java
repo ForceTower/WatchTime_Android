@@ -10,6 +10,8 @@ public class ApiEndPoints {
 
     public static final String BASE_URL = "http://192.168.15.7";
     public static final String OAUTH2_BASE = BASE_URL + "/oauth/access_token";
+
+    public static final String REGISTER_USER = BASE_URL + "/api/user/sign_up";
     public static final String PROFILE_IMAGE = BASE_URL + "/profile_img/";
 
     public static final String BASE_MOVIES_POPULAR = BASE_URL + "/movies/popular/";
