@@ -143,7 +143,6 @@ public class SignUpFragment extends Fragment {
         String name = nameText.getText().toString();
         String email = emailText.getText().toString();
         String password = passwordText.getText().toString();
-        //Bitmap image = ((BitmapDrawable)profileImage.getDrawable()).getBitmap();
 
         progressDialog = new ProgressDialog(getActivity(), R.style.Theme_WatchTime_Dark_Dialog);
         progressDialog.setIndeterminate(true);
@@ -151,15 +150,6 @@ public class SignUpFragment extends Fragment {
         progressDialog.show();
 
         serverSignUp(name, email, password, imageDrawable);
-
-        /*
-        new Handler().postDelayed(new Runnable() {
-            @Override
-            public void run() {
-                onSignUpSuccess();
-                progressDialog.dismiss();
-            }
-        }, 3000);*/
     }
 
     private void serverSignUp(final String name, final String email, final String password, final Bitmap image) {
@@ -167,7 +157,7 @@ public class SignUpFragment extends Fragment {
                 .add("name", name)
                 .add("email", email)
                 .add("password", password)
-                .add("image", toBase64(image))
+                .add("image", image != null ? toBase64(image) : "no image")
                 .build();
 
         Request request = new Request.Builder()
@@ -194,7 +184,9 @@ public class SignUpFragment extends Fragment {
                         String strResp = response.body().string();
                         JSONObject json = new JSONObject(strResp);
                         if (json.has("error")) {
-                            Log.i(TAG, "Error... " + json.optString("error_description"));
+                            int error_code = json.getInt("error_code");
+                            if (error_code == 0)
+                                onSignUpFailed(getString(R.string.email_already_taken));
                         } else {
                             Message completeMessage = mHandler.obtainMessage(0, getString(R.string.account_created));
                             completeMessage.sendToTarget();
@@ -208,6 +200,7 @@ public class SignUpFragment extends Fragment {
                         }
                     } catch (JSONException e) {
                         Log.i(TAG, "JSONException: " + e.getMessage());
+                        onSignUpFailed(getString(R.string.unknown_error));
                     }
                 }
             }
@@ -318,6 +311,8 @@ public class SignUpFragment extends Fragment {
     }
 
     public String toBase64(Bitmap bitmap) {
+        if (bitmap == null) return "no image";
+
         ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
         bitmap.compress(Bitmap.CompressFormat.PNG, 100, byteArrayOutputStream);
         byte[] byteArray = byteArrayOutputStream .toByteArray();
