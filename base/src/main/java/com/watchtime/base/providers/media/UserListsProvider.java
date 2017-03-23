@@ -8,12 +8,14 @@ import com.watchtime.base.WatchTimeApplication;
 import com.watchtime.base.providers.media.models.Genre;
 import com.watchtime.base.providers.media.models.Media;
 import com.watchtime.base.providers.media.models.WatchlistItem;
+import com.watchtime.base.providers.media.response.MovieResponse;
 
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.IOException;
+import java.net.SocketException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -40,7 +42,6 @@ public class UserListsProvider extends MediaProvider {
         Request.Builder requestBuilder = new Request.Builder();
         requestBuilder.url(requestWebsite);
         requestBuilder.addHeader("Authorization", "Bearer " + token);
-        Log.i("UserListProv", "Using token: " + token);
         requestBuilder.tag(MEDIA_CALL);
 
         return fetchList(list, requestBuilder, filters, callback);
@@ -77,7 +78,6 @@ public class UserListsProvider extends MediaProvider {
                     }
                 } else {
                     String string = response.body().string();
-
                     try {
                         JSONObject values = new JSONObject(string);
                         list.addAll(process(values));
@@ -94,7 +94,50 @@ public class UserListsProvider extends MediaProvider {
 
     @Override
     public Call getDetail(ArrayList<Media> currentList, Integer index, Callback callback, String token) {
-        return null;
+        Media media = currentList.get(index);
+        Request.Builder requestBuilder = new Request.Builder();
+        requestBuilder.url(ApiEndPoints.BASE_MOVIES_DETAILS + media.videoId);
+        requestBuilder.tag(MEDIA_CALL);
+        return fetchDetails(requestBuilder, callback);
+    }
+
+    private Call fetchDetails(final Request.Builder requestBuilder, final Callback callback) {
+        return enqueue(requestBuilder.build(), new okhttp3.Callback() {
+            @Override
+            public void onFailure(Call call, IOException e) {
+                Log.d("UserListsProvider", "Failed Fetching Details");
+                callback.onFailure(e);
+            }
+
+            @Override
+            public void onResponse(Call call, Response response) throws IOException {
+
+                if (response.isSuccessful()) {
+                    String responseStr;
+                    try {
+                        responseStr = response.body().string();
+                    } catch (SocketException e) {
+                        onFailure(e);
+                        return;
+                    }
+
+                    MovieResponse movieResponse;
+                    try {
+                        movieResponse = new MovieResponse(mediaProvider);
+                        JSONObject json = new JSONObject(responseStr);
+                        callback.onSuccess(null, movieResponse.singleMovie(json), true);
+                    } catch (Exception e) {
+                        onFailure(e);
+                    }
+
+                }
+            }
+
+            void onFailure(Exception ex) {
+                Log.d("UserListsProvider", "Error: " + ex.getMessage());
+                callback.onFailure(ex);
+            }
+        });
     }
 
     @Override
@@ -124,7 +167,7 @@ public class UserListsProvider extends MediaProvider {
             String tmdb = entry.getString("tmdb");
             String title = entry.getString("name");
             String image = entry.getString("image");
-            int runtime = entry.getInt("runtime");
+            int runtime = entry.optInt("runtime", 0);
             String rating = entry.getString("rating");
             String added = entry.getString("date_added");
             String genresStr = "";

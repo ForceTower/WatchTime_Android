@@ -3,6 +3,7 @@ package com.watchtime.adapters;
 import android.content.Context;
 import android.os.Handler;
 import android.os.Looper;
+import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -28,11 +29,19 @@ import butterknife.ButterKnife;
  */
 
 public class MediaListRowsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>{
+    public interface OnItemClickListener {
+        void onItemClick(View v, Media item, int position);
+    }
     private ArrayList<ListItem> items = new ArrayList<>();
     private final int NORMAL = 0, LOADING = 1;
+    private OnItemClickListener onItemClickListener;
 
     public MediaListRowsAdapter(Context context, ArrayList<Media> items) {
         setItems(items);
+    }
+
+    public void setOnItemClickListener(OnItemClickListener onItemClickListener) {
+        this.onItemClickListener = onItemClickListener;
     }
 
     @Override
@@ -118,7 +127,7 @@ public class MediaListRowsAdapter extends RecyclerView.Adapter<RecyclerView.View
         }
     }
 
-    private ListItem getItem(int position) {
+    public ListItem getItem(int position) {
         if (position < 0 || items.size() <= position) return null;
         return items.get(position);
     }
@@ -164,7 +173,7 @@ public class MediaListRowsAdapter extends RecyclerView.Adapter<RecyclerView.View
         }
     }
 
-    public class ViewHolder extends RecyclerView.ViewHolder {
+    public class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener{
         View itemView;
         @Bind(R.id.cover_image)
         ImageView cover;
@@ -182,7 +191,20 @@ public class MediaListRowsAdapter extends RecyclerView.Adapter<RecyclerView.View
 
             ButterKnife.bind(this, itemView);
             this.itemView = itemView;
+            this.itemView.setOnClickListener(this);
+        }
 
+        @Override
+        public void onClick(View v) {
+            if (onItemClickListener != null) {
+                int position = getLayoutPosition();
+                Media media = getItem(position).media;
+                onItemClickListener.onItemClick(v, media, position);
+            }
+        }
+
+        public ImageView getCover() {
+            return cover;
         }
     }
 }

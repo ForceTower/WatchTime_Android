@@ -7,23 +7,28 @@ import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.RectF;
+import android.graphics.drawable.BitmapDrawable;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
+import android.support.v4.content.ContextCompat;
+import android.support.v7.graphics.Palette;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.helper.ItemTouchHelper;
+import android.transition.TransitionInflater;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.watchtime.R;
+import com.watchtime.activities.MediaDetailsActivity;
 import com.watchtime.adapters.MediaListRowsAdapter;
-import com.watchtime.adapters.decorators.DividerItemDecoration;
 import com.watchtime.base.WatchTimeApplication;
 import com.watchtime.base.content.preferences.Prefs;
 import com.watchtime.base.interfaces.OnDataChangeHandler;
@@ -32,6 +37,8 @@ import com.watchtime.base.providers.media.models.Media;
 import com.watchtime.base.utils.LocaleUtils;
 import com.watchtime.base.utils.PrefUtils;
 import com.watchtime.base.utils.ThreadUtils;
+import com.watchtime.base.utils.VersionUtils;
+import com.watchtime.fragments.dialog.LoadingDetailDialogFragment;
 import com.watchtime.sdk.AccessTokenWT;
 import com.watchtime.sdk.WatchTimeBaseMethods;
 
@@ -44,7 +51,7 @@ import butterknife.ButterKnife;
  * Created by João Paulo on 10/03/2017.
  */
 
-public class UserListsFragment extends Fragment {
+public class UserListsFragment extends Fragment implements LoadingDetailDialogFragment.Callback{
     public static final String EXTRA_PROVIDER = "extra_provider";
     public static final String EXTRA_CATEGORY = "extra_category";
 
@@ -181,7 +188,7 @@ public class UserListsFragment extends Fragment {
     public void onViewStateRestored(@Nullable Bundle savedInstanceState) {
         super.onViewStateRestored(savedInstanceState);
         ((WatchTimeApplication)getActivity().getApplication()).getDataChangeHandler().registerListener("user-lists", dataChanged, new int[] {OnDataChangeHandler.ALL});
-        //listRowsAdapter.setOnItemClickListener(onItemClickListener);
+        listRowsAdapter.setOnItemClickListener(onItemClickListener);
     }
 
     @Override
@@ -377,6 +384,40 @@ public class UserListsFragment extends Fragment {
         }
     };
 
+    private MediaListRowsAdapter.OnItemClickListener onItemClickListener = new MediaListRowsAdapter.OnItemClickListener() {
+        @Override
+        public void onItemClick(View v, final Media item, final int position) {
+            RecyclerView.ViewHolder holder = recyclerView.getChildViewHolder(v);
+
+            if (holder instanceof  MediaListRowsAdapter.ViewHolder) {
+                final ImageView cover = ((MediaListRowsAdapter.ViewHolder) holder).getCover();
+
+                if (cover.getDrawable() == null) {
+                    showLoadingDialog(position);
+                    return;
+                }
+
+                Bitmap coverBitmap = ((BitmapDrawable)cover.getDrawable()).getBitmap();
+                Palette.generateAsync(coverBitmap, 5, new Palette.PaletteAsyncListener() {
+                    @Override
+                    public void onGenerated(Palette palette) {
+                        int vibrantColor = palette.getVibrantColor(-1);
+                        int paletteColor;
+                        if (vibrantColor == -1) {
+                            paletteColor = palette.getMutedColor(ContextCompat.getColor(getContext(), R.color.primary));
+                        } else {
+                            paletteColor = vibrantColor;
+                        }
+                        item.color = paletteColor;
+                        showLoadingDialog(position);
+                    }
+                });
+            } else {
+                showLoadingDialog(position);
+            }
+        }
+    };
+
     private OnDataChangeHandler.OnDataChangeListener dataChanged = new OnDataChangeHandler.OnDataChangeListener() {
         @Override
         public void onDataChange() {
@@ -385,6 +426,31 @@ public class UserListsFragment extends Fragment {
             Log.d("UserListsFrag", "onDataChange: Changed!");
         }
     };
+
+    private void showLoadingDialog(int position) {
+        LoadingDetailDialogFragment loadingFragment = LoadingDetailDialogFragment.newInstance(position);
+        loadingFragment.setTargetFragment(UserListsFragment.this, LOADING_DIALOG_FRAGMENT);
+        loadingFragment.show(getFragmentManager(), DIALOG_LOADING_DETAIL);
+    }
+
+    @Override
+    public void onDetailLoadFailure() {
+        Snackbar.make(rootView, R.string.unknown_error, Snackbar.LENGTH_SHORT).show();
+    }
+
+    @Override
+    public void onDetailLoadSuccess(Media item) {
+        if (VersionUtils.isLollipop()) {
+            setExitTransition(TransitionInflater.from(context).inflateTransition(android.R.transition.fade));
+            setEnterTransition(TransitionInflater.from(context).inflateTransition(android.R.transition.fade));
+        }
+        MediaDetailsActivity.startActivity(context, item);
+    }
+
+    @Override
+    public ArrayList<Media> getCurrentList() {
+        return items;
+    }
 
     private void markWatchedRemoveWatchlist(String tmdb) {
         WatchTimeBaseMethods.getInstance().markMovieAsWatched(tmdb);

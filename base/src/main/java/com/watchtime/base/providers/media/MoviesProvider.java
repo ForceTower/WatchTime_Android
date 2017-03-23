@@ -2,28 +2,22 @@ package com.watchtime.base.providers.media;
 
 import android.util.Log;
 
-import com.google.gson.internal.LinkedTreeMap;
 import com.watchtime.base.ApiEndPoints;
 import com.watchtime.base.R;
 import com.watchtime.base.WatchTimeApplication;
 import com.watchtime.base.providers.media.models.Genre;
 import com.watchtime.base.providers.media.models.Media;
-import com.watchtime.base.providers.media.models.Movie;
-import com.watchtime.base.providers.media.models.Person;
+import com.watchtime.base.providers.media.response.MovieResponse;
 
 import org.json.JSONArray;
-import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.IOException;
-import java.lang.reflect.Array;
 import java.net.SocketException;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 
 import okhttp3.Call;
-import okhttp3.Callback;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import okhttp3.Response;
@@ -77,7 +71,7 @@ public class MoviesProvider extends MediaProvider{
         return fetchList(list, requestBuilder, filter, callback);
     }
 
-    protected Call fetchList(final ArrayList<Media> currentList, final Request.Builder requestBuilder, final Filters filters, final Callback callback) {
+    private Call fetchList(final ArrayList<Media> currentList, final Request.Builder requestBuilder, final Filters filters, final Callback callback) {
         return enqueue(requestBuilder.build(), new okhttp3.Callback() {
             @Override
             public void onFailure(Call call, IOException e) {
@@ -114,7 +108,7 @@ public class MoviesProvider extends MediaProvider{
                             JSONArray array = jsonObject.getJSONArray("data");
                             responseStr = array.toString();
                         }
-                        movies = new MovieResponse(responseStr);
+                        movies = new MovieResponse(responseStr, mediaProvider);
                         currentList.addAll(movies.asList());
                     } catch (Exception e) {
                         onFailure(e);
@@ -163,7 +157,7 @@ public class MoviesProvider extends MediaProvider{
 
                     MovieResponse movieResponse;
                     try {
-                        movieResponse = new MovieResponse();
+                        movieResponse = new MovieResponse(mediaProvider);
                         JSONObject json = new JSONObject(responseStr);
                         callback.onSuccess(null, movieResponse.singleMovie(json), true);
                     } catch (Exception e) {
@@ -210,197 +204,5 @@ public class MoviesProvider extends MediaProvider{
         returnList.add(new Genre("romance", R.string.genre_romance));
         returnList.add(new Genre("scifi", R.string.genre_sci_fi));
         return returnList;
-    }
-
-    private class MovieResponse {
-        JSONArray response;
-
-        MovieResponse(String json) throws JSONException {
-            this.response = new JSONArray(json);
-        }
-
-        MovieResponse() {}
-
-        ArrayList<Movie> asList() throws JSONException {
-            ArrayList<Movie> list = new ArrayList<>();
-            if(response == null)
-                return list;
-
-            for (int i = 0; i < response.length(); i++) {
-                JSONObject item = response.getJSONObject(i);
-
-                Integer tmdb_id = item.getInt("tmdb");
-                String name = item.getString("name");
-                String overview = item.optString("overview", "");
-                String release_date = item.optString("release_date", "0000-00-00");
-                String poster = item.optString("poster_path", "");
-                String backdrop = item.optString("backdrop_path", "");
-                String rating = item.getString("vote_average");
-                String reviews = item.getString("vote_count");
-                String runtime = item.optString("runtime", "0");
-
-                String year = release_date.split("-")[0];
-                if (!poster.trim().equals("")) {
-                    poster = "https://image.tmdb.org/t/p/w780/" + poster;
-                }
-
-                if (!backdrop.trim().equals("")) {
-                    backdrop = "https://image.tmdb.org/t/p/w780/" + backdrop;
-                }
-
-                if (runtime == null || runtime.equals("null"))
-                    runtime = "0";
-
-                Movie movie = new Movie(tmdb_id.toString(), name, poster, poster, mediaProvider, runtime, year, rating, reviews, backdrop);
-                movie.synopsis = overview;
-                list.add(movie);
-            }
-
-            return list;
-        }
-
-        ArrayList<Media> singleMovie(JSONObject item) throws Exception {
-            if (item.has("error")) {
-                throw new Exception("Invalid Request");
-            }
-
-            JSONArray data = item.getJSONArray("data");
-            item = data.getJSONObject(0);
-
-            ArrayList<Media> returnList = new ArrayList<>();
-
-            Integer tmdb_id = item.getInt("tmdb");
-            String name = item.getString("name");
-            String tag_line = item.optString("tag_line", "");
-            String overview = item.optString("overview", "");
-            String imdb = item.optString("imdb", "");
-            String status = item.optString("status", "Unknown");
-            String release_date = item.optString("release_date", "0000-00-00");
-            String poster = item.optString("poster_path", "");
-            String backdrop = item.optString("backdrop_path", "");
-            String rating = item.getString("vote_average");
-            String reviews = item.getString("vote_count");
-            String runtime = item.optString("runtime", "0");
-            Integer budget = item.optInt("budget", 0);
-            Integer revenue = item.optInt("revenue", 0);
-            String homepage = item.optString("homepage", "");
-
-            String year = release_date.split("-")[0];
-            if (!poster.trim().equals("")) {
-                poster = "https://image.tmdb.org/t/p/w780/" + poster;
-            }
-
-            if (!backdrop.trim().equals("")) {
-                backdrop = "https://image.tmdb.org/t/p/w780/" + backdrop;
-            }
-
-            if (runtime == null || runtime.equals("null"))
-                runtime = "0";
-
-            Movie movie = new Movie(tmdb_id.toString(), name, poster, poster, mediaProvider, runtime, year, rating, reviews, backdrop);
-            movie.synopsis = overview;
-
-
-            HashMap<String, Integer> genres = new HashMap<>();
-
-            JSONObject genresObj = item.getJSONObject("genres");
-            JSONArray dataGenres = genresObj.getJSONArray("data");
-            String firstGenre = "";
-
-            for (int i = 0; i < dataGenres.length(); i++) {
-                JSONObject current = dataGenres.getJSONObject(i);
-                genres.put(current.getString("genre"), current.getInt("genre_id"));
-                if (i == 0) firstGenre = current.getString("genre");
-            }
-
-            movie.allGenres = genres;
-            if (!genres.isEmpty())
-                movie.genre = firstGenre;
-
-            JSONObject cast = item.optJSONObject("cast");
-            if (cast != null)
-                movie.actors = parseActors(cast);
-
-            JSONObject crew = item.optJSONObject("crew");
-            if (crew != null) {
-                ArrayList<String> director = getDirectorName(crew);
-                movie.director = director.get(0);
-                movie.directorImage = director.get(1);
-            }
-
-            JSONObject backdrops = item.optJSONObject("images");
-            if (backdrops != null) {
-                movie.backdrops = parseBackdrops(backdrops);
-            }
-
-            returnList.add(movie);
-            return returnList;
-        }
-
-        private ArrayList<Person> parseActors(JSONObject cast) throws JSONException {
-            ArrayList<Person> returnList = new ArrayList<>();
-            JSONArray data = cast.getJSONArray("data");
-
-            for (int i = 0; i < data.length(); i++) {
-                JSONObject pers = data.getJSONObject(i);
-
-                String tmdb = pers.getString("tmdb");
-                String name = pers.getString("person");
-                String prof = pers.optString("profile_path", "");
-                String role = pers.getString("character");
-
-                if (!prof.trim().isEmpty()) {
-                    prof = "https://image.tmdb.org/t/p/w185/" + prof;
-                }
-
-                Person person = new Person(tmdb, name, prof, role);
-                returnList.add(person);
-            }
-
-            return returnList;
-        }
-
-        private ArrayList<String> getDirectorName(JSONObject crew) throws JSONException {
-            ArrayList<String> returnList = new ArrayList<>();
-            JSONArray data = crew.getJSONArray("data");
-
-            String directorName = "Unknown";
-            String profilePicture = "";
-
-            for (int i = 0; i < data.length(); i++) {
-                JSONObject pers = data.getJSONObject(i);
-
-                String tmdb = pers.getString("tmdb");
-                String name = pers.getString("person");
-                String prof = pers.optString("profile_path", "");
-                String role = pers.optString("job", "");
-
-                if (role.equals("Director")) {
-                    directorName = name;
-                    profilePicture = "https://image.tmdb.org/t/p/w185/" + prof;
-                }
-            }
-
-            returnList.add(directorName);
-            returnList.add(profilePicture);
-            return returnList;
-        }
-
-        public HashMap<String, Integer> parseBackdrops(JSONObject object) throws JSONException {
-            HashMap<String, Integer> backdrops = new HashMap<>();
-
-            JSONArray array = object.optJSONArray("data");
-            if (array != null) {
-                for (int i = 0; i < array.length(); i++) {
-                    JSONObject backdrop = array.getJSONObject(i);
-                    String url = backdrop.optString("image_path");
-                    int id = backdrop.getInt("id");
-                    if (url != null)
-                        backdrops.put("https://image.tmdb.org/t/p/w780" + url, id);
-                }
-            }
-
-            return backdrops;
-        }
     }
 }
