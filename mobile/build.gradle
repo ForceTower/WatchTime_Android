@@ -30,7 +30,6 @@ dependencies {
         exclude group: 'com.android.support', module: 'support-annotations'
     })
 
-
     compile project(':base')
 
     compile 'com.android.support:appcompat-v7:25.3.0'

@@ -38,8 +38,8 @@
     <string name="error_getting_response">Error on getting server response</string>
     <string name="com_facebook_login_canceled">Facebook login canceled</string>
 
-    <string name="facebook_app_id">1233374160031410</string>
-    <string name="fb_login_protocol_scheme">fb1233374160031410</string>
+    <string name="facebook_app_id" translatable="false">1233374160031410</string>
+    <string name="fb_login_protocol_scheme" translatable="false">fb1233374160031410</string>
 
     <string name="logout">Logout</string>
     <string name="guest_name">Guest</string>
@@ -49,10 +49,10 @@
     <string name="terms_of_use">Terms of use</string>
 
     <string name="image_logo_transition_login">fragment_image_logo_transition_login</string>
-    <string name="login_or_alternatives">Or...</string>
+    <string name="login_or_alternatives">Or…</string>
     <string name="access_account_choose">Select an option</string>
 
-    <string name="loading_details">Loading details...</string>
+    <string name="loading_details">Loading details…</string>
     <string name="searching">Searching</string>
     <string name="movies_error">No movies found</string>
     <string name="unknown_error">Unknown Error</string>
@@ -69,7 +69,7 @@
     <string name="create_account_associating_facebook">You can create an account now and associate with this facebook</string>
     <string name="ask_create_account_with_facebook_info">Create account using Facebook</string>
     <string name="info_create_account_with_facebook">Create an account using facebook info?</string>
-    <string name="obtaining_access">Obtaining Access...</string>
+    <string name="obtaining_access">Obtaining Access…</string>
     <string name="nothing_watched">Nothing watched yet</string>
     <string name="time_watched_minutes">%d minutes watched</string>
     <string name="only_one_account">Only one account can be created</string>
