@@ -39,6 +39,7 @@ import com.watchtime.base.utils.PrefUtils;
 import com.watchtime.base.utils.ThreadUtils;
 import com.watchtime.base.utils.VersionUtils;
 import com.watchtime.fragments.dialog.LoadingDetailDialogFragment;
+import com.watchtime.sdk.AccessTokenWT;
 import com.watchtime.sdk.WatchTimeBaseMethods;
 
 import java.util.ArrayList;
@@ -158,8 +159,10 @@ public class MediaListFragment extends Fragment implements LoadingDetailDialogFr
         menuInfo = new AdapterView.AdapterContextMenuInfo(v, -1, -1);
         super.onCreateContextMenu(menu, v, menuInfo);
 
-        MenuInflater inflater = getActivity().getMenuInflater();
-        inflater.inflate(R.menu.context_menu_media_list, menu);
+        if (AccessTokenWT.getCurrentAccessToken() != null) {
+            MenuInflater inflater = getActivity().getMenuInflater();
+            inflater.inflate(R.menu.context_menu_media_list, menu);
+        }
     }
 
     @Override

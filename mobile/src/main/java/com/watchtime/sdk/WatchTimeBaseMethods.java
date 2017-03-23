@@ -18,6 +18,7 @@ import com.watchtime.activities.MainActivity;
 import com.watchtime.base.ApiEndPoints;
 import com.watchtime.base.Constants;
 import com.watchtime.base.WatchTimeApplication;
+import com.watchtime.base.backend.User;
 import com.watchtime.base.interfaces.OnDataChangeHandler;
 
 import org.json.JSONException;
@@ -84,12 +85,9 @@ public final class WatchTimeBaseMethods {
             return true;
 
         String refreshToken = accountManager.getUserData(account, "refresh_token");
-
+        Log.i("NormalTK-RFR", "Refresh Token: " + refreshToken);
         if (TextUtils.isEmpty(refreshToken)) {
-            Toast.makeText(getContext(), getContext().getString(R.string.login_again), Toast.LENGTH_SHORT).show();
-            LoginManager.getInstance().logOut();
-            LoginManagerWT.getInstance().logout();
-            ((WatchTimeApplication)getContext()).getDataChangeHandler().igniteListeners(OnDataChangeHandler.LOGOUT);
+            failedRefresh();
             return false;
         }
 
@@ -164,6 +162,7 @@ public final class WatchTimeBaseMethods {
             Response response = tokenCall.execute();
             if (!response.isSuccessful()) {
                 Log.i("NormalTK-RFR", "Refresh Token with normal failed: " + response.body().string());
+                failedRefresh();
                 return false;
             }
             JSONObject token;
@@ -179,12 +178,37 @@ public final class WatchTimeBaseMethods {
             } catch (JSONException e) {
                 Log.i("NormalTK-RFR", "Refresh Token with normal failed, jsonException: " + e.getMessage());
                 LoginManager.getInstance().logOut();
+                failedRefresh();
             }
         } catch (IOException e) {
             Log.i("NormalTK-RFR", "Refresh Token with normal failed, IOException: " + e.getMessage());
+            failedRefresh();
         }
 
         return false;
+    }
+
+    private void failedRefresh() {
+        Handler handler = new Handler(Looper.getMainLooper());
+        handler.post(new Runnable() {
+            @Override
+            public void run() {
+                Toast.makeText(getContext(), getContext().getString(R.string.login_again), Toast.LENGTH_SHORT).show();
+            }
+        });
+
+        LoginManager.getInstance().logOut();
+        LoginManagerWT.getInstance().logout();
+        Account[] accounts = accountManager.getAccountsByType(Constants.ACCOUNT_TYPE);
+        User user = ((WatchTimeApplication)getContext()).getUser();
+
+        for (Account account : accounts) {
+            if (account.name.equals(user.getAccountName())) {
+                accountManager.removeAccount(account, null, null);
+            }
+        }
+
+        ((WatchTimeApplication)getContext()).getDataChangeHandler().igniteListeners(OnDataChangeHandler.LOGOUT);
     }
 
     private Request.Builder requestBuilder(String url, boolean addAuthHeader) {
