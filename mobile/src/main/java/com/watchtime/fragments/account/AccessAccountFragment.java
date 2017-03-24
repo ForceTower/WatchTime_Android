@@ -7,7 +7,6 @@ import android.app.ProgressDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.IntentSender;
-import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
@@ -110,7 +109,6 @@ public class AccessAccountFragment extends Fragment implements GoogleApiClient.O
         facebookLogin = (LoginButton) view.findViewById(R.id.btn_facebook_login);
         googleLogin = (SignInButton) view.findViewById(R.id.btn_google_login);
 
-        setupTransitionNames();
         registerFacebookButton();
         setupGoogleSignIn();
 
@@ -139,11 +137,6 @@ public class AccessAccountFragment extends Fragment implements GoogleApiClient.O
     }
 
     @Override
-    public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
-        super.onViewCreated(view, savedInstanceState);
-    }
-
-    @Override
     public void onStart() {
         super.onStart();
         mGoogleApiClient.connect();
@@ -163,7 +156,7 @@ public class AccessAccountFragment extends Fragment implements GoogleApiClient.O
 
     public void registerFacebookButton() {
         facebookLogin.setLoginBehavior(LoginBehavior.NATIVE_WITH_FALLBACK);
-        facebookLogin.setReadPermissions("email");
+        facebookLogin.setReadPermissions("email", "user_friends", "user_actions.video");
         facebookLogin.setFragment(this);
 
         callbackManager = CallbackManager.Factory.create();
@@ -344,12 +337,6 @@ public class AccessAccountFragment extends Fragment implements GoogleApiClient.O
         });
     }
 
-    public void setupTransitionNames() {
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-            imageLogo.setTransitionName(getString(R.string.image_logo_transition_login));
-        }
-    }
-
     public void onLoginSuccess(String email, AccessTokenWT token) {
         Message completeMessage = mHandler.obtainMessage(0, getString(R.string.logged_in));
         completeMessage.sendToTarget();
@@ -365,7 +352,7 @@ public class AccessAccountFragment extends Fragment implements GoogleApiClient.O
 
         LoginManager.getInstance().logOut();
         LoginManagerWT.getInstance().logout();
-        googleSignOut();
+        //googleSignOut();
     }
 
     private void googleSignOut() {
