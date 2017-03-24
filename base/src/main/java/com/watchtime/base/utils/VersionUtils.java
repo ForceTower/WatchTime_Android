@@ -11,4 +11,8 @@ public class VersionUtils {
     public static boolean isLollipop() {
         return Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP;
     }
+
+    public static boolean isNougat() {
+        return Build.VERSION.SDK_INT >= Build.VERSION_CODES.N;
+    }
 }

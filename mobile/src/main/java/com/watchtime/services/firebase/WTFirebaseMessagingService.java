@@ -2,57 +2,92 @@ package com.watchtime.services.firebase;
 
 import android.app.NotificationManager;
 import android.app.PendingIntent;
+import android.graphics.Color;
+import android.support.v4.app.RemoteInput;
 import android.content.Intent;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.media.RingtoneManager;
+import android.net.Uri;
 import android.support.v4.app.NotificationCompat;
+import android.support.v4.content.ContextCompat;
 import android.util.Log;
 
 import com.google.firebase.messaging.FirebaseMessagingService;
 import com.google.firebase.messaging.RemoteMessage;
 import com.watchtime.R;
 import com.watchtime.activities.MainActivity;
+import com.watchtime.base.utils.VersionUtils;
 
 public class WTFirebaseMessagingService extends FirebaseMessagingService {
     private static final String TAG = WTFirebaseMessagingService.class.getSimpleName();
+    private static int id = 0;
 
     public WTFirebaseMessagingService() {
     }
 
     @Override
     public void onMessageReceived(RemoteMessage remoteMessage) {
-        // TODO(developer): Handle FCM messages here.
-        // Not getting messages here? See why this may be: https://goo.gl/39bRNJ
         Log.i(TAG, "From: " + remoteMessage.getFrom());
 
-        // Check if message contains a data payload.
         if (remoteMessage.getData().size() > 0) {
             Log.i(TAG, "Message data payload: " + remoteMessage.getData());
         }
 
-        // Check if message contains a notification payload.
+        String notificationTitle;
+        String notificationBody;
+        String icon;
+        String sound;
         if (remoteMessage.getNotification() != null) {
-            Log.i(TAG, "Message Notification Body: " + remoteMessage.getNotification().getBody());
-        }
+            notificationTitle = remoteMessage.getNotification().getTitle();
+            notificationBody = remoteMessage.getNotification().getBody();
+            icon = remoteMessage.getNotification().getIcon();
+            sound = remoteMessage.getNotification().getSound();
 
-        // Also if you intend on generating your own notifications as a result of a received FCM
-        // message, here is where that should be initiated. See sendNotification method below.
-        showNotification(remoteMessage.getData().get("message"));
+            if (remoteMessage.getNotification() != null) {
+                Log.i(TAG, "Message Notification Body: " + notificationBody);
+            }
+        } else {
+            notificationTitle = remoteMessage.getData().get("title");
+            notificationBody = remoteMessage.getData().get("message");
+            icon = "some";
+            sound = "default";
+        }
+        showNotification(notificationTitle, notificationBody, icon, sound);
     }
 
-    private void showNotification(String message) {
+    private void showNotification(String title, String message, String icon, String sound) {
         Intent i = new Intent(this, MainActivity.class);
         i.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
 
-        PendingIntent pendingIntent = PendingIntent.getActivity(this, 0, i, PendingIntent.FLAG_UPDATE_CURRENT);
+        PendingIntent pendingIntent = PendingIntent.getActivity(this, 0, i, PendingIntent.FLAG_ONE_SHOT);
+        Bitmap largeIcon = BitmapFactory.decodeResource(getResources(), R.mipmap.ic_launcher);
+        Uri defaultSound = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION);
 
         NotificationCompat.Builder builder = new NotificationCompat.Builder(this)
                 .setAutoCancel(true)
-                .setContentTitle("Firebase Test")
+                .setContentTitle(title)
                 .setContentText(message)
-                .setSmallIcon(R.drawable.common_google_signin_btn_icon_dark)
+                .setSmallIcon(R.mipmap.app_logo)
+                .setLargeIcon(largeIcon)
+                .setSound(defaultSound)
+                .setColor(ContextCompat.getColor(getApplicationContext(), R.color.primary))
                 .setContentIntent(pendingIntent);
+
+        if (VersionUtils.isNougat()) {
+            RemoteInput remoteInput = new RemoteInput.Builder("key_text_remote")
+                    .setLabel("Answer Message")
+                    .build();
+
+            NotificationCompat.Action acceptRecommend = new NotificationCompat.Action.Builder(R.drawable.ic_mark_watched, "Reply", pendingIntent)
+                    .addRemoteInput(remoteInput)
+                    .build();
+
+            builder.addAction(acceptRecommend);
+        }
 
         NotificationManager manager = (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
 
-        manager.notify(0, builder.build());
+        manager.notify(id++, builder.build());
     }
 }
