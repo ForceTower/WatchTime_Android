@@ -1,14 +1,11 @@
 package com.watchtime.fragments;
 
-import android.app.Activity;
 import android.content.Context;
-import android.content.Intent;
 import android.content.res.Configuration;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
 import android.support.annotation.Nullable;
-import android.support.v4.app.ActivityOptionsCompat;
 import android.support.v4.app.Fragment;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBar;
@@ -16,17 +13,13 @@ import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.transition.TransitionInflater;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 
-import com.facebook.AccessToken;
-import com.facebook.login.LoginManager;
 import com.watchtime.R;
-import com.watchtime.activities.AccessAccountBaseActivity;
 import com.watchtime.adapters.NavigationAdapter;
 import com.watchtime.adapters.decorators.OneShotDividerDecorator;
 import com.watchtime.base.WatchTimeApplication;
@@ -35,11 +28,7 @@ import com.watchtime.base.interfaces.OnDataChangeHandler;
 import com.watchtime.base.providers.media.MoviesProvider;
 import com.watchtime.base.providers.media.UserListsProvider;
 import com.watchtime.base.utils.PrefUtils;
-import com.watchtime.base.utils.VersionUtils;
-import com.watchtime.fragments.account.AccessAccountFragment;
-import com.watchtime.fragments.account.LoginFragment;
 import com.watchtime.fragments.drawer.NavDrawerItem;
-import com.watchtime.sdk.AccessTokenWT;
 import com.watchtime.sdk.LoginManagerWT;
 
 import java.util.ArrayList;

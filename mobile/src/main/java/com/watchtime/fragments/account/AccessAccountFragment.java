@@ -2,8 +2,8 @@ package com.watchtime.fragments.account;
 
 import android.app.Dialog;
 import android.app.DialogFragment;
+import android.app.Fragment;
 import android.app.ProgressDialog;
-import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.IntentSender;
@@ -14,14 +14,10 @@ import android.os.Looper;
 import android.os.Message;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
-import android.app.Fragment;
-import android.app.FragmentManager;
-import android.transition.TransitionInflater;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.Toast;
 
@@ -41,15 +37,12 @@ import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GoogleApiAvailability;
 import com.google.android.gms.common.SignInButton;
 import com.google.android.gms.common.api.GoogleApiClient;
-import com.google.android.gms.common.api.ResultCallback;
-import com.google.android.gms.common.api.Status;
 import com.watchtime.R;
 import com.watchtime.activities.AccessAccountBaseActivity;
 import com.watchtime.base.ApiEndPoints;
 import com.watchtime.base.WatchTimeApplication;
 import com.watchtime.base.interfaces.OnDataChangeHandler;
 import com.watchtime.base.utils.PrefUtils;
-import com.watchtime.base.utils.VersionUtils;
 import com.watchtime.sdk.AccessTokenWT;
 import com.watchtime.sdk.LoginManagerWT;
 
@@ -85,8 +78,6 @@ public class AccessAccountFragment extends Fragment implements GoogleApiClient.O
     private LoginButton facebookLogin;
     private SignInButton googleLogin;
 
-    private Button loginBtn;
-    private Button signUpBtn;
     private CallbackManager callbackManager;
     ProgressDialog progressDialog;
 
@@ -121,7 +112,6 @@ public class AccessAccountFragment extends Fragment implements GoogleApiClient.O
 
         setupTransitionNames();
         registerFacebookButton();
-        //registerClickListeners();
         setupGoogleSignIn();
 
         return view;
@@ -354,76 +344,10 @@ public class AccessAccountFragment extends Fragment implements GoogleApiClient.O
         });
     }
 
-    public void registerClickListeners() {
-        loginBtn.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                loginFragmentStart(view);
-            }
-        });
-        signUpBtn.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                signUpFragmentStart(view);
-            }
-        });
-    }
-
     public void setupTransitionNames() {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
             imageLogo.setTransitionName(getString(R.string.image_logo_transition_login));
         }
-    }
-
-    public void loginFragmentStart(View v) {
-        LoginFragment loginFragment = new LoginFragment();
-
-        String imageTransitionName = "";
-
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-            setSharedElementReturnTransition(TransitionInflater.from(getActivity()).inflateTransition(R.transition.change_image_trans));
-            setExitTransition(TransitionInflater.from(getActivity()).inflateTransition(android.R.transition.fade));
-
-            loginFragment.setSharedElementEnterTransition(TransitionInflater.from(getActivity()).inflateTransition(R.transition.change_image_trans));
-            loginFragment.setEnterTransition(TransitionInflater.from(getActivity()).inflateTransition(android.R.transition.fade));
-
-            imageTransitionName = imageLogo.getTransitionName();
-        }
-
-        Bundle bundle = new Bundle();
-        bundle.putString("TRANS_NAME", imageTransitionName);
-        loginFragment.setArguments(bundle);
-
-        FragmentManager fragmentManager = getFragmentManager();
-        if (VersionUtils.isLollipop())
-            fragmentManager.beginTransaction().replace(R.id.container, loginFragment, LoginFragment.TAG).addSharedElement(imageLogo, imageTransitionName).addToBackStack(TAG).commit();
-        else
-            fragmentManager.beginTransaction().replace(R.id.container, loginFragment, LoginFragment.TAG).addToBackStack(TAG).commit();
-    }
-
-    public void signUpFragmentStart(View v) {
-        SignUpFragment signUp = new SignUpFragment();
-        String imageTransitionName = "";
-
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-            setSharedElementReturnTransition(TransitionInflater.from(getActivity()).inflateTransition(R.transition.change_image_trans));
-            setExitTransition(TransitionInflater.from(getActivity()).inflateTransition(android.R.transition.fade));
-
-            signUp.setSharedElementEnterTransition(TransitionInflater.from(getActivity()).inflateTransition(R.transition.change_image_trans));
-            signUp.setEnterTransition(TransitionInflater.from(getActivity()).inflateTransition(android.R.transition.fade));
-
-            imageTransitionName = imageLogo.getTransitionName();
-        }
-
-        Bundle bundle = new Bundle();
-        bundle.putString("TRANS_NAME", imageTransitionName);
-        signUp.setArguments(bundle);
-
-        FragmentManager fragmentManager = getFragmentManager();
-        if (VersionUtils.isLollipop())
-            fragmentManager.beginTransaction().replace(R.id.container, signUp, SignUpFragment.TAG).addToBackStack(TAG).addSharedElement(imageLogo, imageTransitionName).commit();
-        else
-            fragmentManager.beginTransaction().replace(R.id.container, signUp, SignUpFragment.TAG).addToBackStack(TAG).commit();
     }
 
     public void onLoginSuccess(String email, AccessTokenWT token) {
