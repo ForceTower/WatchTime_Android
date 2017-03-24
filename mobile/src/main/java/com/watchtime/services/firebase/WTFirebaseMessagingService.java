@@ -19,6 +19,11 @@ import com.watchtime.R;
 import com.watchtime.activities.MainActivity;
 import com.watchtime.base.utils.VersionUtils;
 
+import java.io.IOException;
+import java.io.InputStream;
+import java.net.HttpURLConnection;
+import java.net.URL;
+
 public class WTFirebaseMessagingService extends FirebaseMessagingService {
     private static final String TAG = WTFirebaseMessagingService.class.getSimpleName();
     private static int id = 0;
@@ -50,7 +55,7 @@ public class WTFirebaseMessagingService extends FirebaseMessagingService {
         } else {
             notificationTitle = remoteMessage.getData().get("title");
             notificationBody = remoteMessage.getData().get("message");
-            icon = "some";
+            icon = remoteMessage.getData().get("icon");
             sound = "default";
         }
         showNotification(notificationTitle, notificationBody, icon, sound);
@@ -63,20 +68,21 @@ public class WTFirebaseMessagingService extends FirebaseMessagingService {
         PendingIntent pendingIntent = PendingIntent.getActivity(this, 0, i, PendingIntent.FLAG_ONE_SHOT);
         Bitmap largeIcon = BitmapFactory.decodeResource(getResources(), R.mipmap.ic_launcher);
         Uri defaultSound = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION);
+        Bitmap largeImage = getBitmapFromURL(icon);
 
         NotificationCompat.Builder builder = new NotificationCompat.Builder(this)
                 .setAutoCancel(true)
                 .setContentTitle(title)
                 .setContentText(message)
                 .setSmallIcon(R.mipmap.app_logo)
-                .setLargeIcon(largeIcon)
+                .setLargeIcon(largeImage != null ? largeImage : largeIcon)
                 .setSound(defaultSound)
                 .setColor(ContextCompat.getColor(getApplicationContext(), R.color.primary))
                 .setContentIntent(pendingIntent);
 
         if (VersionUtils.isNougat()) {
             RemoteInput remoteInput = new RemoteInput.Builder("key_text_remote")
-                    .setLabel("Answer Message")
+                    .setLabel("Reply")
                     .build();
 
             NotificationCompat.Action acceptRecommend = new NotificationCompat.Action.Builder(R.drawable.ic_mark_watched, "Reply", pendingIntent)
@@ -89,5 +95,19 @@ public class WTFirebaseMessagingService extends FirebaseMessagingService {
         NotificationManager manager = (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
 
         manager.notify(id++, builder.build());
+    }
+
+    public static Bitmap getBitmapFromURL(String src) {
+        try {
+            URL url = new URL(src);
+            HttpURLConnection connection = (HttpURLConnection) url.openConnection();
+            connection.setDoInput(true);
+            connection.connect();
+            InputStream input = connection.getInputStream();
+            return BitmapFactory.decodeStream(input);
+        } catch (IOException e) {
+            // Log exception
+            return null;
+        }
     }
 }

@@ -23,6 +23,7 @@ public class ApiEndPoints {
     public static final String BASE_MOVIES_DETAILS = BASE_URL + "/movie/";
 
     public static final String FACEBOOK_LOGIN_REGISTER = BASE_URL + "/api/facebook/login";
+    public static final String GOOGLE_LOGIN_REGISTER = BASE_URL + "/api/google/login";
 
     public static final String BASE_CONNECTED = BASE_URL + "/api/watch_time";
 

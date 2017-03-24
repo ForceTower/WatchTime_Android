@@ -1,12 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 
 <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/activity_access_account_fragment"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:fitsSystemWindows="true"
-    tools:context="com.watchtime.fragments.account.AccessAccountFragment">
+            xmlns:tools="http://schemas.android.com/tools"
+            android:id="@+id/activity_access_account_fragment"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:fitsSystemWindows="true"
+            tools:context="com.watchtime.fragments.account.AccessAccountFragment">
 
     <LinearLayout
         android:id="@+id/container"
@@ -43,36 +43,54 @@
                 android:layout_height="wrap_content"
                 android:orientation="vertical">
 
-                <Button
-                    android:id="@+id/btn_login"
-                    android:layout_width="match_parent"
+                <com.facebook.login.widget.LoginButton
+                    android:id="@+id/btn_facebook_login"
+                    android:layout_width="fill_parent"
                     android:layout_height="wrap_content"
-                    android:text="@string/title_login"
-                    android:background="@color/primary_dark"
-                    android:layout_marginTop="20dp"
-                    android:layout_marginBottom="30dp"/>
-
-                <Button
-                    android:id="@+id/btn_sign_up"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:text="@string/title_sign_up"
-                    android:background="@color/primary_dark"
-                    android:layout_marginBottom="8dp"/>
+                    android:layout_gravity="center"
+                    android:layout_marginStart="5dp"
+                    android:layout_marginEnd="5dp"
+                    android:layout_marginTop="20dp"/>
 
                 <com.devspark.robototextview.widget.RobotoTextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center"
                     android:text="@string/login_or_alternatives"
+                    android:layout_marginTop="8dp"
                     android:layout_marginBottom="8dp"/>
 
-                <com.facebook.login.widget.LoginButton
-                    android:id="@+id/btn_facebook_login"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginBottom="24dp"
-                    android:layout_gravity="center"/>
+                <RelativeLayout
+                    android:layout_width="fill_parent"
+                    android:layout_height="0dp"
+                    android:layout_weight="1">
+
+                    <com.google.android.gms.common.SignInButton
+                        android:id="@+id/btn_google_login"
+                        android:layout_width="fill_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_centerInParent="true"
+                        android:visibility="visible"/>
+
+                    <LinearLayout
+                        android:id="@+id/sign_out_and_disconnect"
+                        android:layout_width="fill_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_centerInParent="true"
+                        android:orientation="horizontal"
+                        android:paddingLeft="16dp"
+                        android:paddingRight="16dp"
+                        android:visibility="gone">
+
+                        <Button
+                            android:id="@+id/sign_out_button"
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:text="@string/sign_out"/>
+                    </LinearLayout>
+                </RelativeLayout>
+
             </LinearLayout>
 
         </LinearLayout>
