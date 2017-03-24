@@ -9,6 +9,7 @@ import android.util.Log;
 import com.watchtime.base.Constants;
 import com.watchtime.base.WatchTimeApplication;
 import com.watchtime.base.interfaces.OnDataChangeHandler;
+import com.watchtime.services.firebase.WTFirebaseTokenRefresh;
 
 /**
  * Created by João Paulo on 04/03/2017.
@@ -51,6 +52,8 @@ public class LoginManagerWT {
     public void logout() {
         WatchTimeAccessTokenManager.getInstance().setCurrentAccessToken(null);
         WatchTimeProfileManager.getInstance().setCurrentProfile(null);
+
+        WTFirebaseTokenRefresh.startActionRefreshFirebase(WatchTimeApplication.getAppContext());
 
         ((WatchTimeApplication)WatchTimeApplication.getAppContext()).getDataChangeHandler().igniteListeners(OnDataChangeHandler.LOGOUT);
     }

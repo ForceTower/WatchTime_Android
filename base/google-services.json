@@ -1,0 +1,55 @@
+{
+  "project_info": {
+    "project_number": "119095877396",
+    "firebase_url": "https://watchtime-4051f.firebaseio.com",
+    "project_id": "watchtime-4051f",
+    "storage_bucket": "watchtime-4051f.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:119095877396:android:4b136599b770c225",
+        "android_client_info": {
+          "package_name": "com.watchtime"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "119095877396-itfmujs7f84rvcvfngc4e5vv55kkudpe.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.watchtime",
+            "certificate_hash": "6b02a60e45c2404f73a347d3a34a5d214111d154"
+          }
+        },
+        {
+          "client_id": "119095877396-j72ncnj02llea0qbaf07lojmmp3a4gfb.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyB42c5g-BbgLuUJQFRFPCCYXM9HlsGxG8Y"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 2,
+          "other_platform_oauth_client": [
+            {
+              "client_id": "119095877396-j72ncnj02llea0qbaf07lojmmp3a4gfb.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

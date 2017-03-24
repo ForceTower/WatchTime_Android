@@ -523,4 +523,43 @@ public final class WatchTimeBaseMethods {
             }
         });
     }
+
+    public void setFirebaseToken(String refreshedToken) {
+        Log.i("WTMethods", "Set firebase to: " + refreshedToken);
+        if (refreshedToken == null)
+            return;
+
+        if (AccessTokenWT.getCurrentAccessToken() != null) {
+            RequestBody requestBody = new FormBody.Builder()
+                    .add("token", refreshedToken)
+                    .build();
+
+            Request request = new Request.Builder()
+                    .url(ApiEndPoints.SET_FIREBASE_TOKEN)
+                    .addHeader("Authorization", "Bearer " + AccessTokenWT.getCurrentAccessToken().getAccessToken())
+                    .post(requestBody)
+                    .build();
+
+            Call call = new OkHttpClient().newCall(request);
+
+            call.enqueue(new Callback() {
+                @Override
+                public void onFailure(Call call, IOException e) {
+                    Log.i("WTMethods", "Failed Setting Firebase :'(");
+                }
+
+                @Override
+                public void onResponse(Call call, Response response) throws IOException {
+                    if (!response.isSuccessful())
+                        Log.i("WTMethods", "Unsuccessful response: Failed Setting Firebase: " + response.body().string());
+                    else {
+                        Log.i("WTMethods", "Firebase Set :)");
+                    }
+                }
+            });
+
+        } else {
+            Log.i("WTMethods", "AccessToken is null");
+        }
+    }
 }

@@ -11,6 +11,8 @@ import android.util.Log;
 import com.facebook.CallbackManager;
 
 import com.facebook.login.LoginManager;
+import com.google.firebase.iid.FirebaseInstanceId;
+import com.google.firebase.iid.FirebaseInstanceIdService;
 import com.watchtime.R;
 import com.watchtime.activities.base.WatchTimeBaseAuthenticatorActivity;
 import com.watchtime.base.Constants;
@@ -20,6 +22,7 @@ import com.watchtime.base.interfaces.OnDataChangeHandler;
 import com.watchtime.fragments.account.AccessAccountFragment;
 import com.watchtime.sdk.AccessTokenWT;
 import com.watchtime.sdk.LoginManagerWT;
+import com.watchtime.sdk.WatchTimeBaseMethods;
 
 public class AccessAccountBaseActivity extends WatchTimeBaseAuthenticatorActivity {
     CallbackManager callbackManager;
@@ -130,6 +133,7 @@ public class AccessAccountBaseActivity extends WatchTimeBaseAuthenticatorActivit
 
         LoginManagerWT.getInstance().onLogin();
         ((WatchTimeApplication)getApplication()).getDataChangeHandler().igniteListeners(OnDataChangeHandler.LOGIN);
+        WatchTimeBaseMethods.getInstance().setFirebaseToken(FirebaseInstanceId.getInstance().getToken());
 
         setAccountAuthenticatorResult(intent.getExtras());
         finish();

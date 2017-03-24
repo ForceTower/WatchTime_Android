@@ -1,24 +1,23 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
-    package="com.watchtime"
-    android:installLocation="auto">
+          xmlns:tools="http://schemas.android.com/tools"
+          package="com.watchtime"
+          android:installLocation="auto">
 
     <meta-data
         android:name="com.facebook.sdk.ApplicationId"
-        android:value="@string/facebook_app_id" />
+        android:value="@string/facebook_app_id"/>
 
-    <uses-permission android:name="android.permission.INTERNET" />
-    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
-    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
-    <uses-permission android:name="android.permission.WRITE_SETTINGS" />
-    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
-    <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
-    <uses-permission android:name="android.permission.CHANGE_WIFI_MULTICAST_STATE" />
-    <uses-permission android:name="android.permission.VIBRATE" />
-    <uses-permission android:name="android.permission.WAKE_LOCK" />
-    <uses-permission android:name="android.permission.CAMERA" />
-
+    <uses-permission android:name="android.permission.INTERNET"/>
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"/>
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE"/>
+    <uses-permission android:name="android.permission.WRITE_SETTINGS"/>
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE"/>
+    <uses-permission android:name="android.permission.ACCESS_WIFI_STATE"/>
+    <uses-permission android:name="android.permission.CHANGE_WIFI_MULTICAST_STATE"/>
+    <uses-permission android:name="android.permission.VIBRATE"/>
+    <uses-permission android:name="android.permission.WAKE_LOCK"/>
+    <uses-permission android:name="android.permission.CAMERA"/>
     <uses-permission android:name="android.permission.GET_ACCOUNTS"/>
     <uses-permission android:name="android.permission.MANAGE_ACCOUNTS"/>
     <uses-permission android:name="android.permission.AUTHENTICATE_ACCOUNTS"/>
@@ -38,41 +37,60 @@
             android:theme="@style/Theme.WatchTime.NavigationDrawer"
             android:windowSoftInputMode="adjustPan">
             <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
+                <action android:name="android.intent.action.MAIN"/>
 
-                <category android:name="android.intent.category.LAUNCHER" />
+                <category android:name="android.intent.category.LAUNCHER"/>
             </intent-filter>
         </activity>
-        <activity android:name=".activities.TermsActivity" />
+        <activity android:name=".activities.TermsActivity"/>
         <activity
             android:name=".activities.AccessAccountBaseActivity"
             android:theme="@style/Theme.WatchTime.TransparentStatusBar"
             android:windowSoftInputMode="adjustPan">
             <intent-filter>
-                <action android:name="android.intent.action.VIEW" />
+                <action android:name="android.intent.action.VIEW"/>
 
-                <category android:name="android.intent.category.DEFAULT" />
-                <category android:name="android.intent.category.BROWSABLE" />
+                <category android:name="android.intent.category.DEFAULT"/>
+                <category android:name="android.intent.category.BROWSABLE"/>
 
-                <data android:scheme="@string/fb_login_protocol_scheme" />
+                <data android:scheme="@string/fb_login_protocol_scheme"/>
             </intent-filter>
         </activity>
         <activity
             android:name=".activities.MediaDetailsActivity"
-            android:theme="@style/Theme.WatchTime.Detail" />
+            android:theme="@style/Theme.WatchTime.Detail"/>
         <activity
             android:name=".activities.MediaImagesActivity"
-            android:theme="@style/Theme.WatchTime.Detail" />
+            android:theme="@style/Theme.WatchTime.Detail"/>
+
         <service
             android:name=".services.AccountAuthenticatorService"
             android:label="Account Authenticator Service">
             <intent-filter>
-                <action android:name="android.accounts.AccountAuthenticator" />
+                <action android:name="android.accounts.AccountAuthenticator"/>
             </intent-filter>
+
             <meta-data
                 android:name="android.accounts.AccountAuthenticator"
                 android:resource="@xml/authenticator"/>
-
+        </service>
+        <service
+            android:name=".services.firebase.WTFirebaseInstanceService"
+            android:label="Firebase Instance Token">
+            <intent-filter>
+                <action android:name="com.google.firebase.INSTANCE_ID_EVENT"/>
+            </intent-filter>
+        </service>
+        <service
+            android:name=".services.firebase.WTFirebaseMessagingService"
+            android:label="Firebase Messaging Service">
+            <intent-filter>
+                <action android:name="com.google.firebase.MESSAGING_EVENT"/>
+            </intent-filter>
+        </service>
+        <service
+            android:name=".services.firebase.WTFirebaseTokenRefresh"
+            android:exported="false">
         </service>
     </application>
 

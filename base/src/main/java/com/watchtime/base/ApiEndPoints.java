@@ -8,7 +8,7 @@ public class ApiEndPoints {
     public static final String CLIENT_ID = "1watch_time1";
     public static final String CLIENT_SECRET = "8suw9ff9122s919slc013";
 
-    public static final String BASE_URL = "https://oqv.000webhostapp.com";
+    public static final String BASE_URL = "http://192.168.15.7";
     public static final String OAUTH2_BASE = BASE_URL + "/oauth/access_token";
 
     public static final String REGISTER_USER = BASE_URL + "/api/user/sign_up";
@@ -29,6 +29,8 @@ public class ApiEndPoints {
     public static final String PROFILE = BASE_CONNECTED + "/user/";
     public static final String PROFILE_ME = BASE_CONNECTED + "/user/me";
     public static final String PROFILE_BASIC = BASE_URL + "/user/";
+
+    public static final String SET_FIREBASE_TOKEN = PROFILE_ME + "/set_firebase";
 
     public static final String UPDATE_COVER_PICTURE = PROFILE_ME + "/cover";
     public static final String MARK_MOVIE_WATCHED = PROFILE_ME + "/movie_watched";
