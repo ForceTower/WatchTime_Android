@@ -13,7 +13,7 @@
         android:layout_marginRight="32dp"
         android:layout_centerInParent="true"
         android:scaleType="centerInside"
-        android:src="@drawable/app_logo_writen"
+        android:src="@drawable/app_logo_written"
         android:alpha="0.6" />
 
     <ImageView

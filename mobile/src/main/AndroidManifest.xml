@@ -99,6 +99,9 @@
             android:name=".services.firebase.WTFirebaseTokenRefresh"
             android:exported="false">
         </service>
+
+        <activity android:name=".activities.LoginActivity">
+        </activity>
     </application>
 
 </manifest>

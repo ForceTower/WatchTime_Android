@@ -5,47 +5,35 @@ import android.accounts.AccountManager;
 import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
-import android.app.FragmentManager;
 import android.util.Log;
 
 import com.facebook.CallbackManager;
-
 import com.facebook.login.LoginManager;
 import com.google.firebase.iid.FirebaseInstanceId;
-import com.google.firebase.iid.FirebaseInstanceIdService;
 import com.watchtime.R;
 import com.watchtime.activities.base.WatchTimeBaseAuthenticatorActivity;
 import com.watchtime.base.Constants;
 import com.watchtime.base.WatchTimeApplication;
 import com.watchtime.base.backend.User;
 import com.watchtime.base.interfaces.OnDataChangeHandler;
-import com.watchtime.fragments.account.AccessAccountFragment;
 import com.watchtime.sdk.AccessTokenWT;
 import com.watchtime.sdk.LoginManagerWT;
 import com.watchtime.sdk.WatchTimeBaseMethods;
 
-public class AccessAccountBaseActivity extends WatchTimeBaseAuthenticatorActivity {
-    CallbackManager callbackManager;
+public class LoginActivity extends WatchTimeBaseAuthenticatorActivity {
+    //Facebook CallbackManager for facebook login
+    private CallbackManager facebookCallback;
+    //Account Manager for storing accounts
     private AccountManager accountManager;
+    //User referenced in WatchTimeApplication
     private User user;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState, R.layout.activity_access_account_base);
-
-        Log.i("AccMgr - AccessAccount", "Create Activity");
-        callbackManager = CallbackManager.Factory.create();
+        super.onCreate(savedInstanceState, R.layout.activity_login);
+        facebookCallback = CallbackManager.Factory.create();
 
         setupAccountManagerCode();
-
-        if (savedInstanceState == null) {
-            AccessAccountFragment accessAccountFragment = new AccessAccountFragment();
-            FragmentManager fragmentManager = getFragmentManager();
-
-            fragmentManager.beginTransaction()
-                    .replace(R.id.container, accessAccountFragment, AccessAccountFragment.TAG)
-                    .commit();
-        }
     }
 
     private void setupAccountManagerCode() {
@@ -67,11 +55,8 @@ public class AccessAccountBaseActivity extends WatchTimeBaseAuthenticatorActivit
     }
 
     public void createLoginToken(final String email, final AccessTokenWT token) {
-        Log.i("AccMgr - AccessAccount", "createLoginToken");
-
         new AsyncTask<Void, Void, Intent>() {
-            @Override
-            protected Intent doInBackground(Void... params) {
+            @Override protected Intent doInBackground(Void... params) {
                 Intent intent = new Intent();
                 intent.putExtra(AccountManager.KEY_ACCOUNT_NAME, email);
                 intent.putExtra(AccountManager.KEY_ACCOUNT_TYPE, user.getAccountType());
@@ -79,49 +64,13 @@ public class AccessAccountBaseActivity extends WatchTimeBaseAuthenticatorActivit
                 return intent;
             }
 
-            @Override
-            protected void onPostExecute(Intent intent) {
+            @Override protected void onPostExecute(Intent intent) {
                 finish(intent, token.getRefreshToken());
             }
         }.execute();
     }
 
-    public void onPasswordChange(final String token) {
-        new AsyncTask<Void, Void, Intent>() {
-            @Override
-            protected Intent doInBackground(Void... params) {
-                Intent intent = new Intent();
-                intent.putExtra(AccountManager.KEY_ACCOUNT_NAME, user.getAccountName());
-                intent.putExtra(AccountManager.KEY_ACCOUNT_TYPE, user.getAccountType());
-                intent.putExtra(AccountManager.KEY_AUTHTOKEN, token);
-                return intent;
-            }
-
-            @Override
-            protected void onPostExecute(Intent intent) {
-                //finishPassword(intent);
-            }
-
-        }.execute();
-
-    }
-
-    public void finishPassword(Intent intent) {
-        Log.i("AccMgr - AccessAccount", "Finishing Password...");
-        String accountName = intent.getStringExtra(AccountManager.KEY_ACCOUNT_NAME);
-        String accountType = intent.getStringExtra(AccountManager.KEY_ACCOUNT_TYPE);
-        String token       = intent.getStringExtra(AccountManager.KEY_AUTHTOKEN);
-
-        Account account = new Account(accountName, accountType);
-        accountManager.invalidateAuthToken(accountType, user.getToken());
-        accountManager.setAuthToken(account, user.getAuthTokenType(), token);
-
-        setAccountAuthenticatorResult(intent.getExtras());
-        finish();
-    }
-
     public void finish(Intent intent, String refresh_token) {
-        Log.i("AccMgr - AccessAccount", "Finishing...");
         String accountName = intent.getStringExtra(AccountManager.KEY_ACCOUNT_NAME);
         String accountType = intent.getStringExtra(AccountManager.KEY_ACCOUNT_TYPE);
         String token       = intent.getStringExtra(AccountManager.KEY_AUTHTOKEN);

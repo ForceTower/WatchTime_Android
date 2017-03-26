@@ -34,6 +34,9 @@ dependencies {
 
     compile project(':base')
 
+
+
+
     compile 'com.android.support:appcompat-v7:25.3.0'
     compile 'com.android.support:design:25.3.0'
     compile 'com.jakewharton:butterknife:7.0.1'
@@ -42,17 +45,14 @@ dependencies {
     compile 'com.android.support:support-v4:25.3.0'
     compile 'com.github.nirhart:parallaxscroll:1.0'
     compile 'com.github.clans:fab:1.6.4'
-    compile 'com.android.support.constraint:constraint-layout:1.0.1'
     compile 'com.wdullaer:swipeactionadapter:2.0.0'
-
     compile 'com.google.firebase:firebase-core:10.2.1'
     compile 'com.google.firebase:firebase-messaging:10.2.1'
     compile 'com.google.firebase:firebase-ads:10.2.1'
     compile 'com.google.firebase:firebase-invites:10.2.1'
-
     compile 'com.google.android.gms:play-services-auth:10.2.1'
-
     testCompile 'junit:junit:4.12'
+    compile 'com.android.support.constraint:constraint-layout:1.0.2'
 }
 
 apply plugin: 'com.google.gms.google-services'
