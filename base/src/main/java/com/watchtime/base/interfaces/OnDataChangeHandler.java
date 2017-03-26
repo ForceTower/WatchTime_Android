@@ -22,14 +22,10 @@ public class OnDataChangeHandler {
         void onDataChange();
     }
 
-    public void registerListener(String key, OnDataChangeListener listener) {
-       registerListener(key, listener, new int[]{ALL});
-    }
-
     public void registerListener(String key, OnDataChangeListener listener, int[] options) {
         Log.i("DataChangeListener", "Attempt to add: " + key);
         //if (!listeners.containsKey(key)) {
-            listeners.put(key, new MicroListener(listener, options));
+            listeners.put(key, new MicroListener(listener, options, key));
             Log.i("DataChangeListener", key + " added");
         //} else {
             //Log.i("DataChangeListener", key + " not added");
@@ -41,8 +37,10 @@ public class OnDataChangeHandler {
         Log.i("DataChangeListener", "Unregister " + key + ". Result: " + Boolean.toString(l != null));
     }
 
-    public void igniteListeners(int option) {
+    public void igniteListeners(String caller, int option) {
+        Log.i("DataChanged", "Caller: " + caller + ". Option: " + option);
         for (MicroListener ml : listeners.values()) {
+            Log.i("DataChanged", "Key: " + ml.key + ". List: " + ml.list);
             if (ml.list.contains(option))
                 ml.listener.onDataChange();
         }
@@ -51,10 +49,12 @@ public class OnDataChangeHandler {
     private class MicroListener{
         ArrayList<Integer> list;
         OnDataChangeListener listener;
+        String key;
 
-        MicroListener(OnDataChangeListener listener, int[] array) {
+        MicroListener(OnDataChangeListener listener, int[] array, String key) {
             list = new ArrayList<>();
             this.listener = listener;
+            this.key = key;
 
             if (array != null) {
                 for (int n : array)

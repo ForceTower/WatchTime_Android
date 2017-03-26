@@ -34,8 +34,10 @@ public class AccountAuthenticator extends AbstractAccountAuthenticator{
 
     @Override
     public Bundle addAccount(AccountAuthenticatorResponse response, String accountType, String authTokenType, String[] requiredFeatures, Bundle options) throws NetworkErrorException {
+        Log.i("AccAuth", "addAccount():[" + accountType + ", " + authTokenType + "]");
         boolean accountExists = AccountManager.get(mContext).getAccountsByType(accountType).length != 0;
         if (accountExists) {
+            Log.i("AccAuth", "addAccount():exists=true");
             final Bundle result = new Bundle();
             result.putInt(AccountManager.KEY_ERROR_CODE, ERROR_CODE_ONE_ACCOUNT_ALLOWED);
             result.putString(AccountManager.KEY_ERROR_MESSAGE, mContext.getString(R.string.one_account_allowed));
@@ -50,6 +52,7 @@ public class AccountAuthenticator extends AbstractAccountAuthenticator{
             return result;
         }
 
+        Log.i("AccAuth", "addAccount():intent_creation");
         Intent intent = new Intent(mContext, LoginActivity.class);
         intent.putExtra(Constants.ARG_ACCOUNT_TYPE, accountType);
         intent.putExtra(Constants.ARG_AUTH_TYPE, authTokenType != null ? authTokenType : Constants.ACCOUNT_TOKEN_TYPE);
@@ -57,6 +60,7 @@ public class AccountAuthenticator extends AbstractAccountAuthenticator{
 
         Bundle bundle = new Bundle();
         bundle.putParcelable(AccountManager.KEY_INTENT, intent);
+        Log.i("AccAuth", "addAccount():bundle_return");
         return bundle;
     }
 

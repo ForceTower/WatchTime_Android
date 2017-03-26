@@ -7,6 +7,7 @@ import com.google.firebase.iid.FirebaseInstanceIdService;
 import com.watchtime.base.ApiEndPoints;
 import com.watchtime.sdk.AccessTokenWT;
 import com.watchtime.sdk.WatchTimeBaseMethods;
+import com.watchtime.sdk.WatchTimeSdk;
 
 import java.io.IOException;
 
@@ -27,6 +28,11 @@ public class WTFirebaseInstanceService extends FirebaseInstanceIdService {
         String refreshedToken = FirebaseInstanceId.getInstance().getToken();
         Log.i(TAG, "Refreshed token: " + refreshedToken);
 
-        WatchTimeBaseMethods.getInstance().setFirebaseToken(refreshedToken);
+        if (WatchTimeSdk.isSdkInitialized())
+            WatchTimeBaseMethods.getInstance().setFirebaseToken(refreshedToken);
+        else {
+            WatchTimeSdk.initializeSdk(this, null);
+            WatchTimeBaseMethods.getInstance().setFirebaseToken(refreshedToken);
+        }
     }
 }

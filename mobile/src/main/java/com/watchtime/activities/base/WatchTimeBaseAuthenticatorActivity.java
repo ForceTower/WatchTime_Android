@@ -94,7 +94,7 @@ public abstract class WatchTimeBaseAuthenticatorActivity extends MyAccountAuthen
         LocaleUtils.setCurrent(this, LocaleUtils.toLocale(language));
 
         FacebookSdk.sdkInitialize(getApplicationContext());
-        WatchTimeSdk.initializeSdk(getApplicationContext(), null);
+        WatchTimeSdk.initializeSdk(getApplication(), null);
 
         super.onCreate(savedInstanceState);
 
@@ -160,7 +160,7 @@ public abstract class WatchTimeBaseAuthenticatorActivity extends MyAccountAuthen
         Message completeMessage = mHandler.obtainMessage(0, getString(R.string.logged_in));
         completeMessage.sendToTarget();
 
-        getApp().getDataChangeHandler().igniteListeners(OnDataChangeHandler.LOGIN);
+        getApp().getDataChangeHandler().igniteListeners("AuthActivityBase", OnDataChangeHandler.LOGIN);
         createLoginToken(email, token);
     }
 
@@ -350,19 +350,23 @@ public abstract class WatchTimeBaseAuthenticatorActivity extends MyAccountAuthen
         String accountType = intent.getStringExtra(AccountManager.KEY_ACCOUNT_TYPE);
         String token       = intent.getStringExtra(AccountManager.KEY_AUTHTOKEN);
 
+        int countAccounts = accountManager.getAccountsByType(accountType).length;
+
         Account account = new Account(accountName, accountType);
         accountManager.addAccountExplicitly(account, null, null);
         accountManager.setAuthToken(account, user.getAuthTokenType(), token);
         accountManager.setUserData(account, "refresh_token", refresh_token);
 
         LoginManagerWT.getInstance().onLogin();
-        getApp().getDataChangeHandler().igniteListeners(OnDataChangeHandler.LOGIN);
+        getApp().getDataChangeHandler().igniteListeners("AuthActivityBase", OnDataChangeHandler.LOGIN);
         WatchTimeBaseMethods.getInstance().setFirebaseToken(FirebaseInstanceId.getInstance().getToken());
 
         setAccountAuthenticatorResult(intent.getExtras());
         finish();
-        Intent main = new Intent(this, MainActivity.class);
-        startActivity(main);
+        if(countAccounts == 0) {
+            Intent main = new Intent(this, MainActivity.class);
+            startActivity(main);
+        }
     }
 
     //Utility Methods

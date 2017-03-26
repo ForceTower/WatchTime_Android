@@ -47,13 +47,8 @@ public class LoginActivity extends WatchTimeBaseAuthenticatorActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState, R.layout.activity_login);
-        if (accountManager.getAccountsByType(Constants.ACCOUNT_TYPE).length != 0) {
-            Intent intent = new Intent(this, MainActivity.class);
-            startActivity(intent);
-            finish();
-        } else {
-            setupViews();
-        }
+
+        setupViews();
     }
 
     private void setupViews() {

@@ -211,7 +211,7 @@ public final class WatchTimeBaseMethods {
             }
         }
 
-        ((WatchTimeApplication)getContext()).getDataChangeHandler().igniteListeners(OnDataChangeHandler.LOGOUT);
+        ((WatchTimeApplication)getContext()).getDataChangeHandler().igniteListeners("WTBaseMethods", OnDataChangeHandler.LOGOUT);
     }
 
     private Request.Builder requestBuilder(String url, boolean addAuthHeader) {
@@ -240,7 +240,7 @@ public final class WatchTimeBaseMethods {
             public void onFailure(Call call, IOException e) {
                 Log.i("MovieDetailsFrag", "Failed to mark watched: " + e.getMessage());
                 Toast.makeText(getContext(), getContext().getString(R.string.mark_failed), Toast.LENGTH_SHORT).show();
-                ((WatchTimeApplication)getContext()).getDataChangeHandler().igniteListeners(OnDataChangeHandler.ALL);
+                ((WatchTimeApplication)getContext()).getDataChangeHandler().igniteListeners("WTBaseMethods", OnDataChangeHandler.ALL);
             }
 
             @Override
@@ -265,7 +265,7 @@ public final class WatchTimeBaseMethods {
                         Log.i("MovieMark", "Exception is: " + e.getMessage());
                         return;
                     }
-                    ((WatchTimeApplication)getContext()).getDataChangeHandler().igniteListeners(OnDataChangeHandler.ALL);
+                    ((WatchTimeApplication)getContext()).getDataChangeHandler().igniteListeners("WTBaseMethods", OnDataChangeHandler.ALL);
                     return;
                 }
 
@@ -285,7 +285,7 @@ public final class WatchTimeBaseMethods {
                                     Toast.makeText(getContext(), getContext().getString(R.string.already_marked), Toast.LENGTH_SHORT).show();
                             }
                         });
-                        ((WatchTimeApplication)getContext()).getDataChangeHandler().igniteListeners(OnDataChangeHandler.ALL);
+                        ((WatchTimeApplication)getContext()).getDataChangeHandler().igniteListeners("WTBaseMethods",OnDataChangeHandler.ALL);
                         return;
                     }
                 } catch (JSONException e) {
@@ -302,7 +302,7 @@ public final class WatchTimeBaseMethods {
                 });
 
                 Profile.fetchProfileForCurrentAccessToken();
-                ((WatchTimeApplication)getContext()).getDataChangeHandler().igniteListeners(OnDataChangeHandler.ALL);
+                ((WatchTimeApplication)getContext()).getDataChangeHandler().igniteListeners("WTBaseMethods",OnDataChangeHandler.ALL);
             }
         };
 
@@ -359,7 +359,7 @@ public final class WatchTimeBaseMethods {
                     @Override
                     public void run() {
                         Toast.makeText(getContext(), R.string.cover_update_success, Toast.LENGTH_SHORT).show();
-                        ((WatchTimeApplication)getContext()).getDataChangeHandler().igniteListeners(OnDataChangeHandler.ALL);
+                        ((WatchTimeApplication)getContext()).getDataChangeHandler().igniteListeners("WTBaseMethods", OnDataChangeHandler.ALL);
                     }
                 });
 
@@ -461,7 +461,7 @@ public final class WatchTimeBaseMethods {
             @Override
             public void onFailure(Call call, IOException e) {
                 Toast.makeText(getContext(), R.string.failed_performing_request, Toast.LENGTH_SHORT).show();
-                ((WatchTimeApplication)getContext()).getDataChangeHandler().igniteListeners(OnDataChangeHandler.ALL);
+                ((WatchTimeApplication)getContext()).getDataChangeHandler().igniteListeners("WTBaseMethods", OnDataChangeHandler.ALL);
             }
 
             @Override
@@ -485,7 +485,7 @@ public final class WatchTimeBaseMethods {
                         Log.i("WTMethods", "Resp: " + strResp);
                         Log.i("WTMethods", "JSONException message: " + e.getMessage());
                     }
-                    ((WatchTimeApplication)getContext()).getDataChangeHandler().igniteListeners(OnDataChangeHandler.ALL);
+                    ((WatchTimeApplication)getContext()).getDataChangeHandler().igniteListeners("WTBaseMethods", OnDataChangeHandler.ALL);
                 } else {
                     try {
                         JSONObject obj = new JSONObject(response.body().string());
@@ -503,13 +503,13 @@ public final class WatchTimeBaseMethods {
                                         Toast.makeText(getContext(), getContext().getString(R.string.not_on_watchlist), Toast.LENGTH_SHORT).show();
                                 }
                             });
-                            ((WatchTimeApplication)getContext()).getDataChangeHandler().igniteListeners(OnDataChangeHandler.ALL);
+                            ((WatchTimeApplication)getContext()).getDataChangeHandler().igniteListeners("WTBaseMethods",OnDataChangeHandler.ALL);
                             return;
                         }
                     } catch (JSONException e) {
                         Log.i("WTMethods", "JSONException message: " + e.getMessage());
 
-                        ((WatchTimeApplication)getContext()).getDataChangeHandler().igniteListeners(OnDataChangeHandler.ALL);
+                        ((WatchTimeApplication)getContext()).getDataChangeHandler().igniteListeners("WTBaseMethods", OnDataChangeHandler.ALL);
                         return;
                     }
 
@@ -520,7 +520,7 @@ public final class WatchTimeBaseMethods {
                         @Override
                         public void run() {
                             Toast.makeText(getContext(), R.string.removed_from_watchlist_success, Toast.LENGTH_SHORT).show();
-                            ((WatchTimeApplication)getContext()).getDataChangeHandler().igniteListeners(OnDataChangeHandler.ALL);
+                            ((WatchTimeApplication)getContext()).getDataChangeHandler().igniteListeners("WTBaseMethods",OnDataChangeHandler.ALL);
                         }
                     });
                 }

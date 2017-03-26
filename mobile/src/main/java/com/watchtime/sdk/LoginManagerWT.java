@@ -55,6 +55,6 @@ public class LoginManagerWT {
 
         WTFirebaseTokenRefresh.startActionRefreshFirebase(WatchTimeApplication.getAppContext());
 
-        ((WatchTimeApplication)WatchTimeApplication.getAppContext()).getDataChangeHandler().igniteListeners(OnDataChangeHandler.LOGOUT);
+        ((WatchTimeApplication)WatchTimeApplication.getAppContext()).getDataChangeHandler().igniteListeners("LoginManagerWT", OnDataChangeHandler.LOGOUT);
     }
 }
