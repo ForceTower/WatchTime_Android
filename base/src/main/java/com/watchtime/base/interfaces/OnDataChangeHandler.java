@@ -23,24 +23,15 @@ public class OnDataChangeHandler {
     }
 
     public void registerListener(String key, OnDataChangeListener listener, int[] options) {
-        Log.i("DataChangeListener", "Attempt to add: " + key);
-        //if (!listeners.containsKey(key)) {
-            listeners.put(key, new MicroListener(listener, options, key));
-            Log.i("DataChangeListener", key + " added");
-        //} else {
-            //Log.i("DataChangeListener", key + " not added");
-        //}
+        listeners.put(key, new MicroListener(listener, options, key));
     }
 
     public void unregisterListener(String key) {
         MicroListener l = listeners.remove(key);
-        Log.i("DataChangeListener", "Unregister " + key + ". Result: " + Boolean.toString(l != null));
     }
 
     public void igniteListeners(String caller, int option) {
-        Log.i("DataChanged", "Caller: " + caller + ". Option: " + option);
         for (MicroListener ml : listeners.values()) {
-            Log.i("DataChanged", "Key: " + ml.key + ". List: " + ml.list);
             if (ml.list.contains(option))
                 ml.listener.onDataChange();
         }
