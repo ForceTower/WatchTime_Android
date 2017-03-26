@@ -21,6 +21,7 @@ import com.watchtime.base.WatchTimeApplication;
 import com.watchtime.base.backend.User;
 import com.watchtime.base.interfaces.OnDataChangeHandler;
 
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -42,6 +43,9 @@ public final class WatchTimeBaseMethods {
     private static WatchTimeBaseMethods instance = null;
     private static Context applicationContext;
     private AccountManager accountManager;
+    private List<String> backgrounds = null;
+    private boolean backgroundRequest = false;
+    private boolean backgroundDisabled = false;
 
     private WatchTimeBaseMethods() {
         applicationContext = WatchTimeSdk.getApplicationContext();
@@ -561,5 +565,54 @@ public final class WatchTimeBaseMethods {
         } else {
             Log.i("WTMethods", "AccessToken is null");
         }
+    }
+
+    public String getBackground(int index) {
+        if (backgrounds == null) {
+            if (!backgroundRequest && !backgroundDisabled)
+                fetchBackgrounds();
+            return null;
+        } else if (backgroundDisabled)
+            return null;
+        else if (backgrounds.size() > index)
+            return backgrounds.get(index);
+        return null;
+    }
+
+    private synchronized void fetchBackgrounds() {
+        backgroundRequest = true;
+        Request request = new Request.Builder()
+                .url(ApiEndPoints.BACKGROUNDS_LOGIN)
+                .build();
+
+        Call call = new OkHttpClient().newCall(request);
+        call.enqueue(new Callback() {
+            @Override
+            public void onFailure(Call call, IOException e) { backgroundRequest = false; }
+
+            @Override
+            public void onResponse(Call call, Response response) throws IOException {
+                if (response.isSuccessful()) {
+                    try {
+                        List<String> bgs = new ArrayList<>();
+                        JSONArray json = new JSONArray(response.body().string());
+                        for (int i = 0; i < json.length(); i++) {
+                            String str = json.getString(i);
+                            if (str.equals("disabled")) {
+                                backgroundDisabled = true;
+                                return;
+                            }
+                            bgs.add(str);
+                        }
+                        backgrounds = bgs;
+                    } catch (JSONException e) { backgroundRequest = false; }
+                }
+                backgroundRequest = false;
+            }
+        });
+    }
+
+    public int backgroundsLimit() {
+        return backgrounds == null ? 0 : backgrounds.size();
     }
 }

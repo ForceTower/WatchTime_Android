@@ -5,23 +5,26 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.StringRes;
 import android.view.View;
-import android.widget.Button;
 import android.widget.ImageView;
-import android.widget.TextView;
 
+import com.devspark.robototextview.widget.RobotoTextView;
 import com.facebook.AccessToken;
 import com.facebook.FacebookCallback;
 import com.facebook.FacebookException;
 import com.facebook.login.LoginBehavior;
 import com.facebook.login.LoginManager;
 import com.facebook.login.LoginResult;
-import com.facebook.login.widget.LoginButton;
 import com.google.android.gms.auth.api.Auth;
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
 import com.google.android.gms.auth.api.signin.GoogleSignInResult;
+import com.squareup.picasso.Callback;
+import com.squareup.picasso.Picasso;
 import com.watchtime.R;
 import com.watchtime.activities.base.WatchTimeBaseAuthenticatorActivity;
+import com.watchtime.base.Constants;
+import com.watchtime.base.utils.AnimUtils;
 import com.watchtime.base.utils.PrefUtils;
+import com.watchtime.sdk.WatchTimeBaseMethods;
 
 import java.util.Arrays;
 
@@ -31,22 +34,31 @@ public class LoginActivity extends WatchTimeBaseAuthenticatorActivity {
     @Bind(R.id.background_image)
     ImageView background;
     @Bind(R.id.center_text_0)
-    TextView centerText;
-    @Bind(R.id.btn_google_login)
-    Button googleLogin;
+    RobotoTextView centerText0;
+    @Bind(R.id.center_text_1)
+    RobotoTextView centerText1;
+    @Bind(R.id.center_text_2)
+    RobotoTextView centerText2;
 
-    ProgressDialog progressDialog;
+    private ProgressDialog progressDialog;
+    private int currentIndex = 1;
+    private int backgroundIndex = 0;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState, R.layout.activity_login);
-        setupViews();
+        if (accountManager.getAccountsByType(Constants.ACCOUNT_TYPE).length != 0) {
+            Intent intent = new Intent(this, MainActivity.class);
+            startActivity(intent);
+            finish();
+        } else {
+            setupViews();
+        }
     }
 
     private void setupViews() {
-        //setupFacebookButton();
+        mHandler.postDelayed(updater, 5000);
     }
-
 
     public void facebookLogin(View view) {
         LoginManager.getInstance().setLoginBehavior(LoginBehavior.NATIVE_WITH_FALLBACK);
@@ -85,6 +97,57 @@ public class LoginActivity extends WatchTimeBaseAuthenticatorActivity {
         else facebookCallback.onActivityResult(requestCode, resultCode, data);
     }
 
+    private void nextElement() {
+        if (isDestroyed())
+            return;
+
+        mHandler.postDelayed(updater, 5000);
+        switch (currentIndex) {
+            case 0:
+                AnimUtils.fadeIn(centerText0);
+                AnimUtils.fadeOut(centerText1);
+                AnimUtils.fadeOut(centerText2);
+                break;
+            case 1:
+                AnimUtils.fadeOut(centerText0);
+                AnimUtils.fadeIn(centerText1);
+                AnimUtils.fadeOut(centerText2);
+                break;
+            case 2:
+                AnimUtils.fadeOut(centerText0);
+                AnimUtils.fadeOut(centerText1);
+                AnimUtils.fadeIn(centerText2);
+                break;
+        }
+
+        changeBackground();
+
+        currentIndex++;
+        if (currentIndex > 2)
+            currentIndex = 0;
+    }
+
+    private void changeBackground() {
+        if (backgroundIndex >= WatchTimeBaseMethods.getInstance().backgroundsLimit())
+            backgroundIndex = 0;
+
+        String url = WatchTimeBaseMethods.getInstance().getBackground(backgroundIndex);
+        if (url == null) return;
+
+        Picasso.with(this).load(url).into(background, new Callback() {
+            @Override
+            public void onSuccess() {
+                background.setVisibility(View.INVISIBLE);
+                AnimUtils.fadeIn(background);
+            }
+
+            @Override
+            public void onError() {}
+        });
+
+        backgroundIndex++;
+    }
+
     @Override protected void showProgressDialog(@StringRes int idMessage) {
         progressDialog = new ProgressDialog(this, R.style.Theme_WatchTime_Dark_ProgressBar);
         progressDialog.setIndeterminate(true);
@@ -121,4 +184,10 @@ public class LoginActivity extends WatchTimeBaseAuthenticatorActivity {
         }
     };
 
+    private Runnable updater = new Runnable() {
+        @Override
+        public void run() {
+            nextElement();
+        }
+    };
 }

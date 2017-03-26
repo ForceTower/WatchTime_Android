@@ -7,6 +7,7 @@ import android.accounts.AccountManagerCallback;
 import android.accounts.AccountManagerFuture;
 import android.accounts.AuthenticatorException;
 import android.accounts.OperationCanceledException;
+import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -33,6 +34,7 @@ import com.watchtime.base.Constants;
 import com.watchtime.base.WatchTimeApplication;
 import com.watchtime.base.backend.User;
 import com.watchtime.base.content.preferences.Prefs;
+import com.watchtime.base.interfaces.OnDataChangeHandler;
 import com.watchtime.base.utils.PrefUtils;
 import com.watchtime.base.utils.VersionUtils;
 import com.watchtime.fragments.MediaContainerFragment;
@@ -46,6 +48,8 @@ import com.watchtime.widget.ScrimInsetsFrameLayout;
 import java.io.IOException;
 
 import butterknife.Bind;
+
+import static com.watchtime.base.interfaces.OnDataChangeHandler.LOGOUT;
 
 /**
  * Main Application Activity, all starts from here.
@@ -114,6 +118,8 @@ public class MainActivity extends WatchTimeBaseActivity implements NavigationDra
         //Gets the user preference for the start view and shows it
         int providerId = PrefUtils.get(this, Prefs.DEFAULT_VIEW, 1);
         mNavigationDrawerFragment.selectItem(providerId);
+
+        getApp().getDataChangeHandler().registerListener("main", dataChangedListener, new int[LOGOUT]);
     }
 
     /**
@@ -270,6 +276,8 @@ public class MainActivity extends WatchTimeBaseActivity implements NavigationDra
         } else {
             LoginManager.getInstance().logOut();
             LoginManagerWT.getInstance().logout();
+
+            addAccount();
         }
     }
 
@@ -349,44 +357,26 @@ public class MainActivity extends WatchTimeBaseActivity implements NavigationDra
         accountManager.getAuthTokenByFeatures(Constants.ACCOUNT_TYPE, Constants.ACCOUNT_TOKEN_TYPE, null, this, null, null, callback, null);
     }
 
-    public void changePassword() {
-        Log.i("AccMgr - MainActivity", "changePassword");
-        Account account = new Account(user.getAccountName(), Constants.ACCOUNT_TYPE);
-        AccountManagerCallback<Bundle> callback = new AccountManagerCallback<Bundle>() {
-            @Override
-            public void run(AccountManagerFuture<Bundle> future) {
-                try {
-                    Bundle bundle = future.getResult();
-                    String accountName = bundle.getString(AccountManager.KEY_ACCOUNT_NAME);
-                    String accountType = bundle.getString(AccountManager.KEY_ACCOUNT_TYPE);
-                    String token       = bundle.getString(AccountManager.KEY_AUTHTOKEN);
-                    Log.i("AccMgr - MainActivity", "Name: " + accountName+ "\nType: " + accountType + "\nToken: " + token);
-
-                    user.setAccountName(accountName);
-                    user.setAccountType(accountType);
-                    user.setToken(token);
-                } catch (OperationCanceledException | IOException | AuthenticatorException e) {
-                    e.printStackTrace();
-                }
-            }
-        };
-
-        accountManager.updateCredentials(account, Constants.ACCOUNT_TOKEN_TYPE, null, this, callback, null);
-    }
-
     public void onLogoutClicked() {
         if (logout()) {
             LoginManager.getInstance().logOut();
             LoginManagerWT.getInstance().logout();
+            mHandler.postDelayed(new Runnable() {
+                @Override
+                public void run() {
+                    addAccount();
+                }
+            }, 500);
+
         }
     }
 
     public boolean logout() {
         Account[] accounts = accountManager.getAccountsByType(Constants.ACCOUNT_TYPE);
 
-        for (int i = 0; i < accounts.length; i++) {
-            if (accounts[i].name.equals(user.getAccountName())) {
-                accountManager.removeAccount(accounts[i], null, null);
+        for (Account account : accounts) {
+            if (account.name.equals(user.getAccountName())) {
+                accountManager.removeAccount(account, null, null);
                 return true;
             }
         }
@@ -394,4 +384,12 @@ public class MainActivity extends WatchTimeBaseActivity implements NavigationDra
         Toast.makeText(this, "Failed", Toast.LENGTH_SHORT).show();
         return false;
     }
+
+    private OnDataChangeHandler.OnDataChangeListener dataChangedListener = new OnDataChangeHandler.OnDataChangeListener() {
+        @Override
+        public void onDataChange() {
+            addAccount();
+            finish();
+        }
+    };
 }

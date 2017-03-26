@@ -14,7 +14,6 @@ import android.text.TextUtils;
 import android.util.Log;
 import android.widget.Toast;
 
-import com.watchtime.activities.AccessAccountBaseActivity;
 import com.watchtime.activities.LoginActivity;
 import com.watchtime.base.Constants;
 import com.watchtime.R;
@@ -35,8 +34,6 @@ public class AccountAuthenticator extends AbstractAccountAuthenticator{
 
     @Override
     public Bundle addAccount(AccountAuthenticatorResponse response, String accountType, String authTokenType, String[] requiredFeatures, Bundle options) throws NetworkErrorException {
-        Log.i("AccMgr - AccountAuthor", "addAccount");
-
         boolean accountExists = AccountManager.get(mContext).getAccountsByType(accountType).length != 0;
         if (accountExists) {
             final Bundle result = new Bundle();
@@ -70,7 +67,6 @@ public class AccountAuthenticator extends AbstractAccountAuthenticator{
 
     @Override
     public Bundle getAuthToken(AccountAuthenticatorResponse response, Account account, String authTokenType, Bundle options) throws NetworkErrorException {
-        Log.i("AccMgr - AccountAuthor", "getAuthToken");
         AccountManager accountManager = AccountManager.get(mContext);
         String token = accountManager.peekAuthToken(account, authTokenType);
 

@@ -38,4 +38,5 @@ public class ApiEndPoints {
     public static final String ADD_MOVIE_TO_WATCHLIST = PROFILE_ME + "/watchlist/add/movie";
     public static final String REMOVE_MOVIE_FROM_WATCHLIST = PROFILE_ME + "/watchlist/remove/movie";
     public static final String MY_WATCHLIST = PROFILE_ME + "/watchlist";
+    public static final String BACKGROUNDS_LOGIN = BASE_URL + "/login_backgrounds";
 }

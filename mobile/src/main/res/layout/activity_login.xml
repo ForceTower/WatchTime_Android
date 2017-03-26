@@ -11,6 +11,19 @@
         android:layout_width="fill_parent"
         android:layout_height="fill_parent"
         android:background="@color/bg"
+        android:scaleType="fitXY"
+        android:adjustViewBounds="true"
+        tools:src="@drawable/background_test_image"
+        android:contentDescription="@string/background_image"
+        android:layout_alignParentTop="true"
+        android:layout_alignParentStart="true"/>
+
+    <ImageView
+        android:id="@+id/background_image_black"
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent"
+        android:background="@color/bg"
+        android:alpha="0.7"
         android:contentDescription="@string/background_image"
         android:layout_alignParentTop="true"
         android:layout_alignParentStart="true"/>

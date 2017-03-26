@@ -27,6 +27,7 @@ import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.firebase.iid.FirebaseInstanceId;
 import com.watchtime.R;
 import com.watchtime.account_manager.MyAccountAuthenticatorActivity;
+import com.watchtime.activities.MainActivity;
 import com.watchtime.base.ApiEndPoints;
 import com.watchtime.base.Constants;
 import com.watchtime.base.WatchTimeApplication;
@@ -360,6 +361,8 @@ public abstract class WatchTimeBaseAuthenticatorActivity extends MyAccountAuthen
 
         setAccountAuthenticatorResult(intent.getExtras());
         finish();
+        Intent main = new Intent(this, MainActivity.class);
+        startActivity(main);
     }
 
     //Utility Methods
