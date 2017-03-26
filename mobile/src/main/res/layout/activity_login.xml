@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
@@ -20,12 +19,12 @@
         android:id="@+id/app_logo_image"
         android:layout_width="100dp"
         android:layout_height="100dp"
-        android:src="@mipmap/ic_launcher"
-        android:layout_marginStart="25dp"
-        android:layout_alignParentTop="true"
         android:layout_alignParentStart="true"
+        android:layout_alignParentTop="true"
+        android:layout_marginStart="25dp"
         android:layout_marginTop="38dp"
-        android:contentDescription="@string/app_name"/>
+        android:contentDescription="@string/app_name"
+        android:src="@mipmap/ic_launcher"/>
 
     <ImageView
         android:id="@+id/app_logo_written_image"
@@ -48,7 +47,7 @@
         android:gravity="center"
         android:textColor="@color/white"
         android:textSize="20sp"
-        tools:text="WatchTime is a Movie/TV Show tracker"
+        android:text="@string/login_text_app_desc_short"
         android:visibility="visible"/>
 
     <com.devspark.robototextview.widget.RobotoTextView
@@ -62,7 +61,7 @@
         android:gravity="center"
         android:textColor="@color/white"
         android:textSize="20sp"
-        tools:text="Recommend Movies and TV Shows to your friends"
+        android:text="@string/login_text_ger_recommendations"
         android:visibility="gone"/>
 
     <com.devspark.robototextview.widget.RobotoTextView
@@ -76,11 +75,12 @@
         android:gravity="center"
         android:textColor="@color/white"
         android:textSize="20sp"
-        tools:text="Get notified when your favorite show is about to start"
+        android:text="@string/login_text_get_notified"
         android:visibility="gone"/>
 
     <Button
         android:id="@+id/btn_facebook_login"
+        android:onClick="facebookLogin"
         android:layout_width="match_parent"
         android:layout_height="50dp"
         android:paddingStart="20dp"
@@ -89,7 +89,7 @@
         android:text="@string/com_facebook_loginview_log_in_button_long"
         android:drawableStart="@drawable/com_facebook_button_icon"
         android:background="@color/com_facebook_blue"
-        android:layout_marginBottom="87dp"
+        android:layout_marginBottom="95dp"
         android:layout_marginStart="20dp"
         android:layout_marginEnd="20dp"
         android:layout_alignParentBottom="true"
@@ -97,6 +97,7 @@
 
     <Button
         android:id="@+id/btn_google_login"
+        android:onClick="googleLogin"
         android:layout_width="match_parent"
         android:layout_height="50dp"
         android:paddingStart="20dp"
@@ -108,8 +109,20 @@
         android:background="@color/white"
         android:layout_marginStart="20dp"
         android:layout_marginEnd="20dp"
-        android:layout_marginBottom="27dp"
+        android:layout_marginBottom="35dp"
         android:layout_alignParentBottom="true"
         android:layout_alignParentStart="true"/>
+
+    <com.devspark.robototextview.widget.RobotoTextView
+        android:id="@+id/terms_policy"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/terms_privacy_login_label"
+        android:textColor="@color/white"
+        android:textSize="12sp"
+        android:gravity="center"
+        android:layout_marginBottom="5dp"
+        android:layout_alignParentBottom="true"
+        android:layout_centerHorizontal="true"/>
 
 </RelativeLayout>

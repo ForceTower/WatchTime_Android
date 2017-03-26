@@ -51,9 +51,8 @@
         </activity>
         <activity android:name=".activities.TermsActivity"/>
         <activity
-            android:name=".activities.AccessAccountBaseActivity"
-            android:theme="@style/Theme.WatchTime.TransparentStatusBar"
-            android:windowSoftInputMode="adjustPan">
+            android:name=".activities.LoginActivity"
+            android:theme="@style/Theme.WatchTime.TransparentStatusBar">
             <intent-filter>
                 <action android:name="android.intent.action.VIEW"/>
 
@@ -63,6 +62,7 @@
                 <data android:scheme="@string/fb_login_protocol_scheme"/>
             </intent-filter>
         </activity>
+
         <activity
             android:name=".activities.MediaDetailsActivity"
             android:theme="@style/Theme.WatchTime.Detail"/>
@@ -99,9 +99,6 @@
             android:name=".services.firebase.WTFirebaseTokenRefresh"
             android:exported="false">
         </service>
-
-        <activity android:name=".activities.LoginActivity">
-        </activity>
     </application>
 
 </manifest>

@@ -15,6 +15,7 @@ import android.util.Log;
 import android.widget.Toast;
 
 import com.watchtime.activities.AccessAccountBaseActivity;
+import com.watchtime.activities.LoginActivity;
 import com.watchtime.base.Constants;
 import com.watchtime.R;
 
@@ -52,7 +53,7 @@ public class AccountAuthenticator extends AbstractAccountAuthenticator{
             return result;
         }
 
-        Intent intent = new Intent(mContext, AccessAccountBaseActivity.class);
+        Intent intent = new Intent(mContext, LoginActivity.class);
         intent.putExtra(Constants.ARG_ACCOUNT_TYPE, accountType);
         intent.putExtra(Constants.ARG_AUTH_TYPE, authTokenType != null ? authTokenType : Constants.ACCOUNT_TOKEN_TYPE);
         intent.putExtra(AccountManager.KEY_ACCOUNT_AUTHENTICATOR_RESPONSE, response);
@@ -82,7 +83,7 @@ public class AccountAuthenticator extends AbstractAccountAuthenticator{
             return bundle;
         }
 
-        Intent intent = new Intent(mContext, AccessAccountBaseActivity.class);
+        Intent intent = new Intent(mContext, LoginActivity.class);
         intent.putExtra(Constants.ARG_ACCOUNT_NAME, account.name);
         intent.putExtra(Constants.ARG_ACCOUNT_TYPE, account.type);
         intent.putExtra(Constants.ARG_AUTH_TYPE, authTokenType);
@@ -103,7 +104,7 @@ public class AccountAuthenticator extends AbstractAccountAuthenticator{
 
     @Override
     public Bundle updateCredentials(AccountAuthenticatorResponse response, Account account, String authTokenType, Bundle options) throws NetworkErrorException {
-        Intent intent = new Intent(mContext, AccessAccountBaseActivity.class);//TODO create change password activity
+        Intent intent = new Intent(mContext, LoginActivity.class);//TODO create change password activity
         intent.putExtra(Constants.ARG_ACCOUNT_NAME, account.name);
         intent.putExtra(Constants.ARG_ACCOUNT_TYPE, account.type);
         intent.putExtra(Constants.ARG_AUTH_TYPE, authTokenType);

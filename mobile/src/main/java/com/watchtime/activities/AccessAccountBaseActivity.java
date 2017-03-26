@@ -6,6 +6,7 @@ import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.app.FragmentManager;
+import android.support.annotation.StringRes;
 import android.util.Log;
 
 import com.facebook.CallbackManager;
@@ -48,7 +49,7 @@ public class AccessAccountBaseActivity extends WatchTimeBaseAuthenticatorActivit
         }
     }
 
-    private void setupAccountManagerCode() {
+    protected void setupAccountManagerCode() {
         accountManager = AccountManager.get(this);
         user = ((WatchTimeApplication)getApplication()).getUser();
 
@@ -65,6 +66,12 @@ public class AccessAccountBaseActivity extends WatchTimeBaseAuthenticatorActivit
         user.setAccountName(accountName);
         user.setAuthTokenType(authTokenType);
     }
+
+    @Override
+    protected void showProgressDialog(@StringRes int idMessage) {}
+
+    @Override
+    protected void dismissProgressDialog() {}
 
     public void createLoginToken(final String email, final AccessTokenWT token) {
         Log.i("AccMgr - AccessAccount", "createLoginToken");
