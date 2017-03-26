@@ -3,6 +3,7 @@ package com.watchtime.services.firebase;
 import android.app.IntentService;
 import android.content.Intent;
 import android.content.Context;
+import android.util.Log;
 
 import com.google.firebase.iid.FirebaseInstanceId;
 
@@ -36,7 +37,7 @@ public class WTFirebaseTokenRefresh extends IntentService {
         try {
             FirebaseInstanceId.getInstance().deleteInstanceId();
         } catch (IOException e) {
-            e.printStackTrace();
+            Log.i("FirebaseRFT", "Failed Generating a new Firebase token. Have you created a token before?");
         }
     }
 }

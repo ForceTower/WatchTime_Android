@@ -93,4 +93,12 @@
     <string name="failed_to_login">Invalid username or password</string>
     <string name="email_already_taken">Email already taken</string>
     <string name="sign_out">Sign out</string>
+    <string name="background_image">Background Image</string>
+    <string name="log_in_with_google">Log in with Google</string>
+    <string name="unsuccessful_response">Unsuccessful response</string>
+    <string name="login_failed">Login failed</string>
+    <string name="terms_privacy_login_label">By logging in you accept our terms of use and privacy policy</string>
+    <string name="login_text_get_notified">Get notified when your favorite show is about to start</string>
+    <string name="login_text_ger_recommendations">Recommend Movies and TV Shows to your friends</string>
+    <string name="login_text_app_desc_short">WatchTime is a Movie/TV Show tracker</string>
 </resources>

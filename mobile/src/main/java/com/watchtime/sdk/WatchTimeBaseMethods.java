@@ -21,6 +21,7 @@ import com.watchtime.base.WatchTimeApplication;
 import com.watchtime.base.backend.User;
 import com.watchtime.base.interfaces.OnDataChangeHandler;
 
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -42,6 +43,9 @@ public final class WatchTimeBaseMethods {
     private static WatchTimeBaseMethods instance = null;
     private static Context applicationContext;
     private AccountManager accountManager;
+    private List<String> backgrounds = null;
+    private boolean backgroundRequest = false;
+    private boolean backgroundDisabled = false;
 
     private WatchTimeBaseMethods() {
         applicationContext = WatchTimeSdk.getApplicationContext();
@@ -207,7 +211,7 @@ public final class WatchTimeBaseMethods {
             }
         }
 
-        ((WatchTimeApplication)getContext()).getDataChangeHandler().igniteListeners(OnDataChangeHandler.LOGOUT);
+        ((WatchTimeApplication)getContext()).getDataChangeHandler().igniteListeners("WTBaseMethods", OnDataChangeHandler.LOGOUT);
     }
 
     private Request.Builder requestBuilder(String url, boolean addAuthHeader) {
@@ -236,7 +240,7 @@ public final class WatchTimeBaseMethods {
             public void onFailure(Call call, IOException e) {
                 Log.i("MovieDetailsFrag", "Failed to mark watched: " + e.getMessage());
                 Toast.makeText(getContext(), getContext().getString(R.string.mark_failed), Toast.LENGTH_SHORT).show();
-                ((WatchTimeApplication)getContext()).getDataChangeHandler().igniteListeners(OnDataChangeHandler.ALL);
+                ((WatchTimeApplication)getContext()).getDataChangeHandler().igniteListeners("WTBaseMethods", OnDataChangeHandler.ALL);
             }
 
             @Override
@@ -261,7 +265,7 @@ public final class WatchTimeBaseMethods {
                         Log.i("MovieMark", "Exception is: " + e.getMessage());
                         return;
                     }
-                    ((WatchTimeApplication)getContext()).getDataChangeHandler().igniteListeners(OnDataChangeHandler.ALL);
+                    ((WatchTimeApplication)getContext()).getDataChangeHandler().igniteListeners("WTBaseMethods", OnDataChangeHandler.ALL);
                     return;
                 }
 
@@ -281,7 +285,7 @@ public final class WatchTimeBaseMethods {
                                     Toast.makeText(getContext(), getContext().getString(R.string.already_marked), Toast.LENGTH_SHORT).show();
                             }
                         });
-                        ((WatchTimeApplication)getContext()).getDataChangeHandler().igniteListeners(OnDataChangeHandler.ALL);
+                        ((WatchTimeApplication)getContext()).getDataChangeHandler().igniteListeners("WTBaseMethods",OnDataChangeHandler.ALL);
                         return;
                     }
                 } catch (JSONException e) {
@@ -298,7 +302,7 @@ public final class WatchTimeBaseMethods {
                 });
 
                 Profile.fetchProfileForCurrentAccessToken();
-                ((WatchTimeApplication)getContext()).getDataChangeHandler().igniteListeners(OnDataChangeHandler.ALL);
+                ((WatchTimeApplication)getContext()).getDataChangeHandler().igniteListeners("WTBaseMethods",OnDataChangeHandler.ALL);
             }
         };
 
@@ -355,7 +359,7 @@ public final class WatchTimeBaseMethods {
                     @Override
                     public void run() {
                         Toast.makeText(getContext(), R.string.cover_update_success, Toast.LENGTH_SHORT).show();
-                        ((WatchTimeApplication)getContext()).getDataChangeHandler().igniteListeners(OnDataChangeHandler.ALL);
+                        ((WatchTimeApplication)getContext()).getDataChangeHandler().igniteListeners("WTBaseMethods", OnDataChangeHandler.ALL);
                     }
                 });
 
@@ -457,7 +461,7 @@ public final class WatchTimeBaseMethods {
             @Override
             public void onFailure(Call call, IOException e) {
                 Toast.makeText(getContext(), R.string.failed_performing_request, Toast.LENGTH_SHORT).show();
-                ((WatchTimeApplication)getContext()).getDataChangeHandler().igniteListeners(OnDataChangeHandler.ALL);
+                ((WatchTimeApplication)getContext()).getDataChangeHandler().igniteListeners("WTBaseMethods", OnDataChangeHandler.ALL);
             }
 
             @Override
@@ -481,7 +485,7 @@ public final class WatchTimeBaseMethods {
                         Log.i("WTMethods", "Resp: " + strResp);
                         Log.i("WTMethods", "JSONException message: " + e.getMessage());
                     }
-                    ((WatchTimeApplication)getContext()).getDataChangeHandler().igniteListeners(OnDataChangeHandler.ALL);
+                    ((WatchTimeApplication)getContext()).getDataChangeHandler().igniteListeners("WTBaseMethods", OnDataChangeHandler.ALL);
                 } else {
                     try {
                         JSONObject obj = new JSONObject(response.body().string());
@@ -499,13 +503,13 @@ public final class WatchTimeBaseMethods {
                                         Toast.makeText(getContext(), getContext().getString(R.string.not_on_watchlist), Toast.LENGTH_SHORT).show();
                                 }
                             });
-                            ((WatchTimeApplication)getContext()).getDataChangeHandler().igniteListeners(OnDataChangeHandler.ALL);
+                            ((WatchTimeApplication)getContext()).getDataChangeHandler().igniteListeners("WTBaseMethods",OnDataChangeHandler.ALL);
                             return;
                         }
                     } catch (JSONException e) {
                         Log.i("WTMethods", "JSONException message: " + e.getMessage());
 
-                        ((WatchTimeApplication)getContext()).getDataChangeHandler().igniteListeners(OnDataChangeHandler.ALL);
+                        ((WatchTimeApplication)getContext()).getDataChangeHandler().igniteListeners("WTBaseMethods", OnDataChangeHandler.ALL);
                         return;
                     }
 
@@ -516,7 +520,7 @@ public final class WatchTimeBaseMethods {
                         @Override
                         public void run() {
                             Toast.makeText(getContext(), R.string.removed_from_watchlist_success, Toast.LENGTH_SHORT).show();
-                            ((WatchTimeApplication)getContext()).getDataChangeHandler().igniteListeners(OnDataChangeHandler.ALL);
+                            ((WatchTimeApplication)getContext()).getDataChangeHandler().igniteListeners("WTBaseMethods",OnDataChangeHandler.ALL);
                         }
                     });
                 }
@@ -561,5 +565,54 @@ public final class WatchTimeBaseMethods {
         } else {
             Log.i("WTMethods", "AccessToken is null");
         }
+    }
+
+    public String getBackground(int index) {
+        if (backgrounds == null) {
+            if (!backgroundRequest && !backgroundDisabled)
+                fetchBackgrounds();
+            return null;
+        } else if (backgroundDisabled)
+            return null;
+        else if (backgrounds.size() > index)
+            return backgrounds.get(index);
+        return null;
+    }
+
+    private synchronized void fetchBackgrounds() {
+        backgroundRequest = true;
+        Request request = new Request.Builder()
+                .url(ApiEndPoints.BACKGROUNDS_LOGIN)
+                .build();
+
+        Call call = new OkHttpClient().newCall(request);
+        call.enqueue(new Callback() {
+            @Override
+            public void onFailure(Call call, IOException e) { backgroundRequest = false; }
+
+            @Override
+            public void onResponse(Call call, Response response) throws IOException {
+                if (response.isSuccessful()) {
+                    try {
+                        List<String> bgs = new ArrayList<>();
+                        JSONArray json = new JSONArray(response.body().string());
+                        for (int i = 0; i < json.length(); i++) {
+                            String str = json.getString(i);
+                            if (str.equals("disabled")) {
+                                backgroundDisabled = true;
+                                return;
+                            }
+                            bgs.add(str);
+                        }
+                        backgrounds = bgs;
+                    } catch (JSONException e) { backgroundRequest = false; }
+                }
+                backgroundRequest = false;
+            }
+        });
+    }
+
+    public int backgroundsLimit() {
+        return backgrounds == null ? 0 : backgrounds.size();
     }
 }

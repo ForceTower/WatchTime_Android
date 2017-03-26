@@ -7,6 +7,7 @@ import android.accounts.AccountManagerCallback;
 import android.accounts.AccountManagerFuture;
 import android.accounts.AuthenticatorException;
 import android.accounts.OperationCanceledException;
+import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -33,6 +34,7 @@ import com.watchtime.base.Constants;
 import com.watchtime.base.WatchTimeApplication;
 import com.watchtime.base.backend.User;
 import com.watchtime.base.content.preferences.Prefs;
+import com.watchtime.base.interfaces.OnDataChangeHandler;
 import com.watchtime.base.utils.PrefUtils;
 import com.watchtime.base.utils.VersionUtils;
 import com.watchtime.fragments.MediaContainerFragment;
@@ -53,25 +55,19 @@ import butterknife.Bind;
  * This Activity that houses the navigation drawer, and controls navigation between fragments
  */
 public class MainActivity extends WatchTimeBaseActivity implements NavigationDrawerFragment.Callbacks{
-    //Variable to keep track of permissions
     private static final int PERMISSIONS_REQUEST = 123;
 
-    //Current fragment being displayed
     private Fragment mCurrentFragment;
 
-    //Toolbar in the view
     @Bind(R.id.toolbar)
     Toolbar mToolbar;
 
-    //Drawer
     @Bind(R.id.navigation_drawer_container)
     ScrimInsetsFrameLayout mNavigationDrawerContainer;
 
-    //Tab layout for a view
     @Bind(R.id.tabs)
     TabLayout mTabs;
 
-    //Navigation Drawer used when user slides to the right
     NavigationDrawerFragment mNavigationDrawerFragment;
 
     private AccountManager accountManager;
@@ -93,25 +89,17 @@ public class MainActivity extends WatchTimeBaseActivity implements NavigationDra
             getWindow().setEnterTransition(TransitionInflater.from(this).inflateTransition(android.R.transition.fade));
         }
 
-        //Supports Action Bar
         setSupportActionBar(mToolbar);
-        //Updates the Toolbar Height
         ToolbarUtils.updateToolbarHeight(this, mToolbar);
 
-        //Gets the drawer reference (This is the top most in view group, everything is inside it)
         DrawerLayout drawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
-        //Changes the color of the drawer
         drawerLayout.setStatusBarBackgroundColor(ContextCompat.getColor(this, R.color.primary_dark));
 
-        //Reference to the NavigationDrawerFragment
         mNavigationDrawerFragment = (NavigationDrawerFragment) getSupportFragmentManager().findFragmentById(R.id.navigation_drawer_fragment);
-
-        //Initialise the NavigationDrawer, creates content to insert and stuff
         mNavigationDrawerFragment.initialise(mNavigationDrawerContainer, drawerLayout);
 
         if (null != savedInstanceState) return;
 
-        //Gets the user preference for the start view and shows it
         int providerId = PrefUtils.get(this, Prefs.DEFAULT_VIEW, 1);
         mNavigationDrawerFragment.selectItem(providerId);
     }
@@ -122,19 +110,25 @@ public class MainActivity extends WatchTimeBaseActivity implements NavigationDra
     @Override
     protected void onResume() {
         super.onResume();
-        //Checks the title
+
+        getApp().getDataChangeHandler().registerListener("main", dataChangedListener, new int[]{OnDataChangeHandler.LOGOUT});
+
         String title = mNavigationDrawerFragment.getCurrentItem().getTitle();
-        //If title is null, updates the title with AppName
+
         setTitle(null != title ? title : getString(R.string.app_name));
         supportInvalidateOptionsMenu();
 
-        //If an Activity is started, updates the title to Activity's name
         if (mNavigationDrawerFragment.getCurrentItem() != null && mNavigationDrawerFragment.getCurrentItem().getTitle() != null) {
             setTitle(mNavigationDrawerFragment.getCurrentItem().getTitle());
         }
 
-        //Init the items on Drawer
         mNavigationDrawerFragment.initItems();
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        getApp().getDataChangeHandler().unregisterListener("main");
     }
 
     /**
@@ -191,28 +185,20 @@ public class MainActivity extends WatchTimeBaseActivity implements NavigationDra
                     */
             }
         }
-        //Selects the first tab on the fragment
+
         if(mTabs.getTabCount() > 0)
             mTabs.getTabAt(0).select();
 
-        //Exchange Fragments
-        Log.d("FragmentChange", "mCurrentFragment " + mCurrentFragment);
         if (mCurrentFragment == null)
             return;
 
         fragmentManager.beginTransaction().replace(R.id.container, mCurrentFragment, tag).commit();
 
-        //If this new Fragment is a media container, update the tabs
         if(mCurrentFragment instanceof MediaContainerFragment) {
             updateTabs((MediaContainerFragment) mCurrentFragment, ((MediaContainerFragment) mCurrentFragment).getCurrentSelection());
         }
     }
 
-    /**
-     * Method called every time a tab is changed
-     * @param containerFragment the media container
-     * @param position the new position
-     */
     public void updateTabs(MediaContainerFragment containerFragment, final int position) {
         if(mTabs == null)
             return;
@@ -255,7 +241,7 @@ public class MainActivity extends WatchTimeBaseActivity implements NavigationDra
             case PERMISSIONS_REQUEST: {
                 if (grantResults.length < 1 || grantResults[0] == PackageManager.PERMISSION_DENIED) {
                     System.out.println("No permission!");
-                    finish(); //End app it user doesn't give the permissions
+                    finish();
                 }
             }
         }
@@ -265,23 +251,21 @@ public class MainActivity extends WatchTimeBaseActivity implements NavigationDra
         accountManager = AccountManager.get(this);
         user = ((WatchTimeApplication)getApplication()).getUser();
 
-        if (accountManager.getAccountsByType(Constants.ACCOUNT_TYPE).length != 0) {
-            getAccounts();
-        } else {
+        getAccounts();
+
+        if (accountManager.getAccountsByType(Constants.ACCOUNT_TYPE).length == 0) {
             LoginManager.getInstance().logOut();
-            LoginManagerWT.getInstance().logout();
+            finish();
         }
+
     }
 
     public void onLoginClicked() {
         addAccount();
     }
 
-    /**
-     * Use this method instead of creating the access account activity explicitly
-     */
     public void addAccount() {
-        Log.i("AccMgr - MainActivity", "addAccount");
+        Log.i("MainAct", "-> addAccount()");
         AccountManagerCallback<Bundle> callback = new AccountManagerCallback<Bundle>() {
             @Override
             public void run(AccountManagerFuture<Bundle> future) {
@@ -290,10 +274,10 @@ public class MainActivity extends WatchTimeBaseActivity implements NavigationDra
                     String accountName = bundle.getString(AccountManager.KEY_ACCOUNT_NAME);
                     String accountType = bundle.getString(AccountManager.KEY_ACCOUNT_TYPE);
                     String token       = bundle.getString(AccountManager.KEY_AUTHTOKEN);
-                    Log.i("AccMgr - MainActivity", "Name: " + accountName+ "\nType: " + accountType + "\nToken: " + token);
+                    Log.i("MainAct", "->addAccount()->callback()::Name: " + accountName+ "\nType: " + accountType + "\nToken: " + token);
                     getAccount(accountName, accountType);
                 } catch (OperationCanceledException | IOException | AuthenticatorException e) {
-                    e.printStackTrace();
+                    Log.i("MainAct", "->addAccount()->callback()->catch(Exception " + e.getMessage() + ")");
                 }
             }
         };
@@ -302,7 +286,7 @@ public class MainActivity extends WatchTimeBaseActivity implements NavigationDra
     }
 
     public void getAccount(String accountName, String accountType) {
-        Log.i("AccMgr - MainActivity", "getAccount");
+        Log.i("MainAct", "-> getAccount()");
         AccountManagerCallback<Bundle> callback = new AccountManagerCallback<Bundle>() {
             @Override
             public void run(AccountManagerFuture<Bundle> future) {
@@ -311,13 +295,13 @@ public class MainActivity extends WatchTimeBaseActivity implements NavigationDra
                     String accountName = bundle.getString(AccountManager.KEY_ACCOUNT_NAME);
                     String accountType = bundle.getString(AccountManager.KEY_ACCOUNT_TYPE);
                     String token       = bundle.getString(AccountManager.KEY_AUTHTOKEN);
-                    Log.i("AccMgr - MainActivity", "Name: " + accountName+ "\nType: " + accountType + "\nToken: " + token);
+                    Log.i("MainAct", "->getAccount()->callback()::Name: " + accountName+ "\nType: " + accountType + "\nToken: " + token);
 
                     user.setAccountName(accountName);
                     user.setAccountType(accountType);
                     user.setToken(token);
                 } catch (OperationCanceledException | IOException | AuthenticatorException e) {
-                    e.printStackTrace();
+                    Log.i("MainAct", "->getAccount()->callback()->catch(Exception " + e.getMessage() + ")");
                 }
             }
         };
@@ -326,7 +310,7 @@ public class MainActivity extends WatchTimeBaseActivity implements NavigationDra
     }
 
     public void getAccounts() {
-        Log.i("AccMgr - MainActivity", "getAccounts");
+        Log.i("MainAct", "-> getAccounts()");
         AccountManagerCallback<Bundle> callback = new AccountManagerCallback<Bundle>() {
             @Override
             public void run(AccountManagerFuture<Bundle> future) {
@@ -335,13 +319,13 @@ public class MainActivity extends WatchTimeBaseActivity implements NavigationDra
                     String accountName = bundle.getString(AccountManager.KEY_ACCOUNT_NAME);
                     String accountType = bundle.getString(AccountManager.KEY_ACCOUNT_TYPE);
                     String token       = bundle.getString(AccountManager.KEY_AUTHTOKEN);
-                    Log.i("AccMgr - MainActivity", "Name: " + accountName+ "\nType: " + accountType + "\nToken: " + token);
+                    Log.i("MainAct", "->getAccounts()->callback()::Name: " + accountName+ "\nType: " + accountType + "\nToken: " + token);
 
                     user.setAccountName(accountName);
                     user.setAccountType(accountType);
                     user.setToken(token);
                 } catch (OperationCanceledException | IOException | AuthenticatorException e) {
-                    e.printStackTrace();
+                    Log.i("MainAct", "->getAccounts()->callback()->catch(Exception " + e.getMessage() + ")");
                 }
             }
         };
@@ -349,44 +333,25 @@ public class MainActivity extends WatchTimeBaseActivity implements NavigationDra
         accountManager.getAuthTokenByFeatures(Constants.ACCOUNT_TYPE, Constants.ACCOUNT_TOKEN_TYPE, null, this, null, null, callback, null);
     }
 
-    public void changePassword() {
-        Log.i("AccMgr - MainActivity", "changePassword");
-        Account account = new Account(user.getAccountName(), Constants.ACCOUNT_TYPE);
-        AccountManagerCallback<Bundle> callback = new AccountManagerCallback<Bundle>() {
-            @Override
-            public void run(AccountManagerFuture<Bundle> future) {
-                try {
-                    Bundle bundle = future.getResult();
-                    String accountName = bundle.getString(AccountManager.KEY_ACCOUNT_NAME);
-                    String accountType = bundle.getString(AccountManager.KEY_ACCOUNT_TYPE);
-                    String token       = bundle.getString(AccountManager.KEY_AUTHTOKEN);
-                    Log.i("AccMgr - MainActivity", "Name: " + accountName+ "\nType: " + accountType + "\nToken: " + token);
-
-                    user.setAccountName(accountName);
-                    user.setAccountType(accountType);
-                    user.setToken(token);
-                } catch (OperationCanceledException | IOException | AuthenticatorException e) {
-                    e.printStackTrace();
-                }
-            }
-        };
-
-        accountManager.updateCredentials(account, Constants.ACCOUNT_TOKEN_TYPE, null, this, callback, null);
-    }
-
     public void onLogoutClicked() {
         if (logout()) {
-            LoginManager.getInstance().logOut();
-            LoginManagerWT.getInstance().logout();
+            mHandler.postDelayed(new Runnable() {
+                @Override
+                public void run() {
+                    LoginManager.getInstance().logOut();
+                    LoginManagerWT.getInstance().logout();
+                }
+            }, 250);
+
         }
     }
 
     public boolean logout() {
         Account[] accounts = accountManager.getAccountsByType(Constants.ACCOUNT_TYPE);
 
-        for (int i = 0; i < accounts.length; i++) {
-            if (accounts[i].name.equals(user.getAccountName())) {
-                accountManager.removeAccount(accounts[i], null, null);
+        for (Account account : accounts) {
+            if (account.name.equals(user.getAccountName())) {
+                accountManager.removeAccount(account, null, null);
                 return true;
             }
         }
@@ -394,4 +359,12 @@ public class MainActivity extends WatchTimeBaseActivity implements NavigationDra
         Toast.makeText(this, "Failed", Toast.LENGTH_SHORT).show();
         return false;
     }
+
+    private OnDataChangeHandler.OnDataChangeListener dataChangedListener = new OnDataChangeHandler.OnDataChangeListener() {
+        @Override
+        public void onDataChange() {
+            finish();
+            addAccount();
+        }
+    };
 }

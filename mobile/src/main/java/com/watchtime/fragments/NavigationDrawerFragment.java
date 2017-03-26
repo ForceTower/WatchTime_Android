@@ -55,11 +55,17 @@ public class NavigationDrawerFragment extends Fragment implements NavigationAdap
         handler.postDelayed(new Runnable() {
             @Override
             public void run() {
+                if(isDetached() || !isVisible())
+                    return;
+                Log.i("NavDrawerFrag", "Exec: " + (isDetached() || !isVisible()));
                 mAdapter.setItems(initItems());
 
                 handler.postDelayed(new Runnable() {
                     @Override
                     public void run() {
+                        if (isDetached() || !isVisible())
+                            return;
+                        Log.i("NavDrawerFrag", "Exec2: " + isDetached());
                         mAdapter.setItems(initItems());
                     }
                 }, 1500);

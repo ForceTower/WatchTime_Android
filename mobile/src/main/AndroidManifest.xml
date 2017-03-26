@@ -45,24 +45,21 @@
             android:windowSoftInputMode="adjustPan">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN"/>
-
                 <category android:name="android.intent.category.LAUNCHER"/>
             </intent-filter>
         </activity>
         <activity android:name=".activities.TermsActivity"/>
         <activity
-            android:name=".activities.AccessAccountBaseActivity"
-            android:theme="@style/Theme.WatchTime.TransparentStatusBar"
-            android:windowSoftInputMode="adjustPan">
+            android:name=".activities.LoginActivity"
+            android:theme="@style/Theme.WatchTime.TransparentStatusBar">
             <intent-filter>
                 <action android:name="android.intent.action.VIEW"/>
-
                 <category android:name="android.intent.category.DEFAULT"/>
                 <category android:name="android.intent.category.BROWSABLE"/>
-
                 <data android:scheme="@string/fb_login_protocol_scheme"/>
             </intent-filter>
         </activity>
+
         <activity
             android:name=".activities.MediaDetailsActivity"
             android:theme="@style/Theme.WatchTime.Detail"/>

@@ -18,7 +18,7 @@
         android:paddingRight="@dimen/activity_horizontal_margin"
         android:scaleType="centerInside"
         android:alpha="0.4"
-        android:src="@drawable/app_logo_writen" />
+        android:src="@drawable/app_logo_written" />
 
     <LinearLayout
         android:layout_width="match_parent"

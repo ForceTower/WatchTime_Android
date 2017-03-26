@@ -2,6 +2,7 @@ package com.watchtime.sdk;
 
 import android.content.Context;
 import android.os.AsyncTask;
+import android.util.Log;
 
 import com.watchtime.sdk.callbacks.InitializeCallback;
 import com.watchtime.sdk.validators.Validate;
@@ -55,6 +56,8 @@ public final class WatchTimeSdk {
     }
 
     public static Context getApplicationContext() {
+        if (isSdkInitialized())
+            Log.i("WTSDK", "Not initialized");
         return applicationContext;
     }
 
