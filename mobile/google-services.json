@@ -13,6 +13,16 @@
           "package_name": "com.watchtime"
         }
       },
+      "web": {
+        "client_id":"119095877396-gdedk829shkbgpd7aoq36g4bs1fk50t7.apps.googleusercontent.com",
+        "project_id":"watchtime-4051f",
+        "auth_uri":"https://accounts.google.com/o/oauth2/auth",
+        "token_uri":"https://accounts.google.com/o/oauth2/token",
+        "auth_provider_x509_cert_url":"https://www.googleapis.com/oauth2/v1/certs",
+        "client_secret":"sP65KBKT85HxfcSyytXvuNJF",
+        "redirect_uris":["https://oqv.000webhostapp.com"],
+        "javascript_origins":["http://localhost","https://oqv.000webhostapp.com"]
+      },
       "oauth_client": [
         {
           "client_id": "119095877396-itfmujs7f84rvcvfngc4e5vv55kkudpe.apps.googleusercontent.com",

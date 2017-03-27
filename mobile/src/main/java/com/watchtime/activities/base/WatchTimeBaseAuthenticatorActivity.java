@@ -181,9 +181,9 @@ public abstract class WatchTimeBaseAuthenticatorActivity extends MyAccountAuthen
     //Google Methods
     protected void setupGoogleAPIClient() {
         GoogleSignInOptions gso = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
-                .requestEmail()
+                .requestEmail()//
                 .requestIdToken("119095877396-gdedk829shkbgpd7aoq36g4bs1fk50t7.apps.googleusercontent.com")
-                .build();
+                .build();//
 
         googleApiClient = new GoogleApiClient.Builder(this)
                 .enableAutoManage(this, connectionFailedListener)

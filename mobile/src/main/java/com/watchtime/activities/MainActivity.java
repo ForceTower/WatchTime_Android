@@ -7,11 +7,9 @@ import android.accounts.AccountManagerCallback;
 import android.accounts.AccountManagerFuture;
 import android.accounts.AuthenticatorException;
 import android.accounts.OperationCanceledException;
-import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
 import android.support.design.widget.TabLayout;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
@@ -77,12 +75,11 @@ public class MainActivity extends WatchTimeBaseActivity implements NavigationDra
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState, R.layout.activity_main);
 
+        setupAccountManagerCode();
         //Request Permission to Write And Read From External Memory
         if (ContextCompat.checkSelfPermission(this, Manifest.permission.WRITE_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
             ActivityCompat.requestPermissions(this, new String[]{ Manifest.permission.WRITE_EXTERNAL_STORAGE }, PERMISSIONS_REQUEST);
         }
-
-        setupAccountManagerCode();
 
         if (VersionUtils.isLollipop()) {
             getWindow().setExitTransition(TransitionInflater.from(this).inflateTransition(android.R.transition.fade));

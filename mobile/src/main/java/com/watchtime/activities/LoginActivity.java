@@ -4,6 +4,7 @@ import android.app.ProgressDialog;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.StringRes;
+import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
 
@@ -21,7 +22,6 @@ import com.squareup.picasso.Callback;
 import com.squareup.picasso.Picasso;
 import com.watchtime.R;
 import com.watchtime.activities.base.WatchTimeBaseAuthenticatorActivity;
-import com.watchtime.base.Constants;
 import com.watchtime.base.utils.AnimUtils;
 import com.watchtime.base.utils.PrefUtils;
 import com.watchtime.sdk.WatchTimeBaseMethods;
@@ -71,12 +71,15 @@ public class LoginActivity extends WatchTimeBaseAuthenticatorActivity {
             GoogleSignInAccount acct = result.getSignInAccount();
             if (acct == null) {
                 onLoginFailed(R.string.login_failed);
+                Log.i("LoginAct", "acc is null");
                 return;
             }
 
             showProgressDialog(R.string.validating_credentials);
             createServerLoginRequest(acct.getId(), acct.getIdToken(), 1);
         } else {
+
+            Log.i("LoginAct", "Unsuccessful. Status: " + result.getStatus().getStatusCode() + ". " + result.toString());
             onLoginFailed(R.string.login_failed);
         }
     }
